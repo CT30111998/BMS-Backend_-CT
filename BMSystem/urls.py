@@ -28,4 +28,4 @@ urlpatterns = [
     path('me/', workView.Me, name='me'),
     path('login/', userView.loginView, name = 'login'),
     path('signup/', userView.signUpView, name = 'signup'),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

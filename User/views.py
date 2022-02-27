@@ -11,3 +11,5 @@ def loginView(request):
 
 def signUpView(request):
     return render(request, 'user/signup.html')
+
+
