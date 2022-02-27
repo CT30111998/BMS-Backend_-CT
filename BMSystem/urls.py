@@ -26,6 +26,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', userView.homeView, name='home'),
     path('me/', workView.Me, name='me'),
-    path('login/', userView.loginView, name = 'login'),
-    path('signup/', userView.signUpView, name = 'signup'),
+    path('login/', userView.loginView, name = 'loginView'),
+    path('login/post', userView.loginView, name = 'login'),
+    path('signup/', userView.signUpView, name = 'signupView'),
+    path('signup/post', userView.signup, name = 'signup'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

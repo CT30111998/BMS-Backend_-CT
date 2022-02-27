@@ -13,7 +13,7 @@
         <h1>Register</h1>
     </div>
     <!-- <h2 class="headingForm">Sign in</h2> -->
-    <form class="form" action="#" method="POST">
+    <form class="form" action="{% url 'signup' %}" method="POST">
         {% csrf_token %}
         <div class="container mt-5 mb-5">
             <div class="row d-flex align-items-center justify-content-center">
@@ -76,7 +76,7 @@
                         <div class="text-center mt-3"> <span>Or continue with these social profile</span> </div>
                         <div class="d-flex justify-content-center mt-4"> <span class="social"><i class="fa fa-google"></i></span> <span class="social"><i class="fa fa-facebook"></i></span> <span class="social"><i class="fa fa-twitter"></i></span> <span class="social"><i class="fa fa-linkedin"></i></span></div>
 
-                        <div class="text-center mt-4"> <span>Already have?</span> <a href="{% url 'login' %}" class="text-decoration-none">Log in</a> </div>
+                        <div class="text-center mt-4"> <span>Already have?</span> <a href="{% url 'loginView' %}" class="text-decoration-none">Log in</a> </div>
                     </div>
                 </div>
             </div>

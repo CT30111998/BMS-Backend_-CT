@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 # Create your views here.
 
 def homeView(request):
@@ -9,7 +9,17 @@ def loginView(request):
     return render(request, 'user/login.html')
 
 
+def login(request):
+    return redirect('/')
+
+
 def signUpView(request):
     return render(request, 'user/signup.html')
+
+
+def signup(request):
+    if request == 'POST':
+        pass
+    return redirect('/')
 
 
