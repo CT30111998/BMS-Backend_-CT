@@ -19,7 +19,10 @@ def signUpView(request):
 
 def signup(request):
     if request == 'POST':
-        pass
+        firstName = request.POST['fname']
+        lastName = request.POST['lname']
+        image = request.POST['myFile']
+        mNo = request.POST['mNo']
     return redirect('/')
 
 
