@@ -1,0 +1,237 @@
+{% extends 'base.html' %} 
+
+{% block head %}
+<link rel="stylesheet" href="/res/css/formView.css">
+<link rel="stylesheet" href="/res/css/heading.css">
+
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+body {
+    background-color: #535fe6;
+    font-family: "Poppins", sans-serif;
+    font-weight: 300
+}
+
+.height {
+    height: 100vh
+}
+
+.card {
+    border: none;
+    padding: 20px;
+    background-color: #1c1e21;
+    color: #fff
+}
+
+.circle {
+    height: 20px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #5855e7;
+    color: #fff;
+    font-size: 10px;
+    border-radius: 50%
+}
+
+.form-input {
+    position: relative;
+    margin-bottom: 10px;
+    margin-top: 10px
+}
+
+.form-input i {
+    position: absolute;
+    font-size: 18px;
+    top: 15px;
+    left: 10px
+}
+
+.form-control {
+    height: 50px;
+    color: white;
+    background-color: #1c1e21;
+    text-indent: 24px;
+    font-size: 15px
+}
+
+.form-control:focus {
+    background-color: #25272a;
+    box-shadow: none;
+    color: #fff;
+    border-color: #4f63e7
+}
+
+.form-check-label {
+    margin-top: 2px;
+    font-size: 14px
+}
+
+.signup {
+    height: 50px;
+    font-size: 14px
+}
+
+.social {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer
+}
+
+.social:hover {
+    background-color: #0d6efd;
+    border-color: #0d6efd
+}
+</style>
+<style>
+    h1 {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+    font-weight: 300;
+    font-size: 40px;
+    color: #ffffff;
+    -webkit-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+}
+
+h1 span {
+    display: block;
+    font-size: 0.5em;
+    line-height: 1.3;
+}
+
+h1 em {
+    font-style: normal;
+    font-weight: 600;
+}
+
+
+/* === HEADING STYLE #1 === */
+
+
+/* Style 7
+     ----------------------------- */
+
+.seven h1 {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 35px;
+    font-weight: 300;
+    color: rgb(255, 76, 76);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: 27px 0;
+    grid-gap: 20px;
+    align-items: center;
+}
+
+.seven h1:after,
+.seven h1:before {
+    content: " ";
+    display: block;
+    border-bottom: 1px solid #c50000;
+    border-top: 1px solid #c50000;
+    height: 5px;
+    background-color: #f8f8f8;
+}
+</style>
+
+
+{% endblock head %} 
+
+{% block title %}SignUp{% endblock title %} 
+
+{% block body %}
+<div class="containerForm">
+    <div class="seven">
+        <h1>Register</h1>
+    </div>
+    <!-- <h2 class="headingForm">Sign in</h2> -->
+    <form class="form" action="{% url 'signup' %}" method="POST">
+        {% csrf_token %}
+        <div class="container mt-5 mb-5">
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="col-md-6">
+                    <div class="card px-5 py-5 bg-dark text-white"> <span class="circle"><i class="fa fa-check"></i></span>
+                        <h5 class="mt-3">Join over 25 million<br> Gamers from around the globe</h5>
+                        <!-- <small class="mt-2 text-muted">Master the languages of the web: HTML, CSS and javascript. This path will prepare you to build basic websites and then build interactive web apps</small> -->
+
+                        <!-- Full Name -->
+                        <div class="form-input"> <input type="text" class="form-control" name="fName" placeholder="First name" pattern="{2,}"> </div>
+                        <div class="form-input"> <input type="text" class="form-control" name="lName" placeholder="Last name" pattern="{2,}"> </div>
+
+                        <!-- Profile Picture -->
+                        <div class="input-group mb-3" style="margin-top:10px;">
+                            <label class="input-group-text" for="inputGroupFile02">Select profile picture</label>
+                            <input type="file" class="form-control" id="inputGroupFile02" name="myFile" style="padding-top: 12px;">
+                        </div>
+
+
+                        <!-- Country -->
+                        <div class="form-input">
+                            <select class="form-select" name="gender" style="width:200px; height: 50px; padding-left: 33px;" aria-label="Default select example">
+                            <option selected>Select Country Code</option>
+                            <option value="Male">India +91</option>
+                            <option value="Female">USA +1</option>
+                            <option value="Other">Pakistan +92</option>
+                          </select>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="form-input"> <input type="text" class="form-control" name="mNo" placeholder="Mobile Number - 0123456789" pattern="[0-9]{10}"> </div>
+
+                        <!-- Gender -->
+                        <div class="form-input">
+                            <select class="form-select" name="gender" style="height: 50px; padding-left: 33px;" aria-label="Default select example">
+                            <option selected value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+
+                        <!-- BDate -->
+                        <div class="form-input">
+                            <input type="date" class="form-control" id="birthday" placeholder="Select BirthDate" name="bDate">
+                            <label for="birthday">Birthday:</label>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-input"> <i class="fa fa-envelope"></i>
+                            <input type="text" class="form-control" placeholder="Email address" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"> </div>
+
+                        <!-- password -->
+                        <div class="form-input"> <i class="fa fa-lock"></i> <input type="password" class="form-control" name="pass" placeholder="Password" pattern=".{8,}"> </div>
+                        <div class="form-input"> <i class="fa fa-lock"></i> <input type="password" class="form-control" name="pass1" placeholder="Confirm password" pattern=".{8,}"> </div>
+
+                        <!-- Submit -->
+                        <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked> <label class="form-check-label" for="flexCheckChecked"> I agree all the statements </label> </div> <button type="submit" class="btn btn-primary mt-4 signup">Register</button>
+
+                        <div class="text-center mt-3"> <span>Or continue with these social profile</span> </div>
+                        <div class="d-flex justify-content-center mt-4"> <span class="social"><i class="fa fa-google"></i></span> <span class="social"><i class="fa fa-facebook"></i></span> <span class="social"><i class="fa fa-twitter"></i></span> <span class="social"><i class="fa fa-linkedin"></i></span></div>
+
+                        <div class="text-center mt-4"> <span>Already have?</span> <a style="text-decoration: none; color: #000000;" href="{% url 'loginView' %}" class="text-decoration-none">Log in</a> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock body %} 
+
+{% block script %}
+<script></script>
+{% endblock script %}
