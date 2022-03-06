@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from .moduals.authModels import authUser
 # Create your views here.
 
 def homeView(request):
@@ -18,11 +19,11 @@ def signUpView(request):
 
 
 def signup(request):
-    if request == 'POST':
-        firstName = request.POST['fname']
-        lastName = request.POST['lname']
-        image = request.POST['myFile']
-        mNo = request.POST['mNo']
+    if request.method == "POST":
+        signUp = authUser()
+        result = signUp.createMyUser(request)
+        print(result)
+    print("hello")
     return redirect('/')
 
 
