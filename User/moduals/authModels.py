@@ -124,6 +124,7 @@ class authUser:
                 return send
 
             user = authenticate(username=email, password=password)
+            userId = None
 
             if user is not None:
                 login(request, user)
@@ -131,14 +132,19 @@ class authUser:
                 userId = userData.id
                 # request.session['username'] = userId
             
-            if userId is None:
-                result = False
-                alert = "Email and password could not match"
+            if userId is not None:
+                MySession.createSession(request, 'userId', userId)
+                alert = "Loading.."
+                result = True
+                MySession.createSession(request, 'email', email)
                 send = [result, alert]
                 return send
-            MySession.createSession(request, 'userId', userId)
-            alert = "Loading.."
-            result = True
-            MySession.createSession(request, 'email', email)
+            
+            result = False
+            alert = "Email and password could not match"
             send = [result, alert]
             return send
+
+    def Profile(request):
+        details = UserDetail.objects.get(email = request.session['userId']) 
+        return details
