@@ -15,6 +15,9 @@ class Blog(models.Model):
     postImage = models.ImageField(upload_to=get_file_path, null=True)
     description = models.CharField(max_length=255, null=True)
 
+    def __str__(self):
+        return self.blogTittle
+
 
 class Like(models.Model):
     user = models.ForeignKey(um.User, on_delete=models.CASCADE)
