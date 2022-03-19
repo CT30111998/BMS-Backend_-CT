@@ -1,5 +1,7 @@
 from django.shortcuts import redirect, render
+from django.contrib.auth.models import User
 from .moduals.authModels import authUser
+from .models import User as UserDetail
 from django.contrib import auth
 # Create your views here.
 
@@ -33,12 +35,29 @@ def signup(request):
 
 
 def logout(request):
-    logout(request)
+    auth.logout(request)
     return redirect('/')
 
+
 def Profile(request):
-    get = authUser()
-    user = get.Profile(request)
-    return render(request, 'user/profile.html', {'user':user})
+    auth = User()
+    if auth.is_authenticated:
+        user = authUser.Profile(request)
+        return render(request, 'user/profile.html', {'userData':user})
+    return redirect('/')
+
+def uploadProfile(request):
+    upload = True
+    auth = User()
+    if auth.is_authenticated:
+        user = authUser.Profile(request)
+        return render(request, 'user/profile.html', {'userData':user, 'upload': upload})
+    return redirect('/')
+
+def uploading(request):
+    upload = authUser()
+    name = authUser.updateProfile(request)
+    print(name)
+    return redirect('/profile/')
 
 

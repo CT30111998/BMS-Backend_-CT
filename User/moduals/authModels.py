@@ -1,9 +1,11 @@
+from urllib import request
 from ..models import User as UserDetail
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from . import MySession
 from .Validation import Validation
+from ..form import profileUpload
 
 class authUser:
     def createMyUser(self, request):
@@ -146,5 +148,25 @@ class authUser:
             return send
 
     def Profile(request):
-        details = UserDetail.objects.get(email = request.session['userId']) 
+        details = UserDetail.objects.get(id=request.session['userId']) 
         return details
+
+    def updateProfile(request):
+        if request.method == 'POST':
+            details = UserDetail.objects.get(id=request.session['userId'])
+
+            form = profileUpload(request.POST, request.FILES)  
+            if form.is_valid():  
+                form.save()
+
+            if request.POST['image']:
+                details.image = request.POST['image']
+                details.save()
+                
+            result = "Update successfull!"
+            return result
+
+
+            # except Exception as ex:
+            #     result = "Could not update try again!"
+            #     return result

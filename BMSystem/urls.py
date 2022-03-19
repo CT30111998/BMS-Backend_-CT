@@ -30,5 +30,8 @@ urlpatterns = [
     path('login/post', userView.login, name = 'login'),
     path('signup/', userView.signUpView, name = 'signupView'),
     path('signup/post', userView.signup, name = 'signup'),
+    path('profile/', userView.Profile, name = 'profile'),
     path('logout/', userView.logout, name = 'logout'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('profile/upload', userView.uploadProfile, name = 'uploadProfile'),
+    path('uploading/', userView.uploading, name = 'uploading'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
