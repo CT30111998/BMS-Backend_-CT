@@ -140,7 +140,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 BASE_URL = 'http://localhost/media/'
-# BASE2_URL = 'http://localhost/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'

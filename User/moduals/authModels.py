@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from . import MySession
 from .Validation import Validation
+from BMSystem import constant as set
 from ..form import profileUpload
+from django.core.files.storage import FileSystemStorage
 
 class authUser:
     def createMyUser(self, request):
@@ -154,16 +156,15 @@ class authUser:
     def updateProfile(request):
         if request.method == 'POST':
             details = UserDetail.objects.get(id=request.session['userId'])
-
-            form = profileUpload(request.POST, request.FILES)  
-            if form.is_valid():  
-                form.save()
-
-            if request.POST['image']:
-                details.image = request.POST['image']
-                details.save()
-                
-            result = "Update successfull!"
+            result = 'File could not upload! try again later'
+            file = request.FILES['image1']
+            if file:  
+                fs = FileSystemStorage()
+                path = set.UPLOAD_PATH+set.PROFILE_PATH+file.name
+                fs.save(name=path, content=file,)
+                details.image = path
+                details.save()  
+                result = "Update successfull!"
             return result
 
 
