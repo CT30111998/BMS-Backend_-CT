@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'Blog',
     'User',
     'Work',
@@ -74,6 +75,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'BMSystem.wsgi.application'
+
+CORE_ORIGIN_ALLOW_ALL = True
+CORE_ORIGIN_WHITELIST = ''
 
 
 # Database
