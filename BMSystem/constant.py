@@ -136,7 +136,7 @@ USER_MODEL_FIELDS = {
     'first_name': 'firstName',
     'last_name': 'lastName',
     'mobile_number': 'mNo',
-    'emial': 'email',
+    'email': 'email',
     'password': 'password',
     'confirm_password': 'confirm_password',
     'image': 'image',

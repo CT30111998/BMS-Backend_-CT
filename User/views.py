@@ -4,29 +4,33 @@ from django.contrib.auth.models import User
 from .moduals.authModels import authUser
 from .models import User as UserDetail
 from django.contrib import auth
+from BMSystem import constant
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import UserSerializer
 # Create your views here.
+
 
 def homeView(request):
     return render(request, 'index.html')
 
 
+@api_view(['POST', 'GET'])
 def login(request):
-    login = authUser()
-    result = login.Login(request)
-    if result[0]:
-        return redirect('/')
-    return render(request, 'user/login.html', {"alert":result[1]})
+    if request.method == 'POST':
+        login = authUser()
+        get_api_response = login.Login(request)
+        return Response(get_api_response)
+    return render(request, constant.USER_TEMPLATE_DIR+constant.USER_TEMPLATES['login'])
 
 
-
+@api_view(['POST', 'GET'])
 def signup(request):
     if request.method == "POST":
         createUser = authUser()
-        alert, result, template = createUser.createMyUser(template)
-        return render(request, template, {"result": alert})
-    login = authUser()
-    template = login.createMyUser(request)
-    return render(request, template)
+        get_api_response = createUser.createMyUser(request)
+        return Response(get_api_response)
+    return render(request, constant.USER_TEMPLATE_DIR+constant.USER_TEMPLATES['register'])
 
 
 def logout(request):
@@ -41,6 +45,7 @@ def Profile(request):
         return render(request, 'user/profile.html', {'userData':user})
     return redirect('/')
 
+
 def uploadProfile(request):
     upload = True
     auth = User()
@@ -48,6 +53,7 @@ def uploadProfile(request):
         user = authUser.Profile(request)
         return render(request, 'user/profile.html', {'userData':user, 'upload': upload})
     return redirect('/')
+
 
 def uploading(request):
     upload = authUser()

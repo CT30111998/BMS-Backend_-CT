@@ -2,15 +2,19 @@ from re import template
 from urllib import request
 from ..models import User as UserDetail
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as AuthUser
 from django.shortcuts import render
 from . import MySession
 from .Validation import Validation
 from BMSystem import constant as set
+from User.serializers import *
+from rest_framework import response
 from ..form import profileUpload
 from django.core.files.storage import FileSystemStorage
 
+
 class authUser:
+
     def createMyUser(self, request):
         if request.method == 'POST':
             # TIME_ZONE = pytz.timezone('Asia/Kolkata')
@@ -31,7 +35,7 @@ class authUser:
             if not valid:
                 alert = "All fields required"
                 result = False
-                send = [result, alert]
+                send = {"result": result, "alert": alert}
                 return send
                 # return render(request, "register.html", {"fail": alert})
 
@@ -40,7 +44,7 @@ class authUser:
             if not validPass2 or not validPass1:
                 alert = "Password should have min 8 characters"
                 result = False
-                send = [result, alert]
+                send = {"result": result, "alert": alert}
                 return send
                 # return redirect("register/")
                 # return render(request, "register.html", {"fail": alert})
@@ -48,65 +52,43 @@ class authUser:
             if password != password1:
                 alert = "Password does not match"
                 result = False
-                send = [result, alert]
+                send = {"result": result, "alert": alert}
                 return send
                 # return redirect("register/")
                 # return render(request, "register.html", {"fail": alert})
-            try:
-                createUser = User.objects.create_user(username=email, email=email, password=password)
-                createUser.first_name = fName
-                createUser.last_name = lName
-                success = createUser.save()
-                getData = User.objects.get(username=email)
-                getId = getData.id
-            except:
-                alert = "Already have account with this email"
-                result = False
-                send = [result, alert]
-                return send
-                # return render(request, 'login.html', {"fail": alert})
+            # try:
+            createUser = User.objects.create_user(username=email, email=email, password=password)
+            createUser.first_name = fName
+            createUser.last_name = lName
+            success = createUser.save()
+            getData = User.objects.get(username=email)
+            getId = getData.id
+            # except:
+            #     alert = "Already have account with this email"
+            #     result = False
+            #     send = {"result": result, "alert": alert}
+            #     return send
+            #     # return render(request, 'login.html', {"fail": alert})
 
             userDetail = UserDetail()
-            userDetail.set.USER_MODEL_FIELDS['first_name'] = fName
-            userDetail.set.USER_MODEL_FIELDS['last_name'] = lName
-            userDetail.set.USER_MODEL_FIELDS['employee_number'] = getId
+            userDetail.firstName = fName
+            userDetail.lastName = lName
+            userDetail.empNo = getId
             # userDetail.user = int(getId)
-            userDetail.set.USER_MODEL_FIELDS['mobile_number'] = mNo
-            userDetail.set.USER_MODEL_FIELDS['email'] = email
+            userDetail.mNo = mNo
+            userDetail.email = email
             save = userDetail.save()
             userName = createUser.get_username()
             # try:
-                
-
-            # except:
-            #     try:
-            #         record = createUser.objects.get(id=getId)
-            #         record.delete()
-            #         alert = "Account create failed! Try again...1"
-            #         result = False
-            #         send = [result, alert]
-            #         return send
-            #         # return render(request, 'login.html', {"fail": alert})
-            #     except:
-
-            #         alert = "Account create failed! Try again..."
-            #         result = False
-            #         send = [result, alert]
-            #         return send
-            #         # return render(request, 'login.html', {"fail": alert})
 
             # Successful create
             alert = "Account create successful"
             result = True
-            template = set.USER_TEMPLATE_DIR+set.USER_TEMPLATES['login']
-            send = [result, alert]
-            return (alert, result, template)
+            data = {'id': getId}
+            send = {"result": result, "alert": alert, 'data': data}
+            return (send)
             # return render(request, 'login.html', {"success": alert})
-        template = set.USER_TEMPLATE_DIR+set.USER_TEMPLATES['register']
-        return (template)
-        
 
-        
     def Login(self, request):
         if request.method == 'POST':
             email = request.POST[set.USER_MODEL_FIELDS['email']]
@@ -116,14 +98,14 @@ class authUser:
             if not fieldsCheck:
                 result = False
                 alert = "All field required"
-                send = [result, alert]
+                send = {"result": result, "alert": alert}
                 return send
 
             passCheck = Validation().passValid(password)
             if not passCheck:
                 result = False
                 alert = "Password should have minimum 8 character"
-                send = [result, alert]
+                send = {"result": result, "alert": alert}
                 return send
 
             user = authenticate(username=email, password=password)
@@ -131,25 +113,23 @@ class authUser:
 
             if user is not None:
                 login(request, user)
-                userData = User.objects.get(username=user)
-                userId = userData.id
+                get_user = AuthUser.objects.get(username=user)
+                get_user_data = UserDetail.objects.get(email=get_user.email)
+                userId = get_user.id
                 # request.session['username'] = userId
-            
-            if userId is not None:
-                MySession.createSession(request, 'userId', userId)
-                alert = "Loading.."
-                result = True
-                MySession.createSession(request, 'email', email)
-                send = [result, alert]
-                template = set.USER_TEMPLATE_DIR+set.USER_TEMPLATES['dashboard']
-                return (alert, result, template)
-            
+                if userId is not None:
+                    MySession.createSession(request, 'userId', userId)
+                    alert = "Login Successful"
+                    result = True
+                    MySession.createSession(request, 'email', email)
+                    serializer = UserSerializer(get_user_data, many=False)
+                    send = {"result": result, "alert": alert, 'data': serializer.data}
+                    return (send)
             result = False
             alert = "Email and password could not match"
-            send = [result, alert]
+            send = {"result": result, "alert": alert}
             return send
 
-        return render(request, 'user/login.html')
 
     def Profile(request):
         details = UserDetail.objects.get(id=request.session['userId']) 
