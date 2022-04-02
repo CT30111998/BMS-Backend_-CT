@@ -1,64 +1,39 @@
-from re import template
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import User
-from .moduals.authModels import authUser
-from .models import User as UserDetail
-from django.contrib import auth
+from .moduals.authModels import *
 from BMSystem import constant
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import UserSerializer
-# Create your views here.
 
 
-def homeView(request):
+def home_view(request):
     return render(request, 'index.html')
 
 
-@api_view(['POST', 'GET'])
+@api_view([constant.POST, constant.GET])
 def login(request):
-    if request.method == 'POST':
-        login = authUser()
-        get_api_response = login.Login(request)
-        return Response(get_api_response)
+    if request.method == constant.POST:
+        get_api_response = user_login(request)
+        return get_api_response
     return render(request, constant.USER_TEMPLATE_DIR+constant.USER_TEMPLATES['login'])
 
 
-@api_view(['POST', 'GET'])
+@api_view([constant.POST, constant.GET])
 def signup(request):
-    if request.method == "POST":
-        createUser = authUser()
-        get_api_response = createUser.createMyUser(request)
-        return Response(get_api_response)
+    if request.method == constant.POST:
+        get_api_response = create_my_user(request)
+        return get_api_response
     return render(request, constant.USER_TEMPLATE_DIR+constant.USER_TEMPLATES['register'])
 
 
+@api_view([constant.GET])
 def logout(request):
-    auth.logout(request)
-    return redirect('/')
+    get_api_response = user_logout(request)
+    return get_api_response
 
 
-def Profile(request):
-    auth = User()
-    if auth.is_authenticated:
-        user = authUser.Profile(request)
-        return render(request, 'user/profile.html', {'userData':user})
-    return redirect('/')
+@api_view([constant.POST, constant.PUT, constant.GET])
+def profile(request, user_id):
+    get_api_response = user_profile(request, user_id)
+    return get_api_response
 
-
-def uploadProfile(request):
-    upload = True
-    auth = User()
-    if auth.is_authenticated:
-        user = authUser.Profile(request)
-        return render(request, 'user/profile.html', {'userData':user, 'upload': upload})
-    return redirect('/')
-
-
-def uploading(request):
-    upload = authUser()
-    name = authUser.updateProfile(request)
-    print(name)
-    return redirect('/profile/')
 
 

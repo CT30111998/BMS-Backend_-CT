@@ -1,5 +1,6 @@
 import re
 
+
 class Validation:
     def nullValid(self, fields):
         notNull = True
@@ -9,14 +10,12 @@ class Validation:
                 break
         return notNull
 
-
     def passValid(self, password):
         check = str(password)
         if len(check) >= 8:
             return True
         else:
             return False
-
 
     def emailValid(self, email):
         regex = r"^[a-z0-9]+[\._-]*[a-z0-9]*[@][a-z0-9]+[.][a-z]{1,3}[.]?[a-z]{0,2}$"
@@ -25,7 +24,6 @@ class Validation:
             return True
         else:
             return False
-
 
 # name = None
 # email = "kushmewada@gmail.com"

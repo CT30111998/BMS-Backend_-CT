@@ -19,25 +19,24 @@ BLOG_PATH = 'Blog/'
 
 #   ** URLS **
 USER_URLS = {
-    'dashboard': '',
+    'user': 'user/',
     'admin': 'admin/',
     'register': 'signup/',
     'login': 'login/',
     'logout': 'logout/',
-    'profile': 'profile/'
-    }
+    'profile': 'profile/<str:user_id>'
+}
 
 EMPLOYEE_REPORT_URLS = {
-    'dashboard': 'me/',
-    
+    'me': 'me/',
+
 }
 
 BLOG_URLS = {
-    'dashboard': 'blog/',
-    
+    'blog': 'blog/',
+
 }
 #   ** End URLS **
-
 
 
 #   ** Views **
@@ -48,16 +47,16 @@ USER_VIEWS = {
     'login': 'login',
     'logout': 'logout',
     'profile': 'profile'
-    }
+}
 
 EMPLOYEE_REPORT_VIEWS = {
     'dashboard': 'me',
-    
+
 }
 
 BLOG_VIEWS = {
     'dashboard': 'blog',
-    
+
 }
 #   ** End Views **
 
@@ -71,20 +70,19 @@ USER_VIEWS_NAME = {
     'login': 'login',
     'logout': 'logout',
     'profile': 'profile'
-    }
+}
 
 EMPLOYEE_REPORT_VIEWS_NAME = {
     'dashboard': 'me',
-    
+
 }
 
 BLOG_VIEWS_NAME = {
     'dashboard': 'blog',
-    
+
 }
 
 #   ** End Views name **
-
 
 
 #   ** Static files **
@@ -110,9 +108,15 @@ USER_TEMPLATES = {
     'register': 'signup.html',
 }
 
-
 #   ** End Static files **
 
+#   ** METHODS **
+POST = 'POST'
+GET = 'GET'
+PUT = 'PUT'
+PATCH = "PATCH"
+DELETE = 'DELETE'
+#   ** End Methods **
 
 
 #   ** APPS **
@@ -160,8 +164,23 @@ USER_MODEL_FIELDS = {
 #   ** End MODEL FIELDS **
 
 
-#   ** FORM FIELDS **
+#   ** Alert massage **
 
-# User 
-
-#   ** End FORM FIELDS **
+# Common
+ALL_FIELD_REQUIRE = 'All field required!'
+DATA_FETCH_SUCCESSFUL = 'Data fetch successful!'
+DATA_FETCH_FAIL = 'Data fetch fail!'
+STARED_FIELD_REQUIRE = 'All star field require!'
+# End Common
+# User
+LOGIN_SUCCESSFUL = 'Login successful!'
+REGISTER_SUCCESSFUL = "Account create successful!"
+PASSWORD_LENGTH_ALERT = 'Password should have min 8 characters!'
+PASSWORD_NOT_MATCH = "Password does not match!"
+USER_AND_PASSWORD_NOT_MATCH = "Email and password could not match!"
+UPDATE_SUCCESSFUL = "Update successful!"
+LOGOUT_SUCCESSFUL = 'Logout successful!'
+LOGOUT_FAIL = 'Could not logout!'
+UPLOAD_FAIL = 'File could not upload! try again later!'
+# End User
+#   ** End alert massage **
