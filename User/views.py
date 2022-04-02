@@ -1,3 +1,4 @@
+from re import template
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from .moduals.authModels import authUser
@@ -9,10 +10,6 @@ def homeView(request):
     return render(request, 'index.html')
 
 
-def loginView(request):
-    return render(request, 'user/login.html')
-
-
 def login(request):
     login = authUser()
     result = login.Login(request)
@@ -21,17 +18,15 @@ def login(request):
     return render(request, 'user/login.html', {"alert":result[1]})
 
 
-def signUpView(request):
-    return render(request, 'user/signup.html')
-
 
 def signup(request):
     if request.method == "POST":
-        signUp = authUser()
-        result = signUp.createMyUser(request)
-        if result[0]:
-            return redirect('/')
-    return render(request, 'user/login.html', {"alert":result[1]})
+        createUser = authUser()
+        alert, result, template = createUser.createMyUser(template)
+        return render(request, template, {"result": alert})
+    login = authUser()
+    template = login.createMyUser(request)
+    return render(request, template)
 
 
 def logout(request):

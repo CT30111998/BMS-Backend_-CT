@@ -76,8 +76,8 @@
             <a class="navbar-brand" href="{% url 'profile' %}">Profile</a>
             <a class="navbar-brand" href="{% url 'logout' %}">Log out</a> 
             {% else %}
-            <a class="navbar-brand" href="{% url 'loginView' %}">Login</a>
-            <a class="navbar-brand" href="{% url 'signupView' %}">Sign up</a> 
+            <a class="navbar-brand" href="{% url 'login' %}">Login</a>
+            <a class="navbar-brand" href="{% url 'signup' %}">Sign up</a> 
             {% endif %}
         </div>
     </nav>
