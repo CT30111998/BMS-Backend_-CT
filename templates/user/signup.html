@@ -20,8 +20,8 @@
                         <!-- <small class="mt-2 text-muted">Master the languages of the web: HTML, CSS and javascript. This path will prepare you to build basic websites and then build interactive web apps</small> -->
 
                         <!-- Full Name -->
-                        <div class="form-input"> <input type="text" class="form-control" name="fName" placeholder="First name" pattern="{2,}"> </div>
-                        <div class="form-input"> <input type="text" class="form-control" name="lName" placeholder="Last name" pattern="{2,}"> </div>
+                        <div class="form-input"> <input type="text" class="form-control" name="firstName" placeholder="First name" pattern="{2,}"> </div>
+                        <div class="form-input"> <input type="text" class="form-control" name="lastName" placeholder="Last name" pattern="{2,}"> </div>
 
 
                         <!-- Mobile Number -->
@@ -33,8 +33,8 @@
                             <input type="text" class="form-control" placeholder="Email address" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"> </div>
 
                         <!-- password -->
-                        <div class="form-input"> <i class="fa fa-lock"></i> <input type="password" class="form-control" name="pass" placeholder="Password" pattern=".{8,}"> </div>
-                        <div class="form-input"> <i class="fa fa-lock"></i> <input type="password" class="form-control" name="pass1" placeholder="Confirm password" pattern=".{8,}"> </div>
+                        <div class="form-input"> <i class="fa fa-lock"></i> <input type="password" class="form-control" name="password" placeholder="Password" pattern=".{8,}"> </div>
+                        <div class="form-input"> <i class="fa fa-lock"></i> <input type="password" class="form-control" name="confirm_password" placeholder="Confirm password" pattern=".{8,}"> </div>
 
                         <!-- Submit -->
                         <div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked> <label class="form-check-label" for="flexCheckChecked"> I agree all the statements </label> </div> <button type="submit" class="btn btn-primary mt-4 signup">Register</button>
@@ -42,7 +42,7 @@
                         <div class="text-center mt-3"> <span>Or continue with these social profile</span> </div>
                         <div class="d-flex justify-content-center mt-4"> <span class="social"><i class="fa fa-google"></i></span> <span class="social"><i class="fa fa-facebook"></i></span> <span class="social"><i class="fa fa-twitter"></i></span> <span class="social"><i class="fa fa-linkedin"></i></span></div>
 
-                        <div class="text-center mt-4"> <span>Already have?</span> <a style="text-decoration: none; color: #000000;" href="{% url 'loginView' %}" class="text-decoration-none">Log in</a> </div>
+                        <div class="text-center mt-4"> <span>Already have?</span> <a style="text-decoration: none; color: #000000;" href="{% url 'login' %}" class="text-decoration-none">Log in</a> </div>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import email
 from django.db import models
 import datetime
 import os
@@ -54,4 +55,7 @@ class User(models.Model):
     shift = models.ForeignKey(Shift, null=True, on_delete=models.CASCADE)
     role = models.IntegerField(default=2)
     createdAt = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"User: {self.email}"
 

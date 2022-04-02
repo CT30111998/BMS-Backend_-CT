@@ -1,3 +1,78 @@
 {% extends 'base.html' %}
 
-{% block head %}{% endblock head %}
+{% block head %}
+<title>Profile</title>
+{% endblock head %}
+
+{% block body %}
+
+<div class="container my-4">
+    <!-- <img src="..." class="img-thumbnail" alt="..."> -->
+    <div class="card mb-3 text-white bg-dark" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-8" style="max-width: 520px;">
+            <img src="{{ userData.image.url }}" style="max-width: 520px;" class="img-fluid rounded-start" alt="{{ userData.image }}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ userData.firstName }} {{ userData.lastName }}</h5>
+              <p class="card-text">{{ userData.email }} <br>{{ userData.mNo }} <br>{{ userData.address }} </p>
+              <!-- <p class="card-text">{{ userData.mNo }}</p> -->
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <h5>Upload your profiel photo</h5>
+        {% if upload %}
+        <div class="input-group mb-3">
+            <form action="{% url 'uploading' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+            <input type="file" class="form-control bg-dark text-white" name="image1" id="inputGroupFile02">
+            <!-- <label class="input-group-text" for="file">Upload</label> -->
+          </div>
+          <p>
+          <a href="{% url 'profile'%}" role="button" class="btn btn-dark popover-test" title="Popover title" data-bs-content="Popover body content is set in this attribute.">Cancle</a>
+         <button type="submit" role="button" class="btn btn-info popover-test">Upload</button>
+        </p>
+        <hr>
+    </form>
+        {% else %}
+        <p> <a href="{% url 'uploadProfile' %}" role="button" class="btn btn-dark popover-test" title="Popover title" data-bs-content="Popover body content is set in this attribute.">Upload</a></p>
+        <hr>
+        {% endif %}
+      </div>
+
+
+      
+        <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+        <div class="row">
+            <div class="col-6 col-md-4"><strong>Emp. No: </strong>{% if userData.empNo %}{{ userData.empNo }} {%endif%}</div>
+            <div class="col-6 col-md-4"><strong>About: </strong>{% if userData.about %}{{ userData.about }} {%endif%}</div>
+            <div class="col-6 col-md-4"><strong>Date of birth: </strong>{% if userData.birthDate %}{{ userData.birthDate }} {%endif%}</div>
+          </div>
+          <br>
+      
+        <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
+        <div class="row">
+          <div class="col-6 col-md-4"><strong>Job Title: </strong>{% if userData.jonTittle %}{{ userData.jonTittle }} {%endif%}</div>
+          <div class="col-6 col-md-4"><strong>Position: </strong>{% if userData.position %}{{ userData.position }} {%endif%}</div>
+          <div class="col-6 col-md-4"><strong>Date of joining: </strong>{% if userData.dateOfJoining %}{{ userData.dateOfJoining }} {%endif%}</div>
+        </div>
+        <br>
+        <!-- Columns are always 50% wide, on mobile and desktop -->
+        <div class="row">
+          <div class="col-6 col-md-4"><strong>Department: </strong>{% if userData.department %}{{ userData.department }} {%endif%} </div>
+          <div class="col-6 col-md-4"><strong>Work Type: </strong>{% if userData.workTye %}{{ userData.workTye }} {%endif%}</div>
+          <div class="col-6 col-md-4"><strong>Job Type: </strong>{% if userData.jobType %}{{ userData.jobType }} {%endif%}</div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-6 col-md-4"><strong>Shift: </strong>{% if userData.shift %}{{ userData.shift }} {%endif%}</div>
+        </div>
+
+</div>
+
+{% endblock body %}

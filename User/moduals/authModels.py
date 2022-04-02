@@ -1,9 +1,14 @@
+from re import template
+from urllib import request
 from ..models import User as UserDetail
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from . import MySession
 from .Validation import Validation
+from BMSystem import constant as set
+from ..form import profileUpload
+from django.core.files.storage import FileSystemStorage
 
 class authUser:
     def createMyUser(self, request):
@@ -11,12 +16,12 @@ class authUser:
             # TIME_ZONE = pytz.timezone('Asia/Kolkata')
             # Current_data_time = datetime.now(TIME_ZONE)
 
-            fName = request.POST['fName']
-            lName = request.POST['lName']
-            email = request.POST['email']
-            mNo = request.POST['mNo']
-            password = request.POST.get('pass')
-            password1 = request.POST.get('pass1')
+            fName = request.POST[set.USER_MODEL_FIELDS['first_name']]
+            lName = request.POST[set.USER_MODEL_FIELDS['last_name']]
+            email = request.POST[set.USER_MODEL_FIELDS['email']]
+            mNo = request.POST[set.USER_MODEL_FIELDS['mobile_number']]
+            password = request.POST.get(set.USER_MODEL_FIELDS['password'])
+            password1 = request.POST.get(set.USER_MODEL_FIELDS['confirm_password'])
             # created_at = Current_data_time
             # updated_at = Current_data_time
 
@@ -62,12 +67,12 @@ class authUser:
                 # return render(request, 'login.html', {"fail": alert})
 
             userDetail = UserDetail()
-            userDetail.firstName = fName
-            userDetail.lastName = lName
-            userDetail.empNo = getId
+            userDetail.set.USER_MODEL_FIELDS['first_name'] = fName
+            userDetail.set.USER_MODEL_FIELDS['last_name'] = lName
+            userDetail.set.USER_MODEL_FIELDS['employee_number'] = getId
             # userDetail.user = int(getId)
-            userDetail.mNo = mNo
-            userDetail.email = email
+            userDetail.set.USER_MODEL_FIELDS['mobile_number'] = mNo
+            userDetail.set.USER_MODEL_FIELDS['email'] = email
             save = userDetail.save()
             userName = createUser.get_username()
             # try:
@@ -93,21 +98,19 @@ class authUser:
             # Successful create
             alert = "Account create successful"
             result = True
+            template = set.USER_TEMPLATE_DIR+set.USER_TEMPLATES['login']
             send = [result, alert]
-            return send
+            return (alert, result, template)
             # return render(request, 'login.html', {"success": alert})
-
-        else:
-            alert = "Could not register"
-            result = False
-            send = [result, alert]
-            return send
+        template = set.USER_TEMPLATE_DIR+set.USER_TEMPLATES['register']
+        return (template)
+        
 
         
     def Login(self, request):
         if request.method == 'POST':
-            email = request.POST['email']
-            password = request.POST['pass']
+            email = request.POST[set.USER_MODEL_FIELDS['email']]
+            password = request.POST[set.USER_MODEL_FIELDS['password']]
             fields = [email, password]
             fieldsCheck = Validation().nullValid(fields)
             if not fieldsCheck:
@@ -138,13 +141,35 @@ class authUser:
                 result = True
                 MySession.createSession(request, 'email', email)
                 send = [result, alert]
-                return send
+                template = set.USER_TEMPLATE_DIR+set.USER_TEMPLATES['dashboard']
+                return (alert, result, template)
             
             result = False
             alert = "Email and password could not match"
             send = [result, alert]
             return send
 
+        return render(request, 'user/login.html')
+
     def Profile(request):
-        details = UserDetail.objects.get(email = request.session['userId']) 
+        details = UserDetail.objects.get(id=request.session['userId']) 
         return details
+
+    def updateProfile(request):
+        if request.method == 'POST':
+            details = UserDetail.objects.get(id=request.session['userId'])
+            result = 'File could not upload! try again later'
+            file = request.FILES['image1']
+            if file:  
+                fs = FileSystemStorage()
+                path = set.UPLOAD_PATH+set.PROFILE_PATH+file.name
+                fs.save(name=path, content=file,)
+                details.image = path
+                details.save()  
+                result = "Update successfull!"
+            return result
+
+
+            # except Exception as ex:
+            #     result = "Could not update try again!"
+            #     return result
