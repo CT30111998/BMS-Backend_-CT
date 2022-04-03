@@ -9,31 +9,50 @@ def get_file_path(request, filename):
     return os.path.join('uploads/', filename)
 
 
-class Position(models.Model):
+class PositionMaster(models.Model):
     positionName = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.positionName
 
-class Department(models.Model):
+
+class DepartmentMaster(models.Model):
     dept = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.dept
 
-class WorkType(models.Model):
+
+class WorkTypeMaster(models.Model):
     workType = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.workType
 
-class JobType(models.Model):
+
+class JobTypeMaster(models.Model):
     jobType = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.jobType
 
-class Shift(models.Model):
+
+class ShiftMaster(models.Model):
     shift = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.shift
 
-class Role(models.Model):
-    role = models.CharField(max_length=30)
+
+class RoleMaster(models.Model):
+    role = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.role}'
 
 
-class User(models.Model):
+class UserMaster(models.Model):
+    id = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     mNo = models.IntegerField()
@@ -48,14 +67,26 @@ class User(models.Model):
     birthDate = models.DateField(null=True)
     dateOfJoining = models.DateField(null=True)
     jonTittle = models.CharField(max_length=50, null=True)
-    position = models.ForeignKey(Position, null=True, on_delete=models.CASCADE)
-    department = models.ForeignKey(Department, null=True, on_delete=models.CASCADE)
-    workTye = models.ForeignKey(WorkType, null=True, on_delete=models.CASCADE)
-    jobType = models.ForeignKey(JobType, null=True, on_delete=models.CASCADE)
-    shift = models.ForeignKey(Shift, null=True, on_delete=models.CASCADE)
-    role = models.IntegerField(default=2)
+    updatedAt = models.DateField(null=True)
     createdAt = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"User: {self.email}"
+        return f"{self.id}"
 
+
+class UserPosition(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
+    position = models.ForeignKey(PositionMaster, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.id}'
+
+
+class UserRole(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
+    role = models.ForeignKey(RoleMaster, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.id}'

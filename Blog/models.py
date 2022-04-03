@@ -20,13 +20,13 @@ class Blog(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(um.User, on_delete=models.CASCADE)
+    user = models.ForeignKey(um.UserMaster, on_delete=models.CASCADE)
     Blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     likedAt = models.DateField(auto_now_add=True)
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(um.User, on_delete=models.CASCADE)
+    user = models.ForeignKey(um.UserMaster, on_delete=models.CASCADE)
     Blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     comment = models.CharField(max_length=255)
     createdAt = models.DateField(auto_now_add=True)

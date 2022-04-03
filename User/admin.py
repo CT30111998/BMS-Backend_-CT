@@ -1,11 +1,11 @@
 from django.contrib import admin
 from .models import *
 
-admin.site.register(Position)
-admin.site.register(Department)
-admin.site.register(WorkType)
-admin.site.register(JobType)
-admin.site.register(Shift)
-admin.site.register(Role)
-admin.site.register(User)
+admin.site.register(PositionMaster)
+admin.site.register(DepartmentMaster)
+admin.site.register(WorkTypeMaster)
+admin.site.register(JobTypeMaster)
+admin.site.register(ShiftMaster)
+admin.site.register(RoleMaster)
+admin.site.register(UserMaster)
 # Register your models here.

@@ -7,7 +7,6 @@ from math import ceil
 
 
 def blog(request):
-
     blogs = Blog.objects.all()
     print(blogs)
     n = len(blogs)

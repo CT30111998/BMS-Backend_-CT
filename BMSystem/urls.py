@@ -20,9 +20,11 @@ from django.urls import path, include
 from . import constant
 from django.conf import settings
 from django.conf.urls.static import static
+from User import views
 
 urlpatterns = [
     path(constant.USER_URLS['admin'], admin.site.urls, name=constant.USER_VIEWS_NAME['admin']),
+    path(constant.DASHBOARD_URL, views.home_view, name=constant.DASHBOARD_VIEW),
     path(constant.USER_URLS['user'], include('User.urls')),
     path(constant.BLOG_URLS['blog'], include('Blog.urls')),
     path(constant.EMPLOYEE_REPORT_URLS['me'], include('Work.urls')),

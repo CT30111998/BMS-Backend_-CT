@@ -1,6 +1,6 @@
 from django.core.files.storage import FileSystemStorage
-
-from ..models import User as UserDetail
+from django.contrib.auth.models import User as AuthUser
+from ..models import UserMaster as UserDetail
 from django.contrib.auth import login, authenticate
 from django.contrib import auth
 from . import MySession
@@ -45,11 +45,11 @@ def create_my_user(request):
             # return redirect("register/")
             # return render(request, "register.html", {"fail": alert})
         # try:
-        createUser = User.objects.create_user(username=email, email=email, password=password)
+        createUser = AuthUser.objects.create_user(username=email, email=email, password=password)
         createUser.first_name = fName
         createUser.last_name = lName
         success = createUser.save()
-        getData = User.objects.get(username=email)
+        getData = AuthUser.objects.get(username=email)
         getId = getData.id
         # except:
         #     alert = "Already have account with this email"
@@ -129,21 +129,26 @@ def user_logout(request):
 
 
 def user_profile(request, user_id=None):
-    details = UserDetail.objects.get(id=user_id)
-    if request.method == set.GET:
-        try:
-            if details:
-                serialize = UserSerializer(details, many=False)
-                result = True
-                alert = set.DATA_FETCH_SUCCESSFUL
-                return create_response(alert=alert, result=result, data=serialize.data)
-            result = False
-            alert = set.DATA_FETCH_FAIL
-            return create_response(alert=alert, result=result)
-        except:
-            result = False
-            alert = set.DATA_FETCH_FAIL
-            return create_response(alert=alert, result=result)
+    try:
+        details = UserDetail.objects.get(id=user_id)
+        if request.method == set.GET:
+            try:
+                if details:
+                    serialize = UserSerializer(details, many=False)
+                    result = True
+                    alert = set.DATA_FETCH_SUCCESSFUL
+                    return create_response(alert=alert, result=result, data=serialize.data)
+                result = False
+                alert = set.DATA_FETCH_FAIL
+                return create_response(alert=alert, result=result)
+            except:
+                result = False
+                alert = set.DATA_FETCH_FAIL
+                return create_response(alert=alert, result=result)
+    except Exception:
+        result = False
+        alert = set.DATA_NOT_FOUND
+        return create_response(alert=alert, result=result)
 
     if request.method == set.PUT:
         alert = set.UPLOAD_FAIL

@@ -18,6 +18,7 @@ BLOG_PATH = 'Blog/'
 
 
 #   ** URLS **
+DASHBOARD_URL = '/'
 USER_URLS = {
     'user': 'user/',
     'admin': 'admin/',
@@ -26,20 +27,18 @@ USER_URLS = {
     'logout': 'logout/',
     'profile': 'profile/<str:user_id>'
 }
-
 EMPLOYEE_REPORT_URLS = {
     'me': 'me/',
-
 }
-
 BLOG_URLS = {
     'blog': 'blog/',
-
+    'dashboard': '',
 }
 #   ** End URLS **
 
 
 #   ** Views **
+DASHBOARD_VIEW = 'home'
 USER_VIEWS = {
     'dashboard': 'home',
     'admin': 'admin',
@@ -51,12 +50,10 @@ USER_VIEWS = {
 
 EMPLOYEE_REPORT_VIEWS = {
     'dashboard': 'me',
-
 }
 
 BLOG_VIEWS = {
     'dashboard': 'blog',
-
 }
 #   ** End Views **
 
@@ -79,7 +76,6 @@ EMPLOYEE_REPORT_VIEWS_NAME = {
 
 BLOG_VIEWS_NAME = {
     'dashboard': 'blog',
-
 }
 
 #   ** End Views name **
@@ -171,6 +167,7 @@ ALL_FIELD_REQUIRE = 'All field required!'
 DATA_FETCH_SUCCESSFUL = 'Data fetch successful!'
 DATA_FETCH_FAIL = 'Data fetch fail!'
 STARED_FIELD_REQUIRE = 'All star field require!'
+DATA_NOT_FOUND = 'Data not found!'
 # End Common
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'

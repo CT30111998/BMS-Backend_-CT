@@ -7,11 +7,17 @@ from BMSystem import constant
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserMaster
         fields = '__all__'
 
 
 class AuthUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AuthUser
+        fields = '__all__'
+
+
+class UserRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserRole
         fields = '__all__'
