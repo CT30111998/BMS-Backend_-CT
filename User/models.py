@@ -1,5 +1,6 @@
 import email
 from django.db import models
+from django.contrib.auth import models as auth_model
 import datetime
 import os
 
@@ -53,6 +54,7 @@ class RoleMaster(models.Model):
 
 class UserMaster(models.Model):
     id = models.AutoField(primary_key=True)
+    userId = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     mNo = models.IntegerField()

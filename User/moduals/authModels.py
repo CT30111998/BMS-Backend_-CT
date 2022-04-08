@@ -64,6 +64,7 @@ def create_my_user(request):
         # userDetail.user = int(getId)
         userDetail.mNo = mNo
         userDetail.email = email
+        userDetail.userId = getId
         save = userDetail.save()
         userName = createUser.get_username()
         # try:
@@ -130,7 +131,7 @@ def user_logout(request):
 
 def user_profile(request, user_id=None):
     try:
-        details = UserDetail.objects.get(id=user_id)
+        details = UserDetail.objects.get(userId=user_id)
         if request.method == set.GET:
             try:
                 if details:
@@ -162,6 +163,6 @@ def user_profile(request, user_id=None):
             details.save()
             alert = set.UPDATE_SUCCESSFUL
             result = True
-        details = UserDetail.objects.get(id=user_id)
+        details = UserDetail.objects.get(userId=user_id)
         serialize = UserSerializer(details, many=False)
         return create_response(result=result, alert=alert, data=serialize.data)
