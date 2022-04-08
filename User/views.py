@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from .moduals.authModels import *
 from BMSystem import constant
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 
 def home_view(request):
