@@ -14,6 +14,7 @@ import { LikeViewComponent } from './blog-view/like-view/like-view.component';
 import { CommentViewComponent } from './blog-view/comment-view/comment-view.component';
 import { WorkViewComponent } from './work-view/work-view.component';
 import { SupportComponent } from './support/support.component';
+import { SideBarComponent } from './nav-bar/side-bar/side-bar.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SupportComponent } from './support/support.component';
     CommentViewComponent,
     WorkViewComponent,
     SupportComponent,
+    SideBarComponent,
   ],
   imports: [
     BrowserModule,
