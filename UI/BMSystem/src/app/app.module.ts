@@ -15,6 +15,7 @@ import { CommentViewComponent } from './blog-view/comment-view/comment-view.comp
 import { WorkViewComponent } from './work-view/work-view.component';
 import { SupportComponent } from './support/support.component';
 import { SideBarComponent } from './nav-bar/side-bar/side-bar.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,9 @@ import { SideBarComponent } from './nav-bar/side-bar/side-bar.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule, 
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
