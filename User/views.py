@@ -11,6 +11,7 @@ def home_view(request):
 
 
 class SignupUser(APIView):
+    @api_view([constant.GET])
     def get(self, request, format=None):
         return render(request, constant.USER_TEMPLATE_DIR+constant.USER_TEMPLATES['register'])
 

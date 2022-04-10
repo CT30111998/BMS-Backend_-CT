@@ -44,36 +44,37 @@ def create_my_user(request):
             return create_response(alert=alert, result=result)
             # return redirect("register/")
             # return render(request, "register.html", {"fail": alert})
-        # try:
-        createUser = AuthUser.objects.create_user(username=email, email=email, password=password)
-        createUser.first_name = fName
-        createUser.last_name = lName
-        success = createUser.save()
-        getData = AuthUser.objects.get(username=email)
-        getId = getData.id
-        # except:
-        #     alert = "Already have account with this email"
-        #     result = False
-        #     send = {"result": result, "alert": alert}
-        #     return send
-        #     # return render(request, 'login.html', {"fail": alert})
-        userDetail = UserDetail()
-        userDetail.firstName = fName
-        userDetail.lastName = lName
-        userDetail.empNo = getId
-        # userDetail.user = int(getId)
-        userDetail.mNo = mNo
-        userDetail.email = email
-        userDetail.userId = getId
-        save = userDetail.save()
-        userName = createUser.get_username()
-        # try:
-        # Successful create
-        alert = set.REGISTER_SUCCESSFUL
-        result = True
-        data = {'id': getId}
-        return create_response(alert=alert, result=result, data=data)
-        # return render(request, 'login.html', {"success": alert})
+        try:
+            createUser = AuthUser.objects.create_user(username=email, email=email, password=password)
+            createUser.first_name = fName
+            createUser.last_name = lName
+            success = createUser.save()
+            getData = AuthUser.objects.get(username=email)
+            getId = getData.id
+        except:
+            alert = set.USER_EXIST_MASSAGE
+            result = False
+            return create_response(result=result, alert=alert)
+        if getId:
+            userDetail = UserDetail()
+            userDetail.firstName = fName
+            userDetail.lastName = lName
+            userDetail.empNo = getId
+            # userDetail.user = int(getId)
+            userDetail.mNo = mNo
+            userDetail.email = email
+            userDetail.user = createUser
+            save = userDetail.save()
+            userName = createUser.get_username()
+            # try:
+            # Successful create
+            alert = set.REGISTER_SUCCESSFUL
+            result = True
+            data = {'id': getId}
+            return create_response(alert=alert, result=result, data=data)
+    alert = set.REGISTER_FAIL
+    result = False
+    return create_response(result=result, alert=alert)
 
 
 def user_login(request):
@@ -131,7 +132,7 @@ def user_logout(request):
 
 def user_profile(request, user_id=None):
     try:
-        details = UserDetail.objects.get(userId=user_id)
+        details = UserDetail.objects.get(user=user_id)
         if request.method == set.GET:
             try:
                 if details:
@@ -154,7 +155,8 @@ def user_profile(request, user_id=None):
     if request.method == set.PUT:
         alert = set.UPLOAD_FAIL
         result = False
-        file = request.FILES['image1']
+        file = request.FILES[set.USER_MODEL_FIELDS['image']]
+        details = UserDetail.objects.get(user=user_id)
         if file:
             fs = FileSystemStorage()
             path = set.UPLOAD_PATH + set.PROFILE_PATH + file.name
@@ -163,6 +165,5 @@ def user_profile(request, user_id=None):
             details.save()
             alert = set.UPDATE_SUCCESSFUL
             result = True
-        details = UserDetail.objects.get(userId=user_id)
         serialize = UserSerializer(details, many=False)
         return create_response(result=result, alert=alert, data=serialize.data)

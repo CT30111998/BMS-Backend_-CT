@@ -16,9 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserMaster
         fields = '__all__'
 
-    def to_representation(self, instance):
-        self.fields['user_id'] = AuthUserSerializer(read_only=True)
-        return super(UserSerializer, self).to_representation(instance)
+    # def to_representation(self, instance):
+    #     self.fields['user_id'] = AuthUserSerializer(read_only=True)
+    #     return super(UserSerializer, self).to_representation(instance)
 
 
 class UserRoleSerializer(serializers.ModelSerializer):

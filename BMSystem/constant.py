@@ -160,6 +160,16 @@ USER_MODEL_FIELDS = {
 #   ** End MODEL FIELDS **
 
 
+#   ** Role and Permission **
+CREATE_USER = 1
+CREATE_BLOG = 1
+DELETE_USER = 1
+
+ADMIN = 2   # Can manage all accounts
+CO_ADMIN = 1    # can manage user accounts
+USER = 0    # Only read permission and
+#   ** End Role and Permission **
+
 #   ** Alert massage **
 
 # Common
@@ -172,6 +182,8 @@ DATA_NOT_FOUND = 'Data not found!'
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'
 REGISTER_SUCCESSFUL = "Account create successful!"
+REGISTER_FAIL = "Account create fail!"
+USER_EXIST_MASSAGE = "Already exist account with this email!"
 PASSWORD_LENGTH_ALERT = 'Password should have min 8 characters!'
 PASSWORD_NOT_MATCH = "Password does not match!"
 USER_AND_PASSWORD_NOT_MATCH = "Email and password could not match!"

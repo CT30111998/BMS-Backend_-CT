@@ -17,6 +17,12 @@ class PositionMaster(models.Model):
         return self.positionName
 
 
+class UserGroup(models):
+    groupName = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.groupName
+
 class DepartmentMaster(models.Model):
     dept = models.CharField(max_length=30)
 
@@ -54,7 +60,7 @@ class RoleMaster(models.Model):
 
 class UserMaster(models.Model):
     id = models.AutoField(primary_key=True)
-    userId = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
+    user = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     mNo = models.IntegerField()
