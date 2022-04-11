@@ -1,5 +1,6 @@
 import email
 from django.db import models
+from BMSystem import constant
 from django.contrib.auth import models as auth_model
 import datetime
 import os
@@ -17,13 +18,7 @@ class PositionMaster(models.Model):
         return self.positionName
 
 
-class PermissionMaster(models.Model):
-    createUser = models.IntegerField(default=0)
-    createBlog = models.IntegerField(default=0)
-    createGroup = models.IntegerField(default=0)
-
-
-class GroupMaster(models):
+class GroupMaster(models.Model):
     groupName = models.CharField(max_length=50)
 
     def __str__(self):
@@ -103,13 +98,7 @@ class UserPosition(models.Model):
         return f'{self.id}'
 
 
-class UserRole(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
-    role = models.ForeignKey(RoleMaster, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.id}'
-
 class UserPermission(models.Model):
-    user
+    user = models.ForeignKey(auth_model.User, models.CASCADE)
+    permission = models.IntegerField(default=constant.USER)
+    createdAt = models.DateField(auto_now_add=True)

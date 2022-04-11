@@ -163,7 +163,7 @@ USER_MODEL_FIELDS = {
 #   ** Role and Permission **
 OWNER = 1
 ADMIN = 2
-HR = 3
+CO_ADMIN = 3
 USER = 4
 #   ** End Role and Permission **
 

@@ -21,7 +21,3 @@ class UserSerializer(serializers.ModelSerializer):
     #     return super(UserSerializer, self).to_representation(instance)
 
 
-class UserRoleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserRole
-        fields = '__all__'

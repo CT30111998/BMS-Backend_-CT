@@ -15,7 +15,7 @@ class SignupUser(APIView):
     def get(self, request, format=None):
         return render(request, constant.USER_TEMPLATE_DIR+constant.USER_TEMPLATES['register'])
 
-    @api_view([constant.POST])
+    # @api_view([constant.POST])
     def post(self, request, format=None):
         get_api_response = create_my_user(request)
         return get_api_response
