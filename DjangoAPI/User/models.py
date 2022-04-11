@@ -1,5 +1,6 @@
 import email
 from django.db import models
+from django.contrib.auth import models as auth_model
 import datetime
 import os
 
@@ -14,6 +15,19 @@ class PositionMaster(models.Model):
 
     def __str__(self):
         return self.positionName
+
+
+class PermissionMaster(models.Model):
+    createUser = models.IntegerField(default=0)
+    createBlog = models.IntegerField(default=0)
+    createGroup = models.IntegerField(default=0)
+
+
+class GroupMaster(models):
+    groupName = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.groupName
 
 
 class DepartmentMaster(models.Model):
@@ -53,6 +67,7 @@ class RoleMaster(models.Model):
 
 class UserMaster(models.Model):
     id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     mNo = models.IntegerField()
@@ -74,9 +89,14 @@ class UserMaster(models.Model):
         return f"{self.id}"
 
 
+class UserGroup(models.Model):
+    user = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
+    group = models.ForeignKey(GroupMaster, on_delete=models.CASCADE)
+
+
 class UserPosition(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
+    user = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
     position = models.ForeignKey(PositionMaster, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -85,8 +105,11 @@ class UserPosition(models.Model):
 
 class UserRole(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(UserMaster, on_delete=models.CASCADE)
+    user = models.ForeignKey(auth_model.User, on_delete=models.CASCADE)
     role = models.ForeignKey(RoleMaster, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.id}'
+
+class UserPermission(models.Model):
+    user
