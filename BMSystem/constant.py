@@ -161,13 +161,10 @@ USER_MODEL_FIELDS = {
 
 
 #   ** Role and Permission **
-CREATE_USER = 1
-CREATE_BLOG = 1
-DELETE_USER = 1
-
-ADMIN = 2   # Can manage all accounts
-CO_ADMIN = 1    # can manage user accounts
-USER = 0    # Only read permission and
+OWNER = 1
+ADMIN = 2
+HR = 3
+USER = 4
 #   ** End Role and Permission **
 
 #   ** Alert massage **
