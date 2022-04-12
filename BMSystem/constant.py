@@ -156,9 +156,9 @@ USER_MODEL_FIELDS = {
     'shift': 'shift',
     'created_at': 'createdAt'}
 # End User
-
 #   ** End MODEL FIELDS **
-
+# Session Key
+SESSION_USER_ID = 'userId'
 
 #   ** Role and Permission **
 OWNER = 1
@@ -166,9 +166,12 @@ ADMIN = 2
 CO_ADMIN = 3
 USER = 4
 #   ** End Role and Permission **
+# Like
+LIKE = 1
+UNLIKE = 0
+# End Like
 
 #   ** Alert massage **
-
 # Common
 ALL_FIELD_REQUIRE = 'All field required!'
 DATA_FETCH_SUCCESSFUL = 'Data fetch successful!'

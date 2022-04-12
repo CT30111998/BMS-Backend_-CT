@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 import os
+from django.contrib.auth.models import User as AuthUser
 from User import models as um
 
 
@@ -20,13 +21,14 @@ class Blog(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(um.UserMaster, on_delete=models.CASCADE)
-    Blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    like = models.IntegerField(default=0)
     likedAt = models.DateField(auto_now_add=True)
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(um.UserMaster, on_delete=models.CASCADE)
-    Blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     comment = models.CharField(max_length=255)
     createdAt = models.DateField(auto_now_add=True)

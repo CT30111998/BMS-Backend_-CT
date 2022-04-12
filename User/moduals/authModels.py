@@ -4,8 +4,6 @@ from ..models import UserMaster as UserDetail
 from ..models import UserPermission as userPermission
 from django.contrib.auth import login, authenticate
 from django.contrib import auth
-from . import MySession
-from .Validation import Validation
 from BMSystem import constant
 from User.serializers import *
 from BMSystem.base_function import *
