@@ -1,17 +1,13 @@
-from django.shortcuts import redirect, render
-from .models import Blog
-from Blog.models import Blog
-from math import ceil
-
-# Create your views here.
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from Blog.modules import *
 
 
-def blog(request):
-    blogs = Blog.objects.all()
-    print(blogs)
-    n = len(blogs)
-    nSlid = n//4 + ceil((n/4)-(n//4))
+class BlogMaster(APIView):
+    def get(self, request):
+        get_response = get_all_blog(request)
+        return get_response
 
-    params = {'no_of_slids': nSlid, 'range': range(nSlid), 'blog': blogs}
-    return render(request, 'blog/blog.html', params)
-
+    def post(self, request):
+        get_response = create_blog(request)
+        return get_response

@@ -25,20 +25,19 @@ def create_my_user(request):
         # updated_at = Current_data_time
         # Validation
         fields = [fName, lName, email, mNo, password, password1]
-        valid = Validation().nullValid(fields)
+        valid = null_valid(fields)
         if not valid:
             alert = constant.ALL_FIELD_REQUIRE
             result = False
             return create_response(alert=alert, result=result)
-            # return render(request, "register.html", {"fail": alert})
-        validPass1 = Validation().passValid(password)
-        validPass2 = Validation().passValid(password1)
+
+        validPass1 = pass_valid(password)
+        validPass2 = pass_valid(password1)
         if not validPass2 or not validPass1:
             alert = constant.PASSWORD_LENGTH_ALERT
             result = False
             return create_response(alert=alert, result=result)
-            # return redirect("register/")
-            # return render(request, "register.html", {"fail": alert})
+
         if password != password1:
             alert = constant.PASSWORD_NOT_MATCH
             result = False
@@ -81,14 +80,14 @@ def user_login(request):
         email = request.POST[constant.USER_MODEL_FIELDS['email']]
         password = request.POST[constant.USER_MODEL_FIELDS['password']]
         fields = [email, password]
-        fieldsCheck = Validation().nullValid(fields)
+        fieldsCheck = null_valid(fields)
         if not fieldsCheck:
             result = False
             alert = constant.ALL_FIELD_REQUIRE
             send = {"result": result, "alert": alert}
             return create_response(alert=alert, result=result)
 
-        passCheck = Validation().passValid(password)
+        passCheck = pass_valid(password)
         if not passCheck:
             result = False
             alert = constant.PASSWORD_LENGTH_ALERT
@@ -105,12 +104,12 @@ def user_login(request):
             userId = get_user.id
             # request.session['username'] = userId
             if userId is not None:
-                MySession.createSession(request, 'userId', userId)
+                create_session(request, 'userId', userId)
+                get_user_role = UserPermission.objects.get(user=userId)
                 alert = constant.LOGIN_SUCCESSFUL
                 result = True
-                MySession.createSession(request, 'email', email)
-                # serializer = UserSerializer(get_user_data, many=False)
-                data = {'id': userId}
+                create_session(request, 'email', email)
+                data = {'id': userId, 'role': get_user_role.permission}
                 return create_response(alert=alert, result=result, data=data)
         result = False
         alert = constant.USER_AND_PASSWORD_NOT_MATCH
@@ -118,15 +117,20 @@ def user_login(request):
 
 
 def user_logout(request):
-    try:
-        auth.logout(request)
-        alert = constant.LOGOUT_SUCCESSFUL
-        result = True
-        return create_response(alert=alert, result=result)
-    except:
-        alert = constant.LOGOUT_FAIL
-        result = False
-        return create_response(alert=alert, result=result)
+    user = get_session(request, 'userId')
+    if user:
+        try:
+            auth.logout(request)
+            alert = constant.LOGOUT_SUCCESSFUL
+            result = True
+            return create_response(alert=alert, result=result)
+        except:
+            alert = constant.LOGOUT_FAIL
+            result = False
+            return create_response(alert=alert, result=result)
+    alert = constant.USER_NOT_LOGGED_IN
+    result = False
+    return create_response(alert=alert, result=result)
 
 
 def user_profile(request, user_id=None):

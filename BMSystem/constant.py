@@ -187,6 +187,12 @@ USER_AND_PASSWORD_NOT_MATCH = "Email and password could not match!"
 UPDATE_SUCCESSFUL = "Update successful!"
 LOGOUT_SUCCESSFUL = 'Logout successful!'
 LOGOUT_FAIL = 'Could not logout!'
+USER_NOT_LOGGED_IN = 'User not logged in!'
 UPLOAD_FAIL = 'File could not upload! try again later!'
 # End User
+
+# Blog
+GET_ALL_BLOG_DATA_SUCCESSFUL = 'Fetch data successful!'
+GET_ALL_BLOG_DATA_FAIL = 'Fetch data fail!'
+# End Blog
 #   ** End alert massage **
