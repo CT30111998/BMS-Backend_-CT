@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-1+aq%ya_hc18tvm285vszv3az6r(h9_liljb0(^femdap!4kra
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.46', 'localhost']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'Blog',
     'User',
     'Work',
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'BMSystem.urls'
@@ -79,6 +81,15 @@ WSGI_APPLICATION = 'BMSystem.wsgi.application'
 CORE_ORIGIN_ALLOW_ALL = True
 CORE_ORIGIN_WHITELIST = ''
 
+# alternate cors Header allow method access
+CORS_ALLOWED_ORIGINS = [
+        'http://localhost:4200',
+        'http://192.168.1.82:4200',
+]
+CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:4200',
+        'http://192.168.1.82:4200',
+    ]
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib import auth
 from BMSystem import constant
 from User.serializers import *
+from json import loads, dumps
 from BMSystem.base_function import *
 
 
@@ -13,60 +14,65 @@ def create_my_user(request):
     if request.method == constant.POST:
         # TIME_ZONE = pytz.timezone('Asia/Kolkata')
         # Current_data_time = datetime.now(TIME_ZONE)
-        fName = request.POST[constant.USER_MODEL_FIELDS['first_name']]
-        lName = request.POST[constant.USER_MODEL_FIELDS['last_name']]
-        email = request.POST[constant.USER_MODEL_FIELDS['email']]
-        mNo = request.POST[constant.USER_MODEL_FIELDS['mobile_number']]
-        password = request.POST.get(constant.USER_MODEL_FIELDS['password'])
-        password1 = request.POST.get(constant.USER_MODEL_FIELDS['confirm_password'])
+        request_data = loads(request.body)
+        first_name, last_name, user_email, mobile_no, password, confirm_password = \
+            request_data[constant.USER_MODEL_FIELDS['first_name']], \
+            request_data[constant.USER_MODEL_FIELDS['last_name']], \
+            request_data[constant.USER_MODEL_FIELDS['email']], \
+            request_data[constant.USER_MODEL_FIELDS['mobile_number']], \
+            request_data[constant.USER_MODEL_FIELDS['password']], \
+            request_data[constant.USER_MODEL_FIELDS['confirm_password']]
+
         # created_at = Current_data_time
         # updated_at = Current_data_time
+
         # Validation
-        fields = [fName, lName, email, mNo, password, password1]
-        valid = null_valid(fields)
+        all_field = [first_name, last_name, user_email, mobile_no, password, confirm_password]
+        valid = null_valid(all_field)
         if not valid:
             alert = constant.ALL_FIELD_REQUIRE
             result = False
             return create_response(alert=alert, result=result)
 
-        validPass1 = pass_valid(password)
-        validPass2 = pass_valid(password1)
-        if not validPass2 or not validPass1:
+        valid_pass1 = pass_valid(password)
+        valid_pass2 = pass_valid(confirm_password)
+        if not valid_pass2 or not valid_pass1:
             alert = constant.PASSWORD_LENGTH_ALERT
             result = False
             return create_response(alert=alert, result=result)
 
-        if password != password1:
+        if password != confirm_password:
             alert = constant.PASSWORD_NOT_MATCH
             result = False
             return create_response(alert=alert, result=result)
         try:
-            createUser = AuthUser.objects.create_user(username=email, email=email, password=password)
-            createUser.first_name = fName
-            createUser.last_name = lName
-            success = createUser.save()
-            getData = AuthUser.objects.get(username=email)
-            getId = getData.id
+            create_user = AuthUser.objects.create_user(username=user_email, email=user_email, password=password)
+            create_user.first_name = first_name
+            create_user.last_name = last_name
+            success = create_user.save()
+            get_data = AuthUser.objects.get(username=user_email)
+            get_id = get_data.id
         except:
             alert = constant.USER_EXIST_MASSAGE
             result = False
             return create_response(result=result, alert=alert)
-        if getId:
-            userDetail = UserDetail()
-            userDetail.firstName = fName
-            userDetail.lastName = lName
-            userDetail.empNo = getId
-            # userDetail.user = int(getId)
-            userDetail.mNo = mNo
-            userDetail.email = email
-            userDetail.user = createUser
-            save = userDetail.save()
+        if get_id:
+            user_detail = UserDetail()
+            user_detail.firstName = first_name
+            user_detail.lastName = last_name
+            user_detail.empNo = get_id
+            user_detail.mNo = mobile_no
+            user_detail.email = user_email
+            user_detail.user = create_user
+            save = user_detail.save()
+
             user_permission = userPermission()
-            user_permission.user = createUser
+            user_permission.user = create_user
             user_permission.save()
+
             alert = constant.REGISTER_SUCCESSFUL
             result = True
-            data = {'id': getId}
+            data = {'id': get_id}
             return create_response(alert=alert, result=result, data=data)
     alert = constant.REGISTER_FAIL
     result = False
@@ -75,39 +81,49 @@ def create_my_user(request):
 
 def user_login(request):
     if request.method == constant.POST:
-        email = request.POST[constant.USER_MODEL_FIELDS['email']]
-        password = request.POST[constant.USER_MODEL_FIELDS['password']]
-        fields = [email, password]
-        fieldsCheck = null_valid(fields)
-        if not fieldsCheck:
+        try:
+            get_request_data = loads(request.body)
+            user_email, password = \
+                get_request_data[constant.USER_MODEL_FIELDS['email']], \
+                get_request_data[constant.USER_MODEL_FIELDS['password']]
+        except:
+            result = False
+            alert = \
+                constant.PAYLOAD_DATA_ERROR + \
+                constant.USER_MODEL_FIELDS['email'] + \
+                " & " + \
+                constant.USER_MODEL_FIELDS['password'] \
+                + " in " + constant.PAYLOAD_DATA_FORMAT
+            return create_response(alert=alert, result=result)
+        field = [user_email, password]
+        fields_check = null_valid(field)
+        if not fields_check:
             result = False
             alert = constant.ALL_FIELD_REQUIRE
-            send = {"result": result, "alert": alert}
             return create_response(alert=alert, result=result)
 
-        passCheck = pass_valid(password)
-        if not passCheck:
+        pass_check = pass_valid(password)
+        if not pass_check:
             result = False
             alert = constant.PASSWORD_LENGTH_ALERT
-            send = {"result": result, "alert": alert}
             return create_response(alert=alert, result=result)
 
-        user = authenticate(username=email, password=password)
-        userId = None
+        user = authenticate(username=user_email, password=password)
+        user_id = None
 
         if user is not None:
             login(request, user)
             get_user = AuthUser.objects.get(username=user)
-            get_user_data = UserDetail.objects.get(email=get_user.email)
-            userId = get_user.id
-            # request.session['username'] = userId
-            if userId is not None:
-                create_session(request, 'userId', userId)
-                get_user_role = UserPermission.objects.get(user=userId)
+            user_id = get_user.id
+            if user_id is not None:
+                create_session(request, 'userId', user_id)
+                get_user_role = userPermission.objects.get(user=user_id)
+                serializer = UserPermissionSerializer(get_user_role, many=False)
+                permission = serializer.data.get("permission")
                 alert = constant.LOGIN_SUCCESSFUL
                 result = True
-                create_session(request, 'email', email)
-                data = {'id': userId, 'role': get_user_role.permission}
+                create_session(request, 'email', user_email)
+                data = {"id": user_id, "role": get_user_role.permission}
                 return create_response(alert=alert, result=result, data=data)
         result = False
         alert = constant.USER_AND_PASSWORD_NOT_MATCH

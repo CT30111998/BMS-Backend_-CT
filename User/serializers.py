@@ -16,6 +16,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = UserMaster
         fields = '__all__'
 
+
+class UserPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPermission
+        fields = '__all__'
+
     # def to_representation(self, instance):
     #     self.fields['user_id'] = AuthUserSerializer(read_only=True)
     #     return super(UserSerializer, self).to_representation(instance)

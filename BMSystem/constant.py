@@ -178,6 +178,8 @@ DATA_FETCH_SUCCESSFUL = 'Data fetch successful!'
 DATA_FETCH_FAIL = 'Data fetch fail!'
 STARED_FIELD_REQUIRE = 'All star field require!'
 DATA_NOT_FOUND = 'Data not found!'
+PAYLOAD_DATA_ERROR = 'Expect payload data: '
+PAYLOAD_DATA_FORMAT = 'JSON format'
 # End Common
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'

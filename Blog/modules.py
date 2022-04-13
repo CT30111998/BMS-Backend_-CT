@@ -13,8 +13,10 @@ def get_all_blog(request):
     user = get_session(request=request, key='userId')
     if user:
         # try:
-        blogs = Blog.objects.all()
-        for blog in blogs:
+        get_blogs = Blog.objects.all()
+        total_blog_details = []
+        for blog in get_blogs:
+            blog_details = {}
             get_total_likes = Like.objects.filter(blog=blog.id, like=constant.LIKE)
             for get_total_like in get_total_likes:
                 user_id = get_total_like.user
