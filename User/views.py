@@ -26,7 +26,7 @@ class SignupUser(APIView):
 
 
 class LoginUser(APIView):
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
