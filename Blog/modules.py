@@ -74,7 +74,7 @@ def get_all_blog(request):
         nSlid = n // 4 + ceil((n / 4) - (n // 4))
         result = True
         alert = constant.GET_ALL_BLOG_DATA_SUCCESSFUL
-        params = {'no_of_slides': nSlid, 'blog': blog_serializer.data}
+        params = {'no_of_slides': nSlid, 'blogs_detail': total_blog_details}
         return create_response(alert=alert, result=result, data=params)
         # except:
         #     result = False
