@@ -81,7 +81,7 @@ class UserMaster(models.Model):
     createdAt = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.id}"
+        return self.firstName
 
 
 class UserGroup(models.Model):

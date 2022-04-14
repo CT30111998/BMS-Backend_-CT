@@ -4,5 +4,5 @@ from .models import *
 
 class BlogMasterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Blog
+        model = Master
         fields = '__all__'

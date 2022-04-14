@@ -10,26 +10,27 @@ def get_file_path(request, filename):
     return os.path.join('uploads/', filename)
 
 
-class Blog(models.Model):
-    timeStamp = models.DateTimeField(auto_now_add=True)
-    blogTittle = models.CharField(max_length=50)
+class Master(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    blogTitle = models.CharField(max_length=50)
     postImage = models.ImageField(upload_to=get_file_path, null=True)
     description = models.CharField(max_length=255, null=True)
     created_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    modified_at = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.blogTittle
+        return self.blogTitle
 
 
 class Like(models.Model):
     like_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Master, on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
-    likedAt = models.DateTimeField(auto_now_add=True)
+    liked_at = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
     comment_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    blog = models.ForeignKey(Master, on_delete=models.CASCADE)
     comment = models.CharField(max_length=255)
-    createdAt = models.DateField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)

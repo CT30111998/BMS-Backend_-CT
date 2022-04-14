@@ -127,9 +127,7 @@ BLOG_TEMPLATE_DIR = 'blog/'
 WORK_TEMPLATE_DIR = 'work/'
 #   ** End TEMPLATE DIR **
 
-
 #   ** MODEL FIELDS **
-
 # User 
 USER_MODEL_FIELDS = {
     'id': 'id',
@@ -156,9 +154,32 @@ USER_MODEL_FIELDS = {
     'shift': 'shift',
     'created_at': 'createdAt'}
 # End User
+
+# Blog
+BLOG_MODEL_FIELDS = {
+    'blog_id': 'id',
+    'blog_created_at': 'created_at',
+    'blog_title': 'blogTitle',
+    'blog_image': 'postImage',
+    'blog_desc': 'description',
+    'blog_created_by': 'created_by',
+    'blog_modify_at': 'modified_at',
+    'like_id': 'id',
+    'like_by': 'like_by',
+    'blog': 'blog',
+    'like': 'like',
+    'like_at': 'liked_at',
+    'comment_id': 'id',
+    'comment': 'comment',
+    'comment_by': 'comment_by',
+    'comment_created_at': 'created_at'
+}
+# End Blog
 #   ** End MODEL FIELDS **
+
 # Session Key
 SESSION_USER_ID = 'userId'
+# End Session Key
 
 #   ** Role and Permission **
 OWNER = 1
