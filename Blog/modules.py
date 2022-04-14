@@ -10,7 +10,7 @@ from .blog_serializer import *
 
 
 def get_all_blog(request):
-    user_id = get_session(request=request, key='userId')
+    user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if user_id:
         # try:
         get_blogs = Master.objects.all()
@@ -86,4 +86,17 @@ def get_all_blog(request):
 
 
 def create_blog(request):
-    pass
+    user_id = get_session(request=request, key=constant.SESSION_USER_ID)
+    if user_id:
+        get_json_data = request.body
+        blog_image = request.body[constant.BLOG_MODEL_FIELDS['blog_image']]
+        if request.body[constant.BLOG_MODEL_FIELDS['blog_title']] and \
+                request.body[constant.BLOG_MODEL_FIELDS['blog_title']]:
+            return create_response(result=False, alert=constant.ONE_FIELD_REQUIRED_FROM_IMAGE_TITLE)
+        if request.body[constant.BLOG_MODEL_FIELDS['blog_title']]:
+            blog_title = request.body[constant.BLOG_MODEL_FIELDS['blog_title']]
+        if request.body[constant.BLOG_MODEL_FIELDS['blog_desc']]:
+            blog_desc = request.body[constant.BLOG_MODEL_FIELDS['blog_desc']]
+        return create_response(result=True)
+
+    return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)

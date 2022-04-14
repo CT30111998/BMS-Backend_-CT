@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path(constant.BLOG_URLS['dashboard'], views.BlogMaster.as_view(), name=constant.BLOG_VIEWS_NAME['dashboard']),
-    # path(constant.BLOG_URLS['dashboard'], views.BlogMaster.as_view(), name=constant.BLOG_VIEWS_NAME['dashboard']),
+    path(constant.BLOG_URLS['dashboard'], views.BlogMaster.as_view(), name=constant.BLOG_VIEWS_NAME['create_blog']),
 ]

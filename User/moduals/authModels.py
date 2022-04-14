@@ -116,13 +116,13 @@ def user_login(request):
             get_user = AuthUser.objects.get(username=user)
             user_id = get_user.id
             if user_id is not None:
-                create_session(request, 'userId', user_id)
+                create_session(request, constant.SESSION_USER_ID, user_id)
                 get_user_role = userPermission.objects.get(user=user_id)
                 serializer = UserPermissionSerializer(get_user_role, many=False)
                 permission = serializer.data.get("permission")
                 alert = constant.LOGIN_SUCCESSFUL
                 result = True
-                create_session(request, 'email', user_email)
+                create_session(request, constant.SESSION_EMAIL, user_email)
                 data = {"id": user_id, "role": get_user_role.permission}
                 return create_response(alert=alert, result=result, data=data)
         result = False
@@ -131,7 +131,7 @@ def user_login(request):
 
 
 def user_logout(request):
-    user = get_session(request, 'userId')
+    user = get_session(request, constant.SESSION_USER_ID)
     if user:
         try:
             auth.logout(request)

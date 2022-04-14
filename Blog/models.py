@@ -12,7 +12,7 @@ def get_file_path(request, filename):
 
 class Master(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    blogTitle = models.CharField(max_length=50)
+    blogTitle = models.CharField(max_length=50, null=True)
     postImage = models.ImageField(upload_to=get_file_path, null=True)
     description = models.CharField(max_length=255, null=True)
     created_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)

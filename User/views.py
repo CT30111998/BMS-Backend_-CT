@@ -3,6 +3,8 @@ from .moduals.authModels import *
 from BMSystem import constant
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -24,6 +26,9 @@ class SignupUser(APIView):
 
 
 class LoginUser(APIView):
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         return render(request, constant.USER_TEMPLATE_DIR + constant.USER_TEMPLATES['login'])
 
@@ -39,10 +44,13 @@ class ProfileUser(APIView):
         return get_api_response
 
 
-@api_view([constant.GET])
-def logout(request):
-    get_api_response = user_logout(request)
-    return get_api_response
+# @api_view([constant.GET])
+class Logout(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        get_api_response = user_logout(request)
+        return get_api_response
 
 
 # @api_view([constant.POST])

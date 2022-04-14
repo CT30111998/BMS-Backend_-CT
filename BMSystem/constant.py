@@ -76,6 +76,7 @@ EMPLOYEE_REPORT_VIEWS_NAME = {
 
 BLOG_VIEWS_NAME = {
     'dashboard': 'blog',
+    'create_blog': 'create_blog'
 }
 
 #   ** End Views name **
@@ -178,7 +179,8 @@ BLOG_MODEL_FIELDS = {
 #   ** End MODEL FIELDS **
 
 # Session Key
-SESSION_USER_ID = 'userId'
+SESSION_USER_ID = 'user_id'
+SESSION_EMAIL = 'email'
 # End Session Key
 
 #   ** Role and Permission **
@@ -220,5 +222,6 @@ UPLOAD_FAIL = 'File could not upload! try again later!'
 # Blog
 GET_ALL_BLOG_DATA_SUCCESSFUL = 'Fetch data successful!'
 GET_ALL_BLOG_DATA_FAIL = 'Fetch data fail!'
+ONE_FIELD_REQUIRED_FROM_IMAGE_TITLE = "One field required from Title and Image!"
 # End Blog
 #   ** End alert massage **
