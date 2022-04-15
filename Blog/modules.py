@@ -20,7 +20,10 @@ def get_all_blog(request):
         for blog in get_blogs:
             blog_details = {}
             user_details = []
-            get_user = UserMaster.objects.get(user=blog.created_by)
+            get_user_filter = {
+                constant.USER_MODEL_FIELDS['user']: getattr(blog, constant.BLOG_MODEL_FIELDS['blog_created_by'])
+            }
+            get_user = UserMaster.objects.get(**get_user_filter)
             user_name = f"\
 {getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} \
 {getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
@@ -31,7 +34,11 @@ def get_all_blog(request):
             blog_details['blog_created_by'] = {'id': user_id, 'name': user_name}
             blog_details['blog_modify_at'] = getattr(blog, constant.BLOG_MODEL_FIELDS['blog_modify_at'])
 
-            get_likes_data = Like.objects.filter(blog=blog.id, like=constant.LIKE)
+            get_like_data_filter = {
+                constant.BLOG_MODEL_FIELDS['blog']: getattr(blog, constant.BLOG_MODEL_FIELDS['blog_id']),
+                constant.BLOG_MODEL_FIELDS['like']: constant.LIKE
+            }
+            get_likes_data = Like.objects.filter(**get_like_data_filter)
             blog_details['total_like_count'] = len(get_likes_data)
             for get_total_like in get_likes_data:
                 user_id = get_total_like.user
@@ -108,7 +115,7 @@ def create_blog(request):
         try:
             create_new_blog = Master(**blog_params)
             create_new_blog.save()
-            return create_response(result=True)
+            return create_response(result=True, alert=constant.CREATE_BLOG_SUCCESSFUL)
         except:
             return create_response(result=False, alert=constant.DATABASE_SERVER_ERROR)
 

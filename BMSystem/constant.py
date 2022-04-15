@@ -132,6 +132,7 @@ WORK_TEMPLATE_DIR = 'work/'
 # User 
 USER_MODEL_FIELDS = {
     'id': 'id',
+    'user': 'user',
     'first_name': 'firstName',
     'last_name': 'lastName',
     'mobile_number': 'mNo',
@@ -224,5 +225,6 @@ UPLOAD_FAIL = 'File could not upload! try again later!'
 GET_ALL_BLOG_DATA_SUCCESSFUL = 'Fetch data successful!'
 GET_ALL_BLOG_DATA_FAIL = 'Fetch data fail!'
 ONE_FIELD_REQUIRED_FROM_FIELDS = "One field required from"
+CREATE_BLOG_SUCCESSFUL = "Blog create successful!"
 # End Blog
 #   ** End alert massage **
