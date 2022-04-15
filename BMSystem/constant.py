@@ -160,9 +160,9 @@ USER_MODEL_FIELDS = {
 BLOG_MODEL_FIELDS = {
     'blog_id': 'id',
     'blog_created_at': 'created_at',
-    'blog_title': 'blogTitle',
+    'blog_title': 'postTitle',
     'blog_image': 'postImage',
-    'blog_desc': 'description',
+    'blog_desc': 'postDescription',
     'blog_created_by': 'created_by',
     'blog_modify_at': 'modified_at',
     'like_id': 'id',
@@ -203,6 +203,7 @@ STARED_FIELD_REQUIRE = 'All star field require!'
 DATA_NOT_FOUND = 'Data not found!'
 PAYLOAD_DATA_ERROR = 'Expect payload data: '
 PAYLOAD_DATA_FORMAT = 'JSON format'
+DATABASE_SERVER_ERROR = 'Database server error! Data save fail.'
 # End Common
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'
@@ -222,6 +223,6 @@ UPLOAD_FAIL = 'File could not upload! try again later!'
 # Blog
 GET_ALL_BLOG_DATA_SUCCESSFUL = 'Fetch data successful!'
 GET_ALL_BLOG_DATA_FAIL = 'Fetch data fail!'
-ONE_FIELD_REQUIRED_FROM_IMAGE_TITLE = "One field required from Title and Image!"
+ONE_FIELD_REQUIRED_FROM_FIELDS = "One field required from"
 # End Blog
 #   ** End alert massage **

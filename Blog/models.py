@@ -12,14 +12,14 @@ def get_file_path(request, filename):
 
 class Master(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    blogTitle = models.CharField(max_length=50, null=True)
+    postTitle = models.CharField(max_length=50, null=True)
     postImage = models.ImageField(upload_to=get_file_path, null=True)
-    description = models.CharField(max_length=255, null=True)
+    postDescription = models.CharField(max_length=255, null=True)
     created_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     modified_at = models.DateTimeField(null=True)
 
     def __str__(self):
-        return self.blogTitle
+        return self.postTitle
 
 
 class Like(models.Model):

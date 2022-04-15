@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import constant
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView, TokenVerifyView
 from django.conf import settings
 from django.conf.urls.static import static
 from User import views
@@ -28,4 +29,6 @@ urlpatterns = [
     path(constant.USER_URLS['user'], include('User.urls')),
     path(constant.BLOG_URLS['blog'], include('Blog.urls')),
     path(constant.EMPLOYEE_REPORT_URLS['me'], include('Work.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
