@@ -33,6 +33,7 @@ EMPLOYEE_REPORT_URLS = {
 BLOG_URLS = {
     'blog': 'blog/',
     'dashboard': '',
+    'blog_update': '<int:blog_id>',
 }
 #   ** End URLS **
 
@@ -76,7 +77,8 @@ EMPLOYEE_REPORT_VIEWS_NAME = {
 
 BLOG_VIEWS_NAME = {
     'dashboard': 'blog',
-    'create_blog': 'create_blog'
+    'create_blog': 'create_blog',
+    'blog_update': 'blog_update',
 }
 
 #   ** End Views name **
@@ -202,9 +204,10 @@ DATA_FETCH_SUCCESSFUL = 'Data fetch successful!'
 DATA_FETCH_FAIL = 'Data fetch fail!'
 STARED_FIELD_REQUIRE = 'All star field require!'
 DATA_NOT_FOUND = 'Data not found!'
-PAYLOAD_DATA_ERROR = 'Expect payload data: '
+PAYLOAD_DATA_ERROR = 'Expect payload data:'
 PAYLOAD_DATA_FORMAT = 'JSON format'
 DATABASE_SERVER_ERROR = 'Database server error! Data save fail.'
+UNEXPECTED_ERROR = "Unexpected error!"
 # End Common
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'
@@ -215,6 +218,7 @@ PASSWORD_LENGTH_ALERT = 'Password should have min 8 characters!'
 PASSWORD_NOT_MATCH = "Password does not match!"
 USER_AND_PASSWORD_NOT_MATCH = "Email and password could not match!"
 UPDATE_SUCCESSFUL = "Update successful!"
+UPDATE_FAIL = 'Update fail!'
 LOGOUT_SUCCESSFUL = 'Logout successful!'
 LOGOUT_FAIL = 'Could not logout!'
 USER_NOT_LOGGED_IN = 'User not logged in!'
@@ -226,5 +230,9 @@ GET_ALL_BLOG_DATA_SUCCESSFUL = 'Fetch data successful!'
 GET_ALL_BLOG_DATA_FAIL = 'Fetch data fail!'
 ONE_FIELD_REQUIRED_FROM_FIELDS = "One field required from"
 CREATE_BLOG_SUCCESSFUL = "Blog create successful!"
+BLOG_UPDATE_SUCCESSFUL = "Blog update successful!"
+BLOG_NOT_EXIST = "Blog not exist!"
+BLOG_NOT_DELETE = "Blog could not delete!"
+BLOG_DELETE_SUCCESSFUL = "Blog delete successful!"
 # End Blog
 #   ** End alert massage **

@@ -10,7 +10,9 @@ from .blog_serializer import *
 from json import loads
 
 
-def get_all_blog(request):
+def get_all_blog(request=None):
+    if not request:
+        create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if user_id:
         # try:
@@ -28,6 +30,7 @@ def get_all_blog(request):
 {getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} \
 {getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
 
+            blog_details['blog_id'] = getattr(blog, constant.BLOG_MODEL_FIELDS['blog_id'])
             blog_details['blog_image'] = str(getattr(blog, constant.BLOG_MODEL_FIELDS['blog_image']))
             blog_details['blog_title'] = getattr(blog, constant.BLOG_MODEL_FIELDS['blog_title'])
             blog_details['blog_desc'] = getattr(blog, constant.BLOG_MODEL_FIELDS['blog_desc'])
@@ -92,7 +95,9 @@ def get_all_blog(request):
     return create_response(alert=alert, result=result)
 
 
-def create_blog(request):
+def create_blog(request=None):
+    if not request:
+        create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if user_id:
         get_json_data = loads(request.body)
@@ -105,11 +110,12 @@ def create_blog(request):
         blog_params = {constant.BLOG_MODEL_FIELDS['blog_created_by']: get_user_details}
         if constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data:
             blog_params[constant.BLOG_MODEL_FIELDS['blog_title']] = \
-                get_json_data[constant.BLOG_MODEL_FIELDS['blog_title']]
+                get_json_data[constant.BLOG_MODEL_FIELDS['blog_title']].title()
         if constant.BLOG_MODEL_FIELDS['blog_desc'] in get_json_data:
             blog_params[constant.BLOG_MODEL_FIELDS['blog_desc']] = \
-                get_json_data[constant.BLOG_MODEL_FIELDS['blog_desc']]
+                get_json_data[constant.BLOG_MODEL_FIELDS['blog_desc']].capitalize()
         if constant.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
+            get_file = request.FILES()
             blog_params[constant.BLOG_MODEL_FIELDS['blog_image']] = \
                 get_json_data[constant.BLOG_MODEL_FIELDS['blog_image']]
         try:
@@ -120,3 +126,50 @@ def create_blog(request):
             return create_response(result=False, alert=constant.DATABASE_SERVER_ERROR)
 
     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+
+
+def update_blog(request=None, blog_id=None):
+    if request is None or blog_id is None:
+        create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    get_json_data = loads(request.body)
+    blog_filter = {constant.BLOG_MODEL_FIELDS['blog_id']: blog_id}
+    get_blog = Master.objects.filter(**blog_filter)
+    if not get_blog:
+        return create_response(result=False, alert=constant.BLOG_NOT_EXIST)
+    blog_params = {}
+    if constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data:
+        blog_params[constant.BLOG_MODEL_FIELDS['blog_title']] = \
+            get_json_data[constant.BLOG_MODEL_FIELDS['blog_title']].title()
+    if constant.BLOG_MODEL_FIELDS['blog_desc'] in get_json_data:
+        blog_params[constant.BLOG_MODEL_FIELDS['blog_desc']] = \
+            get_json_data[constant.BLOG_MODEL_FIELDS['blog_desc']].capitalize()
+    try:
+        get_blog.update(**blog_params)
+    except:
+        return create_response(result=False, alert=constant.UPDATE_FAIL)
+    return create_response(result=True, alert=constant.BLOG_UPDATE_SUCCESSFUL)
+
+
+def delete_blog(request=None, blog_id=None):
+    if not request:
+        create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    blog_filter = {constant.BLOG_MODEL_FIELDS['blog_id']: blog_id}
+    get_blog = Master.objects.filter(**blog_filter)
+    if not get_blog:
+        return create_response(result=False, alert=constant.BLOG_NOT_EXIST)
+    try:
+        get_blog.delete()
+    except:
+        return create_response(result=False, alert=constant.BLOG_NOT_DELETE)
+
+    return create_response(result=True, alert=constant.BLOG_DELETE_SUCCESSFUL)
+
+
+def create_like_blog(request=None, blog_id=None):
+    if not request:
+        create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+
+
+def update_like_blog(request=None, blog_id=None):
+    if not request:
+        create_response(result=False, alert=constant.UNEXPECTED_ERROR)

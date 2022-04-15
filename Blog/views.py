@@ -18,3 +18,25 @@ class BlogMaster(APIView):
     def post(self, request):
         get_response = create_blog(request)
         return get_response
+
+
+class UpdateBlog(APIView):
+
+    def delete(self, request=None, blog_id=None):
+        get_response = delete_blog(request=request, blog_id=blog_id)
+        return get_response
+
+    def put(self, request=None, blog_id=None):
+        get_response = update_blog(request=request, blog_id=blog_id)
+        return get_response
+
+
+class LikBlog(APIView):
+
+    def post(self, request, blog_id):
+        get_response = create_like_blog(request=request, blog_id=blog_id)
+        return get_response
+
+    def put(self, request, blog_id):
+        get_response = update_like_blog(request=request, blog_id=blog_id)
+        return get_response

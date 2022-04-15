@@ -10,19 +10,30 @@ from json import loads, dumps
 from BMSystem.base_function import *
 
 
-def create_my_user(request):
+def create_my_user(request=None):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     if request.method == constant.POST:
         # TIME_ZONE = pytz.timezone('Asia/Kolkata')
         # Current_data_time = datetime.now(TIME_ZONE)
-        request_data = loads(request.body)
-        first_name, last_name, user_email, mobile_no, password, confirm_password = \
-            request_data[constant.USER_MODEL_FIELDS['first_name']], \
-            request_data[constant.USER_MODEL_FIELDS['last_name']], \
-            request_data[constant.USER_MODEL_FIELDS['email']], \
-            request_data[constant.USER_MODEL_FIELDS['mobile_number']], \
-            request_data[constant.USER_MODEL_FIELDS['password']], \
-            request_data[constant.USER_MODEL_FIELDS['confirm_password']]
-
+        try:
+            request_data = loads(request.body)
+            first_name, last_name, user_email, mobile_no, password, confirm_password = \
+                request_data[constant.USER_MODEL_FIELDS['first_name']].capitalize(), \
+                request_data[constant.USER_MODEL_FIELDS['last_name']].capitalize(), \
+                request_data[constant.USER_MODEL_FIELDS['email']], \
+                request_data[constant.USER_MODEL_FIELDS['mobile_number']], \
+                request_data[constant.USER_MODEL_FIELDS['password']], \
+                request_data[constant.USER_MODEL_FIELDS['confirm_password']]
+        except:
+            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['first_name']}, \
+{constant.USER_MODEL_FIELDS['last_name']},\
+{constant.USER_MODEL_FIELDS['email']},\
+{constant.USER_MODEL_FIELDS['mobile_number']},\
+{constant.USER_MODEL_FIELDS['password']} and \
+{constant.USER_MODEL_FIELDS['confirm_password']} \
+in {constant.PAYLOAD_DATA_FORMAT}"
+            return create_response(result=False, alert=alert)
         # created_at = Current_data_time
         # updated_at = Current_data_time
 
@@ -79,7 +90,9 @@ def create_my_user(request):
     return create_response(result=result, alert=alert)
 
 
-def user_login(request):
+def user_login(request=None):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     if request.method == constant.POST:
         try:
             get_request_data = loads(request.body)
@@ -88,12 +101,8 @@ def user_login(request):
                 get_request_data[constant.USER_MODEL_FIELDS['password']]
         except:
             result = False
-            alert = \
-                constant.PAYLOAD_DATA_ERROR + \
-                constant.USER_MODEL_FIELDS['email'] + \
-                " & " + \
-                constant.USER_MODEL_FIELDS['password'] \
-                + " in " + constant.PAYLOAD_DATA_FORMAT
+            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['email']} &\
+{constant.USER_MODEL_FIELDS['password']} {constant.PAYLOAD_DATA_FORMAT}"
             return create_response(alert=alert, result=result)
         field = [user_email, password]
         fields_check = null_valid(field)
@@ -130,7 +139,9 @@ def user_login(request):
         return create_response(alert=alert, result=result)
 
 
-def user_logout(request):
+def user_logout(request=None):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user = get_session(request, constant.SESSION_USER_ID)
     if user:
         try:
@@ -147,7 +158,9 @@ def user_logout(request):
     return create_response(alert=alert, result=result)
 
 
-def user_profile(request, user_id=None):
+def user_profile(request=None, user_id=None):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     try:
         details = UserDetail.objects.get(user=user_id)
         if request.method == constant.GET:

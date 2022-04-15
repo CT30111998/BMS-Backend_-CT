@@ -1,12 +1,18 @@
 from rest_framework.response import Response
 from django.http import JsonResponse
-from json import dumps
+from . import constant
 import re
 
 
 def create_response(result=False, alert=None, data=None):
     get = {"result": result, 'alert': alert, 'data': data}
     return JsonResponse(get)
+
+
+def save_file_storage(request):
+    file = request.FILES['uploadedFile']
+    # file_name = default_storage.save(file.name, file)
+    # return JsonResponse(file_name, safe=False)
 
 
 def create_session(request, key, value):
