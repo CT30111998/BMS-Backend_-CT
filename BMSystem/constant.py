@@ -33,8 +33,9 @@ EMPLOYEE_REPORT_URLS = {
 BLOG_URLS = {
     'blog': 'blog/',
     'dashboard': '',
-    'blog_update': '<int:blog_id>',
-    'blog_like': 'like/'
+    'blog_update': 'delete/',
+    'blog_like': 'like/',
+    'blog_comment': 'comment/',
 }
 #   ** End URLS **
 
@@ -80,7 +81,8 @@ BLOG_VIEWS_NAME = {
     'dashboard': 'blog',
     'create_blog': 'create_blog',
     'blog_update': 'blog_update',
-    'blog_like': 'blog_like'
+    'blog_like': 'blog_like',
+    'blog_comment': 'blog_comment',
 }
 
 #   ** End Views name **
@@ -172,6 +174,7 @@ BLOG_MODEL_FIELDS = {
     'blog_desc': 'postDescription',
     'blog_created_by': 'created_by',
     'blog_modify_at': 'modified_at',
+    'blog_delete': 'deleted',
     'like_id': 'id',
     'like_by': 'like_by',
     'like_status': "like_status",
@@ -200,6 +203,8 @@ USER = 4
 # Like
 LIKE = 1
 UNLIKE = 0
+BLOG_DELETE_NUM = 1
+BLOG_NOT_DELETE_NUM = 0
 # End Like
 
 #   ** Alert massage **
@@ -240,5 +245,10 @@ BLOG_NOT_EXIST = "Blog not exist!"
 BLOG_NOT_DELETE = "Blog could not delete!"
 BLOG_DELETE_SUCCESSFUL = "Blog delete successful!"
 BLOG_LIKE_SUCCESSFUL = 'Blog like successful!'
+BLOG_UNLIKE_SUCCESSFUL = 'Blog unlike successful!'
+CREATE_COMMENT_SUCCESSFUL = "Comment create successful!"
+UPDATE_COMMENT_SUCCESSFUL = "Comment update successful!"
+DELETE_COMMENT_SUCCESSFUL = 'Comment delete successful!'
+COMMENT_NOT_EXIST = 'Comment not exist!'
 # End Blog
 #   ** End alert massage **

@@ -10,6 +10,10 @@ from json import loads, dumps
 from BMSystem.base_function import *
 
 
+def get_all_user_data(request):
+    return create_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL)
+
+
 def create_my_user(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)

@@ -17,6 +17,7 @@ class Master(models.Model):
     postDescription = models.CharField(max_length=255, null=True)
     created_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     modified_at = models.DateTimeField(null=True)
+    deleted = models.IntegerField(default=0)
 
     def __str__(self):
         return self.postTitle

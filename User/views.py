@@ -14,6 +14,12 @@ def home_view(request):
     return render(request, 'index.html')
 
 
+class User(APIView):
+    def get(self, request):
+        get_response = get_all_user_data(request)
+        return get_response
+
+
 class SignupUser(APIView):
     # @api_view([constant.GET])
     def get(self, request, format=None):
@@ -48,6 +54,7 @@ class ProfileUser(APIView):
 class Logout(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         get_api_response = user_logout(request)
         return get_api_response
