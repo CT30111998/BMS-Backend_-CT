@@ -49,8 +49,8 @@ class LoginUser(APIView):
 
 
 class ProfileUser(APIView):
-    def get(self, request, user_id):
-        get_api_response = user_profile(request, user_id)
+    def get(self, request):
+        get_api_response = user_profile(request)
         return get_api_response
 
 

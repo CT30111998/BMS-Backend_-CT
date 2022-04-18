@@ -26,7 +26,7 @@ USER_URLS = {
     'register': 'signup/',
     'login': 'login/',
     'logout': 'logout/',
-    'profile': 'profile/<str:user_id>'
+    'profile': 'profile/'
 }
 EMPLOYEE_REPORT_URLS = {
     'me': 'me/',
@@ -139,6 +139,7 @@ WORK_TEMPLATE_DIR = 'work/'
 #   ** MODEL FIELDS **
 # User 
 USER_MODEL_FIELDS = {
+    'username': 'username',
     'id': 'id',
     'user': 'user',
     'get_user_id': 'user_id',
@@ -225,6 +226,8 @@ UNEXPECTED_ERROR = "Unexpected error!"
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'
 REGISTER_SUCCESSFUL = "Account create successful!"
+USER_CREATE_FAIL_USER_MASTER = "User create fail at User Master!"
+USER_CREATE_FAIL_USER_PERMISSION = "User create fail at User Permission!"
 REGISTER_FAIL = "Account create fail!"
 USER_EXIST_MASSAGE = "Already exist account with this email!"
 PASSWORD_LENGTH_ALERT = 'Password should have min 8 characters!'

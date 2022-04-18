@@ -1,4 +1,5 @@
 # Blog Modules
+from django.core.files.storage import FileSystemStorage
 from .models import *
 from math import ceil
 from django.contrib.auth.models import User as AuthUser
@@ -127,9 +128,11 @@ def create_blog(request=None):
                 get_json_data[constant.BLOG_MODEL_FIELDS['blog_desc']].capitalize()
 
         if constant.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
-            # get_file = request.FILES()
-            blog_params[constant.BLOG_MODEL_FIELDS['blog_image']] = \
-                get_json_data[constant.BLOG_MODEL_FIELDS['blog_image']]
+            get_file = request.FILES()
+            fs = FileSystemStorage()
+            path = f"{constant.UPLOAD_PATH}{constant.BLOG_PATH}{get_file.name}"
+            fs.save(name=path, content=get_file)
+            blog_params[constant.BLOG_MODEL_FIELDS['blog_image']] = path
         try:
             create_new_blog = Master(**blog_params)
             create_new_blog.save()

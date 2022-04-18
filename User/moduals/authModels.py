@@ -26,8 +26,6 @@ def create_my_user(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     if request.method == constant.POST:
-        # TIME_ZONE = pytz.timezone('Asia/Kolkata')
-        # Current_data_time = datetime.now(TIME_ZONE)
         try:
             request_data = loads(request.body)
             first_name, last_name, user_email, mobile_no, password, confirm_password = \
@@ -44,8 +42,6 @@ def create_my_user(request=None):
                     f"{constant.USER_MODEL_FIELDS['password']} and {constant.USER_MODEL_FIELDS['confirm_password']}" + \
                     f" in {constant.PAYLOAD_DATA_FORMAT}"
             return create_response(result=False, alert=alert)
-        # created_at = Current_data_time
-        # updated_at = Current_data_time
 
         # Validation
         all_field = [first_name, last_name, user_email, mobile_no, password, confirm_password]
@@ -66,10 +62,16 @@ def create_my_user(request=None):
             alert = constant.PASSWORD_NOT_MATCH
             result = False
             return create_response(alert=alert, result=result)
+
+        auth_user_params = {
+            constant.USER_MODEL_FIELDS['username']: user_email,
+            constant.USER_MODEL_FIELDS['email']: user_email,
+            constant.USER_MODEL_FIELDS['password']: password,
+            "first_name": first_name,
+            "last_name": last_name
+        }
         try:
-            create_user = AuthUser.objects.create_user(username=user_email, email=user_email, password=password)
-            create_user.first_name = first_name
-            create_user.last_name = last_name
+            create_user = AuthUser.objects.create_user(**auth_user_params)
             success = create_user.save()
             get_data = AuthUser.objects.get(username=user_email)
             get_id = get_data.id
@@ -78,26 +80,36 @@ def create_my_user(request=None):
             result = False
             return create_response(result=result, alert=alert)
         if get_id:
-            user_detail = UserDetail()
-            user_detail.firstName = first_name
-            user_detail.lastName = last_name
-            user_detail.empNo = get_id
-            user_detail.mNo = mobile_no
-            user_detail.email = user_email
-            user_detail.user = create_user
-            save = user_detail.save()
-
-            user_permission = userPermission()
-            user_permission.user = create_user
-            user_permission.save()
+            try:
+                user_params = {
+                    constant.USER_MODEL_FIELDS['first_name']: first_name,
+                    constant.USER_MODEL_FIELDS['last_name']: last_name,
+                    constant.USER_MODEL_FIELDS['employee_number']: get_id,
+                    constant.USER_MODEL_FIELDS['mobile_number']: mobile_no,
+                    constant.USER_MODEL_FIELDS['email']: user_email,
+                    constant.USER_MODEL_FIELDS['user']: create_user,
+                }
+                user_detail = UserDetail(**user_params)
+                save = user_detail.save()
+            except:
+                get_auth_user = AuthUser.objects.filter(id=get_id)
+                get_auth_user.delete()
+                return create_response(result=False, alert=constant.USER_CREATE_FAIL_USER_MASTER)
+            try:
+                user_permission = userPermission(**{constant.USER_MODEL_FIELDS['user']: create_user})
+                user_permission.save()
+            except:
+                get_auth_user = AuthUser.objects.filter(id=get_id)
+                get_user = UserMaster.objects.filter(**{constant.USER_MODEL_FIELDS['user']: get_id})
+                get_auth_user.delete()
+                get_user.delete()
+                return create_response(result=False, alert=constant.USER_CREATE_FAIL_USER_PERMISSION)
 
             alert = constant.REGISTER_SUCCESSFUL
-            result = True
             data = {'id': get_id}
-            return create_response(alert=alert, result=result, data=data)
-    alert = constant.REGISTER_FAIL
-    result = False
-    return create_response(result=result, alert=alert)
+            return create_response(alert=alert, result=True, data=data)
+
+    return create_response(result=False, alert=constant.REGISTER_FAIL)
 
 
 def delete_user(request):
@@ -114,11 +126,11 @@ def delete_user(request):
                 f"{constant.PAYLOAD_DATA_FORMAT}"
         return create_response(result=False, alert=alert)
     get_user_id = get_json_data[constant.USER_MODEL_FIELDS['get_user_id']]
-    get_user = UserMaster.objects.filter(**{constant.USER_MODEL_FIELDS['id']: get_user_id})
+    get_user = AuthUser.objects.filter(**{constant.USER_MODEL_FIELDS['id']: get_user_id})
     if not get_user:
         return create_response(result=False, alert=constant.USER_NOT_EXIST)
     get_user.delete()
-    return create_response(result=True, alert=constant.DELETE_COMMENT_SUCCESSFUL)
+    return create_response(result=True, alert=constant.DELETE_USER_SUCCESSFUL)
 
 
 def user_login(request=None):
@@ -131,16 +143,13 @@ def user_login(request=None):
             password = get_request_data[constant.USER_MODEL_FIELDS['password']]
 
         except:
-            result = False
             alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['email']} & " + \
                     f"{constant.USER_MODEL_FIELDS['password']} {constant.PAYLOAD_DATA_FORMAT}"
-            return create_response(alert=alert, result=result)
+            return create_response(alert=alert, result=False)
         field = [user_email, password]
         fields_check = null_valid(field)
         if not fields_check:
-            result = False
-            alert = constant.ALL_FIELD_REQUIRE
-            return create_response(alert=alert, result=result)
+            return create_response(alert=False, result=constant.ALL_FIELD_REQUIRE)
 
         pass_check = pass_valid(password)
         if not pass_check:
@@ -177,54 +186,47 @@ def user_logout(request=None):
     if user:
         try:
             auth.logout(request)
-            alert = constant.LOGOUT_SUCCESSFUL
-            result = True
-            return create_response(alert=alert, result=result)
+            return create_response(alert=constant.LOGOUT_SUCCESSFUL, result=True)
         except:
-            alert = constant.LOGOUT_FAIL
-            result = False
-            return create_response(alert=alert, result=result)
-    alert = constant.USER_NOT_LOGGED_IN
-    result = False
-    return create_response(alert=alert, result=result)
+            return create_response(alert=constant.LOGOUT_FAIL, result=False)
+
+    return create_response(alert=constant.USER_NOT_LOGGED_IN, result=False)
 
 
-def user_profile(request=None, user_id=None):
+def user_profile(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request=request, key=constant.SESSION_USER_ID)
+    if not user_id:
+        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:
         details = UserDetail.objects.get(user=user_id)
-        if request.method == constant.GET:
-            try:
-                if details:
-                    serialize = UserSerializer(details, many=False)
-                    result = True
-                    alert = constant.DATA_FETCH_SUCCESSFUL
-                    return create_response(alert=alert, result=result, data=serialize.data)
-                result = False
-                alert = constant.DATA_FETCH_FAIL
-                return create_response(alert=alert, result=result)
-            except:
-                result = False
-                alert = constant.DATA_FETCH_FAIL
-                return create_response(alert=alert, result=result)
     except Exception:
-        result = False
-        alert = constant.DATA_NOT_FOUND
-        return create_response(alert=alert, result=result)
+        return create_response(alert=constant.DATA_NOT_FOUND, result=False)
 
-    if request.method == constant.PUT:
-        alert = constant.UPLOAD_FAIL
-        result = False
-        file = request.FILES[constant.USER_MODEL_FIELDS['image']]
-        details = UserDetail.objects.get(user=user_id)
-        if file:
-            fs = FileSystemStorage()
-            path = constant.UPLOAD_PATH + constant.PROFILE_PATH + file.name
-            fs.save(name=path, content=file)
-            details.image = path
-            details.save()
-            alert = constant.UPDATE_SUCCESSFUL
-            result = True
+    if request.method == constant.GET:
         serialize = UserSerializer(details, many=False)
-        return create_response(result=result, alert=alert, data=serialize.data)
+        return create_response(alert=constant.DATA_FETCH_SUCCESSFUL, result=True, data=serialize.data)
+
+
+def update_profile(request):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request=request, key=constant.SESSION_USER_ID)
+    if not user_id:
+        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+
+    file = request.FILES[constant.USER_MODEL_FIELDS['image']]
+    try:
+        details = UserDetail.objects.get(user=user_id)
+    except:
+        return create_response(result=False, alert=constant.DATA_NOT_FOUND)
+    if not file:
+        return create_response(result=False,  alert=constant.UPLOAD_FAIL)
+    fs = FileSystemStorage()
+    path = f"{constant.UPLOAD_PATH}{constant.PROFILE_PATH}{file.name}"
+    fs.save(name=path, content=file)
+    details.update(**{constant.USER_MODEL_FIELDS["image"]: path})
+    details.save()
+    serialize = UserSerializer(details, many=False)
+    return create_response(result=True, alert=constant.UPDATE_SUCCESSFUL, data=serialize.data)
