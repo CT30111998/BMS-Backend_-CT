@@ -27,9 +27,8 @@ def get_all_blog(request=None):
             }
             get_user = UserMaster.objects.get(**get_user_filter)
             get_user_id = getattr(get_user, constant.USER_MODEL_FIELDS['id'])
-            user_name = f"\
-{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} \
-{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
+            user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} " + \
+                        f"{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
 
             blog_details['blog_id'] = getattr(blog, constant.BLOG_MODEL_FIELDS['blog_id'])
             blog_details['blog_image'] = str(getattr(blog, constant.BLOG_MODEL_FIELDS['blog_image']))
@@ -52,8 +51,8 @@ def get_all_blog(request=None):
                     email=user_id
                 )
                 get_user = UserMaster.objects.get(user=user_id)
-                user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} \
-{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
+                user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])}" + \
+                            f"{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
                 user_detail_dict = {'id': getattr(auth_id, constant.USER_MODEL_FIELDS['id']), 'name': user_name}
                 user_like_details.append(user_detail_dict)
 
@@ -65,10 +64,11 @@ def get_all_blog(request=None):
                     key=constant.SESSION_USER_ID)}
             try:
                 current_user_like_status = Like.objects.filter(**like_filter)[:1].get()
-                blog_details['current_user_like_status'] = getattr(current_user_like_status,
-                                                               constant.BLOG_MODEL_FIELDS['like'])
+                blog_details['current_user_like_status'] = getattr(
+                    current_user_like_status,
+                    constant.BLOG_MODEL_FIELDS['like']
+                )
             except:
-
                 blog_details['current_user_like_status'] = 0
 
             get_comment_data_filter = {
@@ -83,8 +83,8 @@ def get_all_blog(request=None):
                     email=user_id
                 )
                 get_user = UserMaster.objects.filter(**{constant.USER_MODEL_FIELDS['user']: auth_id})[:1].get()
-                user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} \
-{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
+                user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])}" + \
+                            f"{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
 
                 user_comment = getattr(
                     comment,
@@ -98,17 +98,10 @@ def get_all_blog(request=None):
         blog_serializer = BlogMasterSerializer(get_blogs, many=True)
         n = len(get_blogs)
         nSlid = n // 4 + ceil((n / 4) - (n // 4))
-        result = True
         alert = constant.GET_ALL_BLOG_DATA_SUCCESSFUL
         params = {'no_of_slides': nSlid, 'total blogs': total_blogs, 'blogs_detail': total_blog_details}
-        return create_response(alert=alert, result=result, data=params)
-        # except:
-        #     result = False
-        #     alert = constant.GET_ALL_BLOG_DATA_FAIL
-        #     return create_response(alert=alert, result=result)
-    result = False
-    alert = constant.USER_NOT_LOGGED_IN
-    return create_response(alert=alert, result=result)
+        return create_response(alert=alert, result=True, data=params)
+    return create_response(alert=constant.USER_NOT_LOGGED_IN, result=False)
 
 
 def create_blog(request=None):
@@ -119,8 +112,8 @@ def create_blog(request=None):
         get_json_data = loads(request.body)
         if not constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data and \
                 not constant.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
-            alert = f"{constant.ONE_FIELD_REQUIRED_FROM_FIELDS} {constant.BLOG_MODEL_FIELDS['blog_title']} and \
-{constant.BLOG_MODEL_FIELDS['blog_image']}!"
+            alert = f"{constant.ONE_FIELD_REQUIRED_FROM_FIELDS} {constant.BLOG_MODEL_FIELDS['blog_title']}" + \
+                    f" and {constant.BLOG_MODEL_FIELDS['blog_image']}!"
             return create_response(result=False, alert=alert)
         get_user_details = AuthUser.objects.get(id=user_id)
         blog_params = {constant.BLOG_MODEL_FIELDS['blog_created_by']: get_user_details}
@@ -156,14 +149,14 @@ def update_blog(request=None):
     get_json_data = loads(request.body)
 
     if not constant.BLOG_MODEL_FIELDS['get_blog_id'] in get_json_data:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} \
-{constant.PAYLOAD_DATA_FORMAT}!"
+        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']}" + \
+                f" {constant.PAYLOAD_DATA_FORMAT}!"
         return create_response(result=False, alert=alert)
 
     if not constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data and \
             not constant.BLOG_MODEL_FIELDS['blog_desc'] in get_json_data:
-        alert = f"{constant.ONE_FIELD_REQUIRED_FROM_FIELDS} {constant.BLOG_MODEL_FIELDS['blog_title']} and \
-{constant.BLOG_MODEL_FIELDS['blog_desc']}!"
+        alert = f"{constant.ONE_FIELD_REQUIRED_FROM_FIELDS} {constant.BLOG_MODEL_FIELDS['blog_title']}" + \
+                f" and {constant.BLOG_MODEL_FIELDS['blog_desc']}!"
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_data['blog_id']
@@ -171,6 +164,7 @@ def update_blog(request=None):
     get_blog = Master.objects.filter(**blog_filter)
     if not get_blog:
         return create_response(result=False, alert=constant.BLOG_NOT_EXIST)
+
     blog_params = {}
     if constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data:
         blog_params[constant.BLOG_MODEL_FIELDS['blog_title']] = \
@@ -194,14 +188,15 @@ def delete_blog(request):
     try:
         get_json_data = loads(request.body)
     except:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} \
-            {constant.PAYLOAD_DATA_FORMAT}!"
+        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} " + \
+                f"{constant.PAYLOAD_DATA_FORMAT}!"
         return create_response(result=False, alert=alert)
 
     if not constant.BLOG_MODEL_FIELDS['get_blog_id'] in get_json_data:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} \
-    {constant.PAYLOAD_DATA_FORMAT}!"
+        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} " + \
+                f"{constant.PAYLOAD_DATA_FORMAT}!"
         return create_response(result=False, alert=alert)
+
     blog_id = get_json_data[constant.BLOG_MODEL_FIELDS['get_blog_id']]
     blog_filter = {
         constant.BLOG_MODEL_FIELDS['blog_id']: blog_id,
@@ -230,8 +225,8 @@ def like_blog(request=None):
     get_json_response = loads(request.body)
 
     if constant.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} \
-in {constant.PAYLOAD_DATA_FORMAT}"
+        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']}" + \
+                f" in {constant.PAYLOAD_DATA_FORMAT}"
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
@@ -266,24 +261,26 @@ in {constant.PAYLOAD_DATA_FORMAT}"
 def comment_blog(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+
     get_json_response = loads(request.body)
     if constant.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response \
             or constant.BLOG_MODEL_FIELDS['comment'] not in get_json_response:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} \
-and {constant.BLOG_MODEL_FIELDS['comment']} in \
-{constant.PAYLOAD_DATA_FORMAT}"
+        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']}" + \
+                f"and {constant.BLOG_MODEL_FIELDS['comment']} in {constant.PAYLOAD_DATA_FORMAT}"
         return create_response(result=False, alert=alert)
+
     blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
     comment = get_json_response[constant.BLOG_MODEL_FIELDS['comment']].capitalize()
+
     comment_filter = {
         constant.BLOG_MODEL_FIELDS['comment_by']: user_id,
         constant.BLOG_MODEL_FIELDS['blog']: blog_id
     }
     blog_comment = Comment.objects.filter(**comment_filter)
-    print("COMMENT: ", blog_id, user_id)
     if not blog_comment:
         try:
             get_blog = Master.objects.get(**{constant.BLOG_MODEL_FIELDS['blog_id']: blog_id})
@@ -313,14 +310,14 @@ def delete_comment_blog(request=None):
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+
     get_json_response = loads(request.body)
     if constant.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} \
-in {constant.PAYLOAD_DATA_FORMAT}"
+        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} " \
+                + f"in {constant.PAYLOAD_DATA_FORMAT}"
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
-
     comment_filter = {
         constant.BLOG_MODEL_FIELDS['comment_by']: user_id,
         constant.BLOG_MODEL_FIELDS['blog']: blog_id

@@ -19,6 +19,10 @@ class User(APIView):
         get_response = get_all_user_data(request)
         return get_response
 
+    def delete(self, request):
+        get_response = delete_user(request)
+        return get_response
+
 
 class SignupUser(APIView):
     # @api_view([constant.GET])

@@ -8,6 +8,7 @@ urlpatterns = [
     path(constant.USER_URLS['login'], views.LoginUser.as_view(), name=constant.USER_VIEWS_NAME['login']),
     path(constant.USER_URLS['logout'], views.Logout.as_view(), name=constant.USER_VIEWS_NAME['logout']),
     path(constant.USER_URLS['profile'], views.ProfileUser.as_view(), name=constant.USER_VIEWS_NAME['profile']),
+    path(constant.USER_URLS['get_all'], views.User.as_view(), name=constant.USER_VIEWS_NAME['get_all']),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

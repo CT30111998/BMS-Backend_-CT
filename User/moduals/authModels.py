@@ -11,7 +11,15 @@ from BMSystem.base_function import *
 
 
 def get_all_user_data(request):
-    return create_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL)
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request, constant.SESSION_USER_ID)
+    if not user_id:
+        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    get_users = UserMaster.objects.all()
+    serialize = UserSerializer(get_users, many=True)
+    data = serialize.data
+    return create_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL, data=data)
 
 
 def create_my_user(request=None):
@@ -30,13 +38,11 @@ def create_my_user(request=None):
                 request_data[constant.USER_MODEL_FIELDS['password']], \
                 request_data[constant.USER_MODEL_FIELDS['confirm_password']]
         except:
-            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['first_name']}, \
-{constant.USER_MODEL_FIELDS['last_name']},\
-{constant.USER_MODEL_FIELDS['email']},\
-{constant.USER_MODEL_FIELDS['mobile_number']},\
-{constant.USER_MODEL_FIELDS['password']} and \
-{constant.USER_MODEL_FIELDS['confirm_password']} \
-in {constant.PAYLOAD_DATA_FORMAT}"
+            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['first_name']}, " + \
+                    f"{constant.USER_MODEL_FIELDS['last_name']}, {constant.USER_MODEL_FIELDS['email']}, " +\
+                    f"{constant.USER_MODEL_FIELDS['mobile_number']}, "\
+                    f"{constant.USER_MODEL_FIELDS['password']} and {constant.USER_MODEL_FIELDS['confirm_password']}" + \
+                    f" in {constant.PAYLOAD_DATA_FORMAT}"
             return create_response(result=False, alert=alert)
         # created_at = Current_data_time
         # updated_at = Current_data_time
@@ -94,19 +100,40 @@ in {constant.PAYLOAD_DATA_FORMAT}"
     return create_response(result=result, alert=alert)
 
 
+def delete_user(request):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request, constant.SESSION_USER_ID)
+
+    if not user_id:
+        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    get_json_data = loads(request.body)
+
+    if constant.USER_MODEL_FIELDS['get_user_id'] not in get_json_data:
+        alert = f"{constant.PAYLOAD_DATA_ERROR} '{constant.USER_MODEL_FIELDS['get_user_id']}' " + \
+                f"{constant.PAYLOAD_DATA_FORMAT}"
+        return create_response(result=False, alert=alert)
+    get_user_id = get_json_data[constant.USER_MODEL_FIELDS['get_user_id']]
+    get_user = UserMaster.objects.filter(**{constant.USER_MODEL_FIELDS['id']: get_user_id})
+    if not get_user:
+        return create_response(result=False, alert=constant.USER_NOT_EXIST)
+    get_user.delete()
+    return create_response(result=True, alert=constant.DELETE_COMMENT_SUCCESSFUL)
+
+
 def user_login(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     if request.method == constant.POST:
         try:
             get_request_data = loads(request.body)
-            user_email, password = \
-                get_request_data[constant.USER_MODEL_FIELDS['email']], \
-                get_request_data[constant.USER_MODEL_FIELDS['password']]
+            user_email = get_request_data[constant.USER_MODEL_FIELDS['email']]
+            password = get_request_data[constant.USER_MODEL_FIELDS['password']]
+
         except:
             result = False
-            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['email']} &\
-{constant.USER_MODEL_FIELDS['password']} {constant.PAYLOAD_DATA_FORMAT}"
+            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['email']} & " + \
+                    f"{constant.USER_MODEL_FIELDS['password']} {constant.PAYLOAD_DATA_FORMAT}"
             return create_response(alert=alert, result=result)
         field = [user_email, password]
         fields_check = null_valid(field)

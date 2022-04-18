@@ -21,6 +21,7 @@ BLOG_PATH = 'Blog/'
 DASHBOARD_URL = '/'
 USER_URLS = {
     'user': 'user/',
+    'get_all': '',
     'admin': 'admin/',
     'register': 'signup/',
     'login': 'login/',
@@ -69,7 +70,8 @@ USER_VIEWS_NAME = {
     'register': 'signup',
     'login': 'login',
     'logout': 'logout',
-    'profile': 'profile'
+    'profile': 'profile',
+    'get_all': 'user',
 }
 
 EMPLOYEE_REPORT_VIEWS_NAME = {
@@ -219,6 +221,7 @@ PAYLOAD_DATA_FORMAT = 'JSON format'
 DATABASE_SERVER_ERROR = 'Database server error! Data save fail.'
 UNEXPECTED_ERROR = "Unexpected error!"
 # End Common
+
 # User
 LOGIN_SUCCESSFUL = 'Login successful!'
 REGISTER_SUCCESSFUL = "Account create successful!"
@@ -233,6 +236,8 @@ LOGOUT_SUCCESSFUL = 'Logout successful!'
 LOGOUT_FAIL = 'Could not logout!'
 USER_NOT_LOGGED_IN = 'User not logged in!'
 UPLOAD_FAIL = 'File could not upload! try again later!'
+DELETE_USER_SUCCESSFUL = 'User delete successful!'
+USER_NOT_EXIST = 'User not exits!'
 # End User
 
 # Blog
