@@ -33,10 +33,10 @@ class UpdateBlog(APIView):
 
 class LikBlog(APIView):
 
-    def post(self, request, blog_id):
-        get_response = create_like_blog(request=request, blog_id=blog_id)
+    def post(self, request):
+        get_response = create_like_blog(request=request)
         return get_response
 
-    def put(self, request, blog_id):
-        get_response = update_like_blog(request=request, blog_id=blog_id)
+    def put(self, request):
+        get_response = update_like_blog(request=request)
         return get_response

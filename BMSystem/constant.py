@@ -34,6 +34,7 @@ BLOG_URLS = {
     'blog': 'blog/',
     'dashboard': '',
     'blog_update': '<int:blog_id>',
+    'blog_like': 'like/'
 }
 #   ** End URLS **
 
@@ -79,6 +80,7 @@ BLOG_VIEWS_NAME = {
     'dashboard': 'blog',
     'create_blog': 'create_blog',
     'blog_update': 'blog_update',
+    'blog_like': 'blog_like'
 }
 
 #   ** End Views name **
@@ -135,6 +137,7 @@ WORK_TEMPLATE_DIR = 'work/'
 USER_MODEL_FIELDS = {
     'id': 'id',
     'user': 'user',
+    'get_user_id': 'user_id',
     'first_name': 'firstName',
     'last_name': 'lastName',
     'mobile_number': 'mNo',
@@ -162,6 +165,7 @@ USER_MODEL_FIELDS = {
 # Blog
 BLOG_MODEL_FIELDS = {
     'blog_id': 'id',
+    'get_blog_id': "blog_id",
     'blog_created_at': 'created_at',
     'blog_title': 'postTitle',
     'blog_image': 'postImage',
@@ -170,6 +174,7 @@ BLOG_MODEL_FIELDS = {
     'blog_modify_at': 'modified_at',
     'like_id': 'id',
     'like_by': 'like_by',
+    'like_status': "like_status",
     'blog': 'blog',
     'like': 'like',
     'like_at': 'liked_at',
@@ -234,5 +239,6 @@ BLOG_UPDATE_SUCCESSFUL = "Blog update successful!"
 BLOG_NOT_EXIST = "Blog not exist!"
 BLOG_NOT_DELETE = "Blog could not delete!"
 BLOG_DELETE_SUCCESSFUL = "Blog delete successful!"
+BLOG_LIKE_SUCCESSFUL = 'Blog like successful!'
 # End Blog
 #   ** End alert massage **

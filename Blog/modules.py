@@ -108,14 +108,17 @@ def create_blog(request=None):
             return create_response(result=False, alert=alert)
         get_user_details = AuthUser.objects.get(id=user_id)
         blog_params = {constant.BLOG_MODEL_FIELDS['blog_created_by']: get_user_details}
+
         if constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data:
             blog_params[constant.BLOG_MODEL_FIELDS['blog_title']] = \
                 get_json_data[constant.BLOG_MODEL_FIELDS['blog_title']].title()
+
         if constant.BLOG_MODEL_FIELDS['blog_desc'] in get_json_data:
             blog_params[constant.BLOG_MODEL_FIELDS['blog_desc']] = \
                 get_json_data[constant.BLOG_MODEL_FIELDS['blog_desc']].capitalize()
+
         if constant.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
-            get_file = request.FILES()
+            # get_file = request.FILES()
             blog_params[constant.BLOG_MODEL_FIELDS['blog_image']] = \
                 get_json_data[constant.BLOG_MODEL_FIELDS['blog_image']]
         try:
@@ -165,9 +168,39 @@ def delete_blog(request=None, blog_id=None):
     return create_response(result=True, alert=constant.BLOG_DELETE_SUCCESSFUL)
 
 
-def create_like_blog(request=None, blog_id=None):
+def create_like_blog(request=None):
     if not request:
         create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    get_json_response = loads(request.body)
+    if constant.BLOG_MODEL_FIELDS['get_blog_id'] and constant.USER_MODEL_FIELDS['get_user_id'] \
+            not in get_json_response:
+        alert = f"{constant.PAYLOAD_DATA_ERROR} \
+{constant.BLOG_MODEL_FIELDS['get_blog_id']} and {constant.BLOG_MODEL_FIELDS['get_user_id']}\
+ in {constant.PAYLOAD_DATA_FORMAT}"
+        create_response(result=False, alert=alert)
+
+    blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
+    user_id = get_json_response[constant.USER_MODEL_FIELDS['get_user_id']]
+
+    get_like_status = get_json_response[constant.BLOG_MODEL_FIELDS['like_status']] \
+        if constant.BLOG_MODEL_FIELDS['like_status'] in get_json_response else 0
+    like_filter = {
+        constant.BLOG_MODEL_FIELDS['blog']: blog_id,
+        constant.BLOG_MODEL_FIELDS['like_by']: user_id
+    }
+    get_like_blog = Like.objects.filter(**like_filter)
+    like_params = {constant.BLOG_MODEL_FIELDS['like']: get_like_status}
+    if get_like_blog:
+        get_like_blog.update(**like_params)
+    else:
+        get_user = AuthUser.objects.get(**{constant.USER_MODEL_FIELDS['id']: user_id})
+        get_blog = Master.objects.get(**{constant.BLOG_MODEL_FIELDS['blog_id']: blog_id})
+        like_params[constant.BLOG_MODEL_FIELDS['like_by']] = get_user
+        like_params[constant.BLOG_MODEL_FIELDS['blog']] = get_blog
+        like_blog = Like(**like_params)
+        like_blog.save()
+
+    return create_response(result=True, alert=constant.BLOG_LIKE_SUCCESSFUL)
 
 
 def update_like_blog(request=None, blog_id=None):
