@@ -18,7 +18,7 @@ BLOG_PATH = 'Blog/'
 
 
 #   ** URLS **
-DASHBOARD_URL = '/'
+DASHBOARD_URL = ''
 USER_URLS = {
     'user': 'user/',
     'get_all': '',
@@ -30,6 +30,8 @@ USER_URLS = {
 }
 EMPLOYEE_REPORT_URLS = {
     'me': 'me/',
+    'attend': 'attendance/',
+    'all_attend': 'all_attendance/',
 }
 BLOG_URLS = {
     'blog': 'blog/',
@@ -54,6 +56,8 @@ USER_VIEWS = {
 
 EMPLOYEE_REPORT_VIEWS = {
     'dashboard': 'me',
+    'attend': 'attend',
+    'all_attend': 'all_attend',
 }
 
 BLOG_VIEWS = {
@@ -75,8 +79,9 @@ USER_VIEWS_NAME = {
 }
 
 EMPLOYEE_REPORT_VIEWS_NAME = {
-    'dashboard': 'me',
-
+    'dashboard': 'work_dashboard',
+    'attend': 'attend',
+    'all_attend': 'all_attend'
 }
 
 BLOG_VIEWS_NAME = {
@@ -190,6 +195,20 @@ BLOG_MODEL_FIELDS = {
     'comment_created_at': 'created_at'
 }
 # End Blog
+# Work Model
+WORK_MODEL_FIELDS = {
+    'punch_in': 'punchIn',
+    'punch_out': 'punchOut',
+    'attendance_id': 'id',
+    'day': 'day',
+    'month': 'month',
+    'year': 'year',
+    'punch_status': 'punch_status',
+    'attend_id': 'attend_id',
+    'created_by': 'created_by',
+    'updated_by': 'updated_by',
+    'emp_id': 'emp_id',
+}
 #   ** End MODEL FIELDS **
 
 # Session Key
@@ -209,6 +228,10 @@ UNLIKE = 0
 BLOG_DELETE_NUM = 1
 BLOG_NOT_DELETE_NUM = 0
 # End Like
+# Work
+PUNCH_IN_STATUS = 1
+PUNCH_OUT_STATUS = 2
+# End work
 
 #   ** Alert massage **
 # Common
@@ -259,4 +282,15 @@ UPDATE_COMMENT_SUCCESSFUL = "Comment update successful!"
 DELETE_COMMENT_SUCCESSFUL = 'Comment delete successful!'
 COMMENT_NOT_EXIST = 'Comment not exist!'
 # End Blog
+
+# Work
+CREATE_ATTENDANCE_SUCCESSFUL = "Attendance create Successful!"
+CREATE_ATTENDANCE_FAIL = "Attendance create Fail!"
+UPDATE_ATTENDANCE_SUCCESSFUL = "Attendance update Successful!"
+UPDATE_ATTENDANCE_FAIL = "Attendance update Fail!"
+DELETE_ATTENDANCE_SUCCESSFUL = "Attendance delete Successful!"
+DELETE_ATTENDANCE_FAIL = "Attendance delete Fail!"
+ATTEND_NOT_FOUND = "Attendance not exist!"
+EMP_NOT_EXIST = "Employee not exist!"
+# End Work
 #   ** End alert massage **

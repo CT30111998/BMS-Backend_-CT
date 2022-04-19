@@ -15,6 +15,19 @@ def save_file_storage(request):
     # return JsonResponse(file_name, safe=False)
 
 
+def get_name_from_master_user(user_objects):
+    user_name = f"{getattr(user_objects, constant.USER_MODEL_FIELDS['first_name'])} " + \
+        f"{getattr(user_objects, constant.USER_MODEL_FIELDS['last_name'])}"
+    return user_name
+
+
+def get_date_from_tabl_object(table_object):
+    date = f"{getattr(table_object, constant.WORK_MODEL_FIELDS['year'])}-" +\
+            f"{getattr(table_object, constant.WORK_MODEL_FIELDS['month'])}-" +\
+            f"{getattr(table_object, constant.WORK_MODEL_FIELDS['day'])}"
+    return date
+
+
 def create_session(request, key, value):
     try:
         request.session[key] = value

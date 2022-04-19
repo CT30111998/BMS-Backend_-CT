@@ -39,8 +39,8 @@ class LoginUser(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
-        return render(request, constant.USER_TEMPLATE_DIR + constant.USER_TEMPLATES['login'])
+    # def get(self, request, format=None):
+    #     return render(request, constant.USER_TEMPLATE_DIR + constant.USER_TEMPLATES['login'])
 
     def post(self, request, format=None):
         get_api_response = user_login(request)

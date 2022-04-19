@@ -3,6 +3,13 @@ from BMSystem import constant
 from . import views
 
 urlpatterns = [
-    path(constant.EMPLOYEE_REPORT_URLS['me'], views.Me,
-         name=constant.EMPLOYEE_REPORT_VIEWS_NAME['dashboard']),
+    path(
+        constant.EMPLOYEE_REPORT_URLS['attend'],
+        views.Attendance.as_view(),
+        name=constant.EMPLOYEE_REPORT_VIEWS_NAME['attend']),
+    path(
+        constant.EMPLOYEE_REPORT_URLS['all_attend'],
+        views.AllAttendance.as_view(),
+        name=constant.EMPLOYEE_REPORT_VIEWS_NAME['all_attend']),
+
 ]
