@@ -36,11 +36,14 @@ def create_my_user(request=None):
                 request_data[constant.USER_MODEL_FIELDS['password']], \
                 request_data[constant.USER_MODEL_FIELDS['confirm_password']]
         except:
-            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['first_name']}, " + \
-                    f"{constant.USER_MODEL_FIELDS['last_name']}, {constant.USER_MODEL_FIELDS['email']}, " +\
-                    f"{constant.USER_MODEL_FIELDS['mobile_number']}, "\
-                    f"{constant.USER_MODEL_FIELDS['password']} and {constant.USER_MODEL_FIELDS['confirm_password']}" + \
-                    f" in {constant.PAYLOAD_DATA_FORMAT}"
+            alert = get_payload_error_alert(
+                constant.USER_MODEL_FIELDS['first_name'],
+                constant.USER_MODEL_FIELDS['last_name'],
+                constant.USER_MODEL_FIELDS['email'],
+                constant.USER_MODEL_FIELDS['mobile_number'],
+                constant.USER_MODEL_FIELDS['password'],
+                constant.USER_MODEL_FIELDS['confirm_password']
+            )
             return create_response(result=False, alert=alert)
 
         # Validation
@@ -119,11 +122,14 @@ def delete_user(request):
 
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    if not request.body:
+        alert = get_payload_error_alert(constant.USER_MODEL_FIELDS['get_user_id'])
+        return create_response(result=False, alert=alert)
+
     get_json_data = loads(request.body)
 
     if constant.USER_MODEL_FIELDS['get_user_id'] not in get_json_data:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} '{constant.USER_MODEL_FIELDS['get_user_id']}' " + \
-                f"{constant.PAYLOAD_DATA_FORMAT}"
+        alert = get_payload_error_alert(constant.USER_MODEL_FIELDS['get_user_id'])
         return create_response(result=False, alert=alert)
     get_user_id = get_json_data[constant.USER_MODEL_FIELDS['get_user_id']]
     get_user = AuthUser.objects.filter(**{constant.USER_MODEL_FIELDS['id']: get_user_id})
@@ -143,8 +149,7 @@ def user_login(request=None):
             password = get_request_data[constant.USER_MODEL_FIELDS['password']]
 
         except:
-            alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.USER_MODEL_FIELDS['email']} & " + \
-                    f"{constant.USER_MODEL_FIELDS['password']} {constant.PAYLOAD_DATA_FORMAT}"
+            alert = get_payload_error_alert(constant.USER_MODEL_FIELDS['email'], constant.USER_MODEL_FIELDS['password'])
             return create_response(alert=alert, result=False)
         field = [user_email, password]
         fields_check = null_valid(field)

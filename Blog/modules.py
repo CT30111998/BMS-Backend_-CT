@@ -28,8 +28,7 @@ def get_all_blog(request=None):
             }
             get_user = UserMaster.objects.get(**get_user_filter)
             get_user_id = getattr(get_user, constant.USER_MODEL_FIELDS['id'])
-            user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])} " + \
-                        f"{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
+            user_name = get_name_from_master_user(get_user)
 
             blog_details['blog_id'] = getattr(blog, constant.BLOG_MODEL_FIELDS['blog_id'])
             blog_details['blog_image'] = str(getattr(blog, constant.BLOG_MODEL_FIELDS['blog_image']))
@@ -52,8 +51,7 @@ def get_all_blog(request=None):
                     email=user_id
                 )
                 get_user = UserMaster.objects.get(user=user_id)
-                user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])}" + \
-                            f"{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
+                user_name = get_name_from_master_user(get_user)
                 user_detail_dict = {'id': getattr(auth_id, constant.USER_MODEL_FIELDS['id']), 'name': user_name}
                 user_like_details.append(user_detail_dict)
 
@@ -84,8 +82,7 @@ def get_all_blog(request=None):
                     email=user_id
                 )
                 get_user = UserMaster.objects.filter(**{constant.USER_MODEL_FIELDS['user']: auth_id})[:1].get()
-                user_name = f"{getattr(get_user, constant.USER_MODEL_FIELDS['first_name'])}" + \
-                            f"{getattr(get_user, constant.USER_MODEL_FIELDS['last_name'])}"
+                user_name = get_name_from_master_user(get_user)
 
                 user_comment = getattr(
                     comment,
@@ -110,6 +107,9 @@ def create_blog(request=None):
         create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if user_id:
+        if not request.body:
+            alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
+            return create_response(result=False, alert=alert)
         get_json_data = loads(request.body)
         if not constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data and \
                 not constant.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
@@ -149,11 +149,14 @@ def update_blog(request=None):
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+
+    if not request.body:
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
+        return create_response(result=False, alert=alert)
     get_json_data = loads(request.body)
 
     if not constant.BLOG_MODEL_FIELDS['get_blog_id'] in get_json_data:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']}" + \
-                f" {constant.PAYLOAD_DATA_FORMAT}!"
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
         return create_response(result=False, alert=alert)
 
     if not constant.BLOG_MODEL_FIELDS['blog_title'] in get_json_data and \
@@ -191,13 +194,11 @@ def delete_blog(request):
     try:
         get_json_data = loads(request.body)
     except:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} " + \
-                f"{constant.PAYLOAD_DATA_FORMAT}!"
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
         return create_response(result=False, alert=alert)
 
     if not constant.BLOG_MODEL_FIELDS['get_blog_id'] in get_json_data:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} " + \
-                f"{constant.PAYLOAD_DATA_FORMAT}!"
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_data[constant.BLOG_MODEL_FIELDS['get_blog_id']]
@@ -225,11 +226,17 @@ def like_blog(request=None):
 
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+
+    if not request.body:
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
+        return create_response(result=False, alert=alert)
     get_json_response = loads(request.body)
 
-    if constant.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']}" + \
-                f" in {constant.PAYLOAD_DATA_FORMAT}"
+    if constant.BLOG_MODEL_FIELDS['get_blog_id'] and constant.BLOG_MODEL_FIELDS['like_status'] not in get_json_response:
+        alert = get_payload_error_alert(
+            constant.BLOG_MODEL_FIELDS['get_blog_id'],
+            constant.BLOG_MODEL_FIELDS['like_status']
+        )
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
@@ -269,11 +276,15 @@ def comment_blog(request=None):
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
+    if not request.body:
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
+        return create_response(result=False, alert=alert)
     get_json_response = loads(request.body)
     if constant.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response \
             or constant.BLOG_MODEL_FIELDS['comment'] not in get_json_response:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']}" + \
-                f"and {constant.BLOG_MODEL_FIELDS['comment']} in {constant.PAYLOAD_DATA_FORMAT}"
+        alert = get_payload_error_alert(
+            constant.BLOG_MODEL_FIELDS['get_blog_id'], constant.BLOG_MODEL_FIELDS['comment']
+        )
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
@@ -314,10 +325,13 @@ def delete_comment_blog(request=None):
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
+    if not request.body:
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
+        return create_response(result=False, alert=alert)
+
     get_json_response = loads(request.body)
     if constant.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response:
-        alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.BLOG_MODEL_FIELDS['get_blog_id']} " \
-                + f"in {constant.PAYLOAD_DATA_FORMAT}"
+        alert = get_payload_error_alert(constant.BLOG_MODEL_FIELDS['get_blog_id'])
         return create_response(result=False, alert=alert)
 
     blog_id = get_json_response[constant.BLOG_MODEL_FIELDS['get_blog_id']]
