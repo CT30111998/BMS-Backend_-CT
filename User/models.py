@@ -102,3 +102,8 @@ class UserPermission(models.Model):
     user = models.ForeignKey(auth_model.User, models.CASCADE)
     permission = models.IntegerField(default=constant.USER)
     createdAt = models.DateField(auto_now_add=True)
+
+
+class BmsSession(models.Model):
+    sessionKey = models.CharField(max_length=300)
+    sessionValue = models.CharField(max_length=300)

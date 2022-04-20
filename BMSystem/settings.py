@@ -87,10 +87,12 @@ CORE_ORIGIN_WHITELIST = ''
 CORS_ALLOWED_ORIGINS = [
         'http://localhost:4200',
         'http://192.168.1.82:4200',
+        'http://192.168.1.82:4210',
 ]
 CSRF_TRUSTED_ORIGINS = [
         'http://localhost:4200',
         'http://192.168.1.82:4200',
+        'http://192.168.1.82:4210',
     ]
 
 # Database

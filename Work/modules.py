@@ -239,3 +239,19 @@ def delete_user_attendance(request=None):
 
     get_attend.delete()
     return create_response(result=True, alert=constant.DELETE_ATTENDANCE_SUCCESSFUL)
+
+
+def create_category(request):
+    if not request:
+        return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request, constant.SESSION_USER_ID)
+    if not user_id:
+        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    try:
+        get_json_response = loads(request.body)
+        get_cat_name = get_json_response[constant.WORK_MODEL_FIELDS['cat_name']]
+    except:
+        alert = get_payload_error_alert(constant.WORK_MODEL_FIELDS['cat_name'])
+        return create_response(result=False, alert=alert)
+
+    return create_response(result=True, alert=constant.CATEGORY_CREATE_SUCCESSFUL)

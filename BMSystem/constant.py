@@ -214,6 +214,7 @@ WORK_MODEL_FIELDS = {
     'created_by': 'created_by',
     'updated_by': 'updated_by',
     'emp_id': 'emp_id',
+    'cat_name': "categoryName",
 }
 #   ** End MODEL FIELDS **
 
@@ -275,6 +276,7 @@ UPDATE_FAIL = 'Update fail!'
 LOGOUT_SUCCESSFUL = 'Logout successful!'
 LOGOUT_FAIL = 'Could not logout!'
 USER_NOT_LOGGED_IN = 'User not logged in!'
+USER_LOGGED_IN = "User already logged in! please logout and try again."
 UPLOAD_FAIL = 'File could not upload! try again later!'
 DELETE_USER_SUCCESSFUL = 'User delete successful!'
 USER_NOT_EXIST = 'User not exits!'
@@ -297,7 +299,7 @@ DELETE_COMMENT_SUCCESSFUL = 'Comment delete successful!'
 COMMENT_NOT_EXIST = 'Comment not exist!'
 # End Blog
 
-# Work
+# Attendance Work
 CREATE_ATTENDANCE_SUCCESSFUL = "Attendance create Successful!"
 CREATE_ATTENDANCE_FAIL = "Attendance create Fail!"
 UPDATE_ATTENDANCE_SUCCESSFUL = "Attendance update Successful!"
@@ -306,5 +308,8 @@ DELETE_ATTENDANCE_SUCCESSFUL = "Attendance delete Successful!"
 DELETE_ATTENDANCE_FAIL = "Attendance delete Fail!"
 ATTEND_NOT_FOUND = "Attendance not exist!"
 EMP_NOT_EXIST = "Employee not exist!"
-# End Work
+# End Attendance Work
+# Category work
+CATEGORY_CREATE_SUCCESSFUL = "Category create successful!"
+# End Category work
 #   ** End alert massage **

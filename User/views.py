@@ -44,7 +44,6 @@ class LoginUser(APIView):
 
     def post(self, request, format=None):
         get_api_response = user_login(request)
-        print("API RESPONSE = ", get_api_response)
         return get_api_response
 
 

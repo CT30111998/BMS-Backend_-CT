@@ -1,6 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User as AuthUser
 from ..models import UserMaster as UserDetail
+from ..models import BmsSession as bmSession
 from ..models import UserPermission as userPermission
 from django.contrib.auth import login, authenticate
 from django.contrib import auth
@@ -25,6 +26,10 @@ def get_all_user_data(request):
 def create_my_user(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request, constant.SESSION_USER_ID)
+    # print("USER ID: ", user_id)
+    if user_id:
+        return create_response(result=False, alert=constant.USER_LOGGED_IN)
     if request.method == constant.POST:
         try:
             request_data = loads(request.body)
@@ -142,6 +147,11 @@ def delete_user(request):
 def user_login(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
+    user_id = get_session(request, constant.SESSION_USER_ID)
+    user_id_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
+
+    if user_id or user_id_session:
+        return create_response(result=False, alert=constant.USER_LOGGED_IN)
     if request.method == constant.POST:
         try:
             get_request_data = loads(request.body)
@@ -171,6 +181,8 @@ def user_login(request=None):
             user_id = get_user.id
             if user_id is not None:
                 create_session(request, constant.SESSION_USER_ID, user_id)
+                session = bmSession(**{'sessionKey': constant.SESSION_USER_ID, 'sessionValue': user_id})
+                session.save()
                 get_user_role = userPermission.objects.get(user=user_id)
                 serializer = UserPermissionSerializer(get_user_role, many=False)
                 permission = serializer.data.get("permission")
@@ -190,7 +202,9 @@ def user_logout(request=None):
     user = get_session(request, constant.SESSION_USER_ID)
     if user:
         try:
-            auth.logout(request)
+            # auth.logout(request)
+            delete_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
+            delete_session.delete()
             return create_response(alert=constant.LOGOUT_SUCCESSFUL, result=True)
         except:
             return create_response(alert=constant.LOGOUT_FAIL, result=False)

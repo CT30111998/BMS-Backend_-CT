@@ -1,0 +1,41 @@
+	** User **
+Sign up 
+{
+    "lastName": "2",			    --Required
+    "firstName": "User",		    --Required
+    "email":"user3@user.com",		--Required
+    "password": "user1234",		    --Required
+    "mNo":"1234567890",		        --Required
+    "confirm_password": "user1234"	--Required
+}
+
+Login in
+{
+    "email":"user2@user.com",		--Required
+    "password": "user1234"		    --Required
+}
+
+Delete user
+{
+    "user_id": 2	--Required
+}
+
+	** End User **
+	
+	** Blog **
+	
+Create Blog
+{
+    "blog_id":1,
+    "postTitle": "Title", 	    --Required if not "postImage"
+    "postImage": Image,	        --Required if not "postTitle"
+    "postDescription": "desc"	--Optional
+}
+
+Update Blog
+{
+    "blog_id":1,			        --Required
+    "postDescription": "update",	--Optional
+    "postTitle": "title"		    --Optional
+}
+
