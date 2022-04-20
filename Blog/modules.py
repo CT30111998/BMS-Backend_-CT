@@ -248,7 +248,7 @@ def like_blog(request=None):
         constant.BLOG_MODEL_FIELDS['like_by']: user_id
     }
     alert = constant.BLOG_LIKE_SUCCESSFUL
-    if get_like_status is 0:
+    if get_like_status == 0:
         alert = constant.BLOG_UNLIKE_SUCCESSFUL
     get_like_blog = Like.objects.filter(**like_filter)
     like_params = {constant.BLOG_MODEL_FIELDS['like']: get_like_status}
