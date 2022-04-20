@@ -12,10 +12,96 @@ def get_all_user_attendance(request=None):
     user_id = get_session(request, constant.SESSION_USER_ID)
     if not user_id:
         return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    attend_filter = {}
+    order_by = f"-{constant.WORK_MODEL_FIELDS['date']}"
     if request.body:
         get_json_response = loads(request.body)
-    # get_all_attendance = AttendMaster.objetcs
-    return create_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL)
+        if constant.USER_MODEL_FIELDS['get_user_id'] in get_json_response:
+            attend_filter[constant.USER_MODEL_FIELDS['user']] = \
+                get_json_response[constant.USER_MODEL_FIELDS['get_user_id']]
+
+        if constant.WORK_MODEL_FIELDS['year'] in get_json_response:
+            attend_filter[constant.WORK_MODEL_FIELDS['year']] = get_json_response[
+                constant.WORK_MODEL_FIELDS['year']
+            ]
+            if constant.WORK_MODEL_FIELDS['month'] in get_json_response:
+                attend_filter[constant.WORK_MODEL_FIELDS['month']] = get_json_response[
+                    constant.WORK_MODEL_FIELDS['month']
+                ]
+                if constant.WORK_MODEL_FIELDS['day'] in get_json_response:
+                    attend_filter[constant.WORK_MODEL_FIELDS['day']] = get_json_response[
+                        constant.WORK_MODEL_FIELDS['day']
+                    ]
+
+        if (constant.WORK_MODEL_FIELDS['month'] in get_json_response and
+            constant.WORK_MODEL_FIELDS['year'] not in get_json_response)\
+                or (constant.WORK_MODEL_FIELDS['day'] in get_json_response and
+                    constant.WORK_MODEL_FIELDS['month'] not in get_json_response):
+            alert = get_payload_error_alert(constant.WORK_MODEL_FIELDS['year'], constant.WORK_MODEL_FIELDS['month'])
+            return create_response(result=False, alert=alert)
+
+        if constant.WORK_MODEL_FIELDS['date'] in get_json_response:
+            attend_filter[constant.WORK_MODEL_FIELDS['date']] = get_json_response[
+                constant.WORK_MODEL_FIELDS['date']
+            ]
+
+        if constant.COMMON_MODEL_FIELDS['order_by'] in get_json_response:
+            if get_json_response[constant.COMMON_MODEL_FIELDS['order_by']] == constant.ORDER_BY_DATE_ASCENDING:
+                order_by = constant.WORK_MODEL_FIELDS['date']
+
+    get_all_attendance = AttendMaster.objects.all().filter(**attend_filter).order_by(order_by)
+    attends_data_list = []
+    for attend in get_all_attendance:
+        attend_params = {
+            "attend_id": getattr(attend, constant.WORK_MODEL_FIELDS['attendance_id']),
+            "attend_of_user": {},
+            "punch_in": getattr(attend, constant.WORK_MODEL_FIELDS['punch_in']),
+            "punch_out": getattr(attend, constant.WORK_MODEL_FIELDS['punch_out']),
+            "date": get_date_from_tabl_object(attend),
+        }
+
+        get_attend_user = MasterUser.objects.get(**{
+            constant.USER_MODEL_FIELDS['user']: getattr(attend, constant.USER_MODEL_FIELDS['user'])
+        })
+        attend_user_name = get_name_from_master_user(get_attend_user)
+        attend_user_id = getattr(get_attend_user, constant.USER_MODEL_FIELDS['id'])
+
+        attend_params['attend_of_user'].update({
+            "name": attend_user_name,
+            "id": attend_user_id
+        })
+
+        get_created_user = MasterUser.objects.get(**{
+            constant.USER_MODEL_FIELDS['user']: getattr(attend, constant.WORK_MODEL_FIELDS['created_by'])
+        })
+        created_user_name = get_name_from_master_user(get_created_user)
+        created_user_id = getattr(get_created_user, constant.USER_MODEL_FIELDS['id'])
+        attend_params['created_by'] = {
+            'user_id': created_user_id,
+            'user_name': created_user_name
+        }
+        if getattr(attend, constant.WORK_MODEL_FIELDS['updated_by']):
+            if getattr(attend, constant.WORK_MODEL_FIELDS['created_by']) == \
+                    getattr(attend, constant.WORK_MODEL_FIELDS['updated_by']):
+                attend_params['updated_by'] = {
+                    'user_id': created_user_id,
+                    'user_name': created_user_name
+                }
+            else:
+                get_updated_user = MasterUser.objects.get(**{
+                    constant.USER_MODEL_FIELDS['user']: getattr(attend, constant.WORK_MODEL_FIELDS['updated_by'])
+                })
+                update_user_name = get_name_from_master_user(get_updated_user)
+                attend_params['updated_by'] = {
+                    'user_id': getattr(get_updated_user, constant.USER_MODEL_FIELDS['id']),
+                    'user_name': update_user_name
+                }
+        attends_data_list.append(attend_params)
+
+    if not get_all_attendance:
+        return create_response(result=False, alert=constant.ATTEND_NOT_FOUND)
+
+    return create_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
 
 
 def get_user_attendance(request=None):
@@ -34,6 +120,7 @@ def get_user_attendance(request=None):
     })
     if not get_attends:
         return create_response(result=False, alert=constant.ATTEND_NOT_FOUND)
+
     attends_data_list = []
     for attend in get_attends:
         attend_params = {

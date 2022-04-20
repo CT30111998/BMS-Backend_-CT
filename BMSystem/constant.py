@@ -31,7 +31,7 @@ USER_URLS = {
 EMPLOYEE_REPORT_URLS = {
     'me': 'me/',
     'attend': 'attendance/',
-    'all_attend': 'all_attendance/',
+    'all_attend': 'all-attendance/',
 }
 BLOG_URLS = {
     'blog': 'blog/',
@@ -142,6 +142,11 @@ WORK_TEMPLATE_DIR = 'work/'
 #   ** End TEMPLATE DIR **
 
 #   ** MODEL FIELDS **
+# Common
+COMMON_MODEL_FIELDS = {
+    "order_by": "order_by"
+}
+# End Common
 # User 
 USER_MODEL_FIELDS = {
     'username': 'username',
@@ -203,6 +208,7 @@ WORK_MODEL_FIELDS = {
     'day': 'day',
     'month': 'month',
     'year': 'year',
+    'date': 'date',
     'punch_status': 'punch_status',
     'attend_id': 'attend_id',
     'created_by': 'created_by',
@@ -232,6 +238,14 @@ BLOG_NOT_DELETE_NUM = 0
 PUNCH_IN_STATUS = 1
 PUNCH_OUT_STATUS = 2
 # End work
+#   Order by
+ORDER_BY_DATE_DESCENDING = 1
+ORDER_BY_DATE_ASCENDING = 2
+ORDER_BY_FIRST_ASCENDING = 3
+ORDER_BY_FIRST_DESCENDING = 4
+ORDER_BY_LAST_NAME_ASCENDING = 5
+ORDER_BY_LAST_NAME_DESCENDING = 6
+#   End Order by
 
 #   ** Alert massage **
 # Common

@@ -83,6 +83,7 @@ class AttendanceMaster(models.Model):
     day = models.IntegerField()
     month = models.IntegerField()
     year = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         AuthUser,
         related_name="related_attendance_created_by",

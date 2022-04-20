@@ -28,6 +28,14 @@ def get_date_from_tabl_object(table_object):
     return date
 
 
+def get_payload_error_alert(*fields):
+    field_name = []
+    for field in fields:
+        field_name.append(str(field))
+    alert = f"{constant.PAYLOAD_DATA_ERROR} {field_name} in {constant.PAYLOAD_DATA_FORMAT}"
+    return alert
+
+
 def create_session(request, key, value):
     try:
         request.session[key] = value
