@@ -15,8 +15,8 @@ def get_all_user_data(request):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request, constant.SESSION_USER_ID)
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     get_users = UserMaster.objects.all()
     serialize = UserSerializer(get_users, many=True)
     data = serialize.data
@@ -125,8 +125,8 @@ def delete_user(request):
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request, constant.SESSION_USER_ID)
 
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     if not request.body:
         alert = get_payload_error_alert(constant.USER_MODEL_FIELDS['get_user_id'])
         return create_response(result=False, alert=alert)
@@ -199,41 +199,39 @@ def user_login(request=None):
 def user_logout(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
-    user = get_session(request, constant.SESSION_USER_ID)
-    if user:
-        try:
-            # auth.logout(request)
-            delete_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
-            delete_session.delete()
-            return create_response(alert=constant.LOGOUT_SUCCESSFUL, result=True)
-        except:
-            return create_response(alert=constant.LOGOUT_FAIL, result=False)
-
-    return create_response(alert=constant.USER_NOT_LOGGED_IN, result=False)
+    user_id = get_session(request, constant.SESSION_USER_ID)
+    # if user_id:
+    #     return create_response(alert=constant.USER_NOT_LOGGED_IN, result=False)
+    try:
+        # auth.logout(request)
+        delete_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
+        delete_session.delete()
+        return create_response(alert=constant.LOGOUT_SUCCESSFUL, result=True)
+    except:
+        return create_response(alert=constant.LOGOUT_FAIL, result=False)
 
 
 def user_profile(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:
         details = UserDetail.objects.get(user=user_id)
     except Exception:
         return create_response(alert=constant.DATA_NOT_FOUND, result=False)
-
-    if request.method == constant.GET:
-        serialize = UserSerializer(details, many=False)
-        return create_response(alert=constant.DATA_FETCH_SUCCESSFUL, result=True, data=serialize.data)
+        # if request.method == constant.GET:
+    serialize = UserSerializer(details, many=False)
+    return create_response(alert=constant.DATA_FETCH_SUCCESSFUL, result=True, data=serialize.data)
 
 
 def update_profile(request):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
     file = request.FILES[constant.USER_MODEL_FIELDS['image']]
     try:
@@ -241,7 +239,7 @@ def update_profile(request):
     except:
         return create_response(result=False, alert=constant.DATA_NOT_FOUND)
     if not file:
-        return create_response(result=False,  alert=constant.UPLOAD_FAIL)
+        return create_response(result=False, alert=constant.UPLOAD_FAIL)
     fs = FileSystemStorage()
     path = f"{constant.UPLOAD_PATH}{constant.PROFILE_PATH}{file.name}"
     fs.save(name=path, content=file)

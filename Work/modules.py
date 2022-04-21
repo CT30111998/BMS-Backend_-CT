@@ -10,8 +10,8 @@ def get_all_user_attendance(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request, constant.SESSION_USER_ID)
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     attend_filter = {}
     order_by = f"-{constant.WORK_MODEL_FIELDS['date']}"
     if request.body:
@@ -110,8 +110,8 @@ def get_user_attendance(request=None):
 
     user_id = get_session(request, constant.SESSION_USER_ID)
 
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
     get_attends = AttendMaster.objects.filter(**{
         constant.USER_MODEL_FIELDS['user']: user_id,
@@ -222,8 +222,8 @@ def delete_user_attendance(request=None):
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request, constant.SESSION_USER_ID)
 
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     get_json_data = loads(request.body)
 
     if constant.WORK_MODEL_FIELDS['attend_id'] not in get_json_data:
@@ -245,8 +245,8 @@ def create_category(request):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request, constant.SESSION_USER_ID)
-    if not user_id:
-        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:
         get_json_response = loads(request.body)
         get_cat_name = get_json_response[constant.WORK_MODEL_FIELDS['cat_name']]
