@@ -203,7 +203,7 @@ def user_logout(request=None):
     # if user_id:
     #     return create_response(alert=constant.USER_NOT_LOGGED_IN, result=False)
     try:
-        # auth.logout(request)
+        auth.logout(request)
         delete_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
         delete_session.delete()
         return create_response(alert=constant.LOGOUT_SUCCESSFUL, result=True)
@@ -215,6 +215,10 @@ def user_profile(request=None):
     if not request:
         return create_response(result=False, alert=constant.UNEXPECTED_ERROR)
     user_id = get_session(request=request, key=constant.SESSION_USER_ID)
+    try:
+        user_id = loads(request.body)['user_id']
+    except:
+        return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     # if not user_id:
     #     return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:

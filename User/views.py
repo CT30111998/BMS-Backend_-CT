@@ -56,7 +56,7 @@ class ProfileUser(APIView):
 # @api_view([constant.GET])
 class Logout(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         get_api_response = user_logout(request)

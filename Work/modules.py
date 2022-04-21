@@ -3,6 +3,7 @@ from json import loads
 from django.contrib.auth.models import User as AuthUser
 from User.models import UserMaster as MasterUser
 from .models import AttendanceMaster as AttendMaster
+from .models import CategoryMaser as CatMaster
 import datetime
 
 
@@ -254,4 +255,12 @@ def create_category(request):
         alert = get_payload_error_alert(constant.WORK_MODEL_FIELDS['cat_name'])
         return create_response(result=False, alert=alert)
 
+    get_user_master = AuthUser.objects.filter(
+        **{constant.USER_MODEL_FIELDS['id']: user_id}
+    )
+    create_cat = CatMaster(**{
+        constant.WORK_MODEL_FIELDS['cat_name']: get_cat_name,
+        constant.WORK_MODEL_FIELDS['created_by']: get_user_master
+    })
+    create_cat.save()
     return create_response(result=True, alert=constant.CATEGORY_CREATE_SUCCESSFUL)

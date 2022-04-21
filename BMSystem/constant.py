@@ -32,6 +32,7 @@ EMPLOYEE_REPORT_URLS = {
     'me': 'me/',
     'attend': 'attendance/',
     'all_attend': 'all-attendance/',
+    'category': 'category/',
 }
 BLOG_URLS = {
     'blog': 'blog/',

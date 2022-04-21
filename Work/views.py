@@ -30,3 +30,9 @@ class AllAttendance(APIView):
     def get(self, request):
         get_response = get_all_user_attendance(request)
         return get_response
+
+
+class Category(APIView):
+    def post(self, request):
+        get_response = create_category(request)
+        return get_response
