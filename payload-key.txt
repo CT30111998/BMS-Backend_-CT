@@ -26,7 +26,6 @@ Delete user
 	
 Create Blog
 {
-    "blog_id":1,
     "postTitle": "Title", 	    --Required if not "postImage"
     "postImage": Image,	        --Required if not "postTitle"
     "postDescription": "desc"	--Optional
@@ -39,3 +38,49 @@ Update Blog
     "postTitle": "title"		    --Optional
 }
 
+Blog Delete
+{
+    "blog_id":6         --Required
+}
+
+Like blog
+{
+    "blog_id":1,            --Required
+    "like_status": 1/0  1-for Like, 2-for Unlike    --Required
+}
+
+Blog Comment
+{
+    "blog_id":1,                            --Required
+    "comment":"comment by kush mewada"      --Required
+}
+
+** Attendance **
+Create attendance
+{
+    "punch_status":1/2  1 - for Punch in, 2 - for Punch out     --Required
+}
+
+Update attendance
+{
+    "punch_status":1/2,     --Required
+    "attend_id":            --Required
+}
+
+Delete attendance
+{
+    "attend_id": 9          --Required
+}
+
+Get all attendance
+{
+    * For filter use *
+    "year": 2022        --Required if month and day entered
+    "month": 5          --Required if day entered
+    "day": 12
+    "user_id": 1
+
+    * For order by *
+    "order_by": ORDER_BY_DATE_DESCENDING = 1, ORDER_BY_DATE_ASCENDING = 2, ORDER_BY_FIRST_ASCENDING = 3
+                ORDER_BY_FIRST_DESCENDING = 4, ORDER_BY_LAST_NAME_ASCENDING = 5, ORDER_BY_LAST_NAME_DESCENDING = 6
+}
