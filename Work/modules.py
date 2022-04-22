@@ -3,7 +3,7 @@ from BMSystem.base_function import \
     get_session as my_session_get, \
     get_name_from_master_user as my_name_create, \
     get_payload_error_alert as my_payload_error, \
-    get_date_from_tabl_object as my_table_data_get
+    get_date_from_tabl_object as my_date_get_from_table
 from BMSystem import constant
 from json import loads
 from django.contrib.auth.models import User as AuthUser
@@ -63,7 +63,7 @@ def get_all_user_attendance(request=None):
             "attend_of_user": {},
             "punch_in": getattr(attend, constant.WORK_MODEL_FIELDS['punch_in']),
             "punch_out": getattr(attend, constant.WORK_MODEL_FIELDS['punch_out']),
-            "date": my_table_data_get(attend),
+            "date": my_date_get_from_table(attend),
         }
 
         get_attend_user = MasterUser.objects.get(**{
@@ -131,7 +131,7 @@ def get_user_attendance(request=None):
     for attend in get_attends:
         attend_params = {
             "attend_id": getattr(attend, constant.WORK_MODEL_FIELDS['attendance_id']),
-            "date": my_table_data_get(attend),
+            "date": my_date_get_from_table(attend),
             "punch_in": getattr(attend, constant.WORK_MODEL_FIELDS['punch_in']),
             "punch_out": getattr(attend, constant.WORK_MODEL_FIELDS['punch_out']),
         }
@@ -245,6 +245,26 @@ def delete_user_attendance(request=None):
 
     get_attend.delete()
     return my_response(result=True, alert=constant.DELETE_ATTENDANCE_SUCCESSFUL)
+
+
+def get_all_cat(request):
+    user_id = my_session_get(request, constant.SESSION_USER_ID)
+    if not user_id:
+        user_id = loads(request.body)[constant.USER_MODEL_FIELDS['get_user_id']]
+        # return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    get_cats = CatMaster.objects.all()
+    cat_list = []
+    for cat in get_cats:
+        get_user = MasterUser.objects.get(**{constant.USER_MODEL_FIELDS['user']: user_id})
+        user_name = my_name_create(get_user)
+        cat_dict = {
+            constant.WORK_MODEL_FIELDS["cat_name"]: getattr(cat, constant.WORK_MODEL_FIELDS['cat_name']),
+            constant.WORK_MODEL_FIELDS["created_by"]: {
+                "id": user_id, "name": user_name
+            }
+        }
+        cat_list.append(cat_dict)
+    return my_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL, data=cat_list)
 
 
 def create_category(request):

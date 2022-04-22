@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from . import constant
 import re
+from json import loads
 
 
 def create_response(result=False, alert=None, data=None):
@@ -26,6 +27,27 @@ def get_date_from_tabl_object(table_object):
             f"{getattr(table_object, constant.WORK_MODEL_FIELDS['month'])}-" +\
             f"{getattr(table_object, constant.WORK_MODEL_FIELDS['day'])}"
     return date
+
+
+def check_user_loging(request):
+    user_id = get_session(request, constant.SESSION_USER_ID)
+    if not user_id:
+        try:
+            user_id = loads(request.body)[constant.USER_MODEL_FIELDS['get_user_id']]
+        except:
+            return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    return create_response(result=True, data=user_id)
+
+
+def check_response_result(response=None):
+    get_response = response
+    try:
+        print("RESPONSE: ", get_response)
+    except:
+        return False
+    if not get_response['result']:
+        return False
+    return get_response['data']
 
 
 def get_payload_error_alert(*fields):
