@@ -14,6 +14,7 @@ urlpatterns = [
 
     path(
         constant.EMPLOYEE_REPORT_URLS['category'],
-        views.
-    )
+        views.Category.as_view(),
+        name=constant.EMPLOYEE_REPORT_VIEWS_NAME['category'],
+    ),
 ]

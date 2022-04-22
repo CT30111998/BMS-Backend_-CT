@@ -82,7 +82,8 @@ USER_VIEWS_NAME = {
 EMPLOYEE_REPORT_VIEWS_NAME = {
     'dashboard': 'work_dashboard',
     'attend': 'attend',
-    'all_attend': 'all_attend'
+    'all_attend': 'all_attend',
+    'category': 'category'
 }
 
 BLOG_VIEWS_NAME = {
