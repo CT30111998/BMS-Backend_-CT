@@ -87,11 +87,13 @@ CORE_ORIGIN_WHITELIST = ''
 CORS_ALLOWED_ORIGINS = [
         'http://localhost:4200',
         'http://192.168.1.82:4200',
+        'http://localhost:4210',
         'http://192.168.1.82:4210',
 ]
 CSRF_TRUSTED_ORIGINS = [
         'http://localhost:4200',
         'http://192.168.1.82:4200',
+        'http://localhost:4210',
         'http://192.168.1.82:4210',
     ]
 
@@ -137,7 +139,7 @@ STATICFILES_DIRS = [
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     BASE_DIR / "media",
-    "/media",
+    # "/media",
 ]
 
 # Internationalization
@@ -180,7 +182,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=(60*24)),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
