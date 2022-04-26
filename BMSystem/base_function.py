@@ -35,8 +35,8 @@ def check_user_loging(request):
         try:
             user_id = loads(request.body)[constant.USER_MODEL_FIELDS['get_user_id']]
         except:
-            return create_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
-    return create_response(result=True, data=user_id)
+            return {"result": False, "alert": constant.USER_NOT_LOGGED_IN}
+    return {'result': True, 'data': user_id}
 
 
 def check_response_result(response=None):

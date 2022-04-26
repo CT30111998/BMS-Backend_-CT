@@ -17,7 +17,7 @@ from BMSystem.base_function import \
 def get_all_user_data(request):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
     get_users = UserDetail.objects.all()
@@ -29,10 +29,10 @@ def get_all_user_data(request):
 def create_my_user(request=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
     # print("USER ID: ", user_id)
-    if user_id:
-        return my_response_create(result=False, alert=constant.USER_LOGGED_IN)
+    # if user_id:
+    #     return my_response_create(result=False, alert=constant.USER_LOGGED_IN)
     if request.method == constant.POST:
         try:
             request_data = loads(request.body)
@@ -118,23 +118,19 @@ def create_my_user(request=None):
     return my_response_create(result=False, alert=constant.REGISTER_FAIL)
 
 
-def delete_user(request):
+def delete_user(request, get_user_id=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
-
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
-    if not request.body:
-        alert = my_payload_error(constant.USER_MODEL_FIELDS['get_user_id'])
-        return my_response_create(result=False, alert=alert)
-
-    get_json_data = loads(request.body)
-
-    if constant.USER_MODEL_FIELDS['get_user_id'] not in get_json_data:
-        alert = my_payload_error(constant.USER_MODEL_FIELDS['get_user_id'])
-        return my_response_create(result=False, alert=alert)
-    get_user_id = get_json_data[constant.USER_MODEL_FIELDS['get_user_id']]
+    # if not request.body:
+    #     alert = my_payload_error(constant.USER_MODEL_FIELDS['get_user_id'])
+    #     return my_response_create(result=False, alert=alert)
+    #
+    # get_json_data = loads(request.body)
+    #
+    # if constant.USER_MODEL_FIELDS['get_user_id'] not in get_json_data:
+    #     alert = my_payload_error(constant.USER_MODEL_FIELDS['get_user_id'])
+    #     return my_response_create(result=False, alert=alert)
+    # get_user_id = get_json_data[constant.USER_MODEL_FIELDS['get_user_id']]
     get_user = AuthUser.objects.filter(**{constant.USER_MODEL_FIELDS['id']: get_user_id})
     if not get_user:
         return my_response_create(result=False, alert=constant.USER_NOT_EXIST)
@@ -145,11 +141,11 @@ def delete_user(request):
 def user_login(request=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
-    user_id_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
-
-    if user_id or user_id_session:
-        return my_response_create(result=False, alert=constant.USER_LOGGED_IN)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # user_id_session = bmSession.objects.filter(**{'sessionKey': constant.SESSION_USER_ID})
+    #
+    # if user_id or user_id_session:
+    #     return my_response_create(result=False, alert=constant.USER_LOGGED_IN)
     if request.method == constant.POST:
         try:
             get_request_data = loads(request.body)
@@ -169,6 +165,11 @@ def user_login(request=None):
             result = False
             alert = constant.PASSWORD_LENGTH_ALERT
             return my_response_create(alert=alert, result=result)
+
+        try:
+            check_user = AuthUser.objects.get(email=user_email)
+        except:
+            return my_response_create(result=False, alert=constant.ACCOUNT_NOT_EXIST_WITH_EMAIL)
 
         user = authenticate(username=user_email, password=password)
         user_id = None
@@ -209,14 +210,14 @@ def user_logout(request=None):
         return my_response_create(alert=constant.LOGOUT_FAIL, result=False)
 
 
-def user_profile(request=None):
+def user_profile(request=None, user_id=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
-    try:
-        user_id = loads(request.body)['user_id']
-    except:
-        return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # try:
+    #     # user_id = loads(request.body)['user_id']
+    # except:
+    #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:
@@ -228,10 +229,10 @@ def user_profile(request=None):
     return my_response_create(alert=constant.DATA_FETCH_SUCCESSFUL, result=True, data=serialize.data)
 
 
-def update_profile(request):
+def update_profile(request, user_id=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
 

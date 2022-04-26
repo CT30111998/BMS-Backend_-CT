@@ -14,10 +14,10 @@ from .blog_serializer import BlogMasterSerializer as BlogSerializer
 from json import loads
 
 
-def get_all_blog(request=None):
+def get_all_blog(request=None, get_user_id=None):
     if not request:
         my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(alert=constant.USER_NOT_LOGGED_IN, result=False)
 
@@ -107,10 +107,10 @@ def get_all_blog(request=None):
     return my_response_create(alert=alert, result=True, data=params)
 
 
-def create_blog(request=None):
+def create_blog(request=None, user_id=None):
     if not request:
         my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
@@ -148,10 +148,10 @@ def create_blog(request=None):
         return my_response_create(result=False, alert=constant.DATABASE_SERVER_ERROR)
 
 
-def update_blog(request=None):
+def update_blog(request=None, user_id=None):
     if request is None:
         my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
@@ -190,10 +190,10 @@ def update_blog(request=None):
     return my_response_create(result=True, alert=constant.BLOG_UPDATE_SUCCESSFUL)
 
 
-def delete_blog(request):
+def delete_blog(request, user_id=None):
     if not request or not request.body:
         my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:
@@ -224,10 +224,10 @@ def delete_blog(request):
     return my_response_create(result=True, alert=constant.BLOG_DELETE_SUCCESSFUL)
 
 
-def like_blog(request=None):
+def like_blog(request=None, user_id=None):
     if not request:
         my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
 
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
@@ -273,11 +273,11 @@ def like_blog(request=None):
     return my_response_create(result=True, alert=alert)
 
 
-def comment_blog(request=None):
+def comment_blog(request=None, user_id=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
 
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
@@ -323,10 +323,10 @@ def comment_blog(request=None):
     return my_response_create(result=True, alert=alert)
 
 
-def delete_comment_blog(request=None):
+def delete_comment_blog(request=None, user_id=None):
     if not request:
         return my_response_create(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
+    # user_id = my_session_get(request=request, key=constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response_create(result=False, alert=constant.USER_NOT_LOGGED_IN)
 

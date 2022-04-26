@@ -217,6 +217,8 @@ WORK_MODEL_FIELDS = {
     'updated_by': 'updated_by',
     'emp_id': 'emp_id',
     'cat_name': "categoryName",
+    'get_cat_id': 'cat_id',
+    'cat_id': 'id',
 }
 #   ** End MODEL FIELDS **
 
@@ -273,6 +275,7 @@ USER_EXIST_MASSAGE = "Already exist account with this email!"
 PASSWORD_LENGTH_ALERT = 'Password should have min 8 characters!'
 PASSWORD_NOT_MATCH = "Password does not match!"
 USER_AND_PASSWORD_NOT_MATCH = "Email and password could not match!"
+ACCOUNT_NOT_EXIST_WITH_EMAIL = 'Account not exist with this email!'
 UPDATE_SUCCESSFUL = "Update successful!"
 UPDATE_FAIL = 'Update fail!'
 LOGOUT_SUCCESSFUL = 'Logout successful!'
@@ -313,5 +316,8 @@ EMP_NOT_EXIST = "Employee not exist!"
 # End Attendance Work
 # Category work
 CATEGORY_CREATE_SUCCESSFUL = "Category create successful!"
+CAT_UPDATE_SUCCESSFUL = "Category update successful!"
+CAT_NOT_EXIST = "Category not exist!"
+CAT_ALREADY_EXIST = "Category already exist! please create different category."
 # End Category work
 #   ** End alert massage **

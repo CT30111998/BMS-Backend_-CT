@@ -12,10 +12,10 @@ from .models import AttendanceMaster as AttendMaster, CategoryMaser as CatMaster
 import datetime
 
 
-def get_all_user_attendance(request=None):
+def get_all_user_attendance(request=None, user_id=None):
     if not request:
         return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
     # if not user_id:
     #     return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     attend_filter = {}
@@ -40,7 +40,7 @@ def get_all_user_attendance(request=None):
                     ]
 
         if (constant.WORK_MODEL_FIELDS['month'] in get_json_response and
-            constant.WORK_MODEL_FIELDS['year'] not in get_json_response)\
+            constant.WORK_MODEL_FIELDS['year'] not in get_json_response) \
                 or (constant.WORK_MODEL_FIELDS['day'] in get_json_response and
                     constant.WORK_MODEL_FIELDS['month'] not in get_json_response):
             alert = my_payload_error(constant.WORK_MODEL_FIELDS['year'], constant.WORK_MODEL_FIELDS['month'])
@@ -110,11 +110,11 @@ def get_all_user_attendance(request=None):
     return my_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
 
 
-def get_user_attendance(request=None):
+def get_user_attendance(request=None, user_id=None):
     if not request:
         return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
 
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
 
     # if not user_id:
     #     return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
@@ -164,19 +164,19 @@ def get_user_attendance(request=None):
     return my_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
 
 
-def create_user_attendance(request=None):
+def create_user_attendance(request=None, user_id=None):
     if not request:
         return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
 
     get_json_data = loads(request.body)
     if constant.WORK_MODEL_FIELDS['punch_status'] not in get_json_data:
         alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.WORK_MODEL_FIELDS['punch_status']}" + \
-            f" in {constant.PAYLOAD_DATA_FORMAT}"
+                f" in {constant.PAYLOAD_DATA_FORMAT}"
         return my_response(result=False, alert=alert)
 
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
-    if not user_id:
-        return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # if not user_id:
+    #     return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
 
     get_current_user = AuthUser.objects.get(**{constant.USER_MODEL_FIELDS['id']: user_id})
 
@@ -217,16 +217,16 @@ def create_user_attendance(request=None):
     return my_response(result=True, alert=alert)
 
 
-def update_user_attendance(request=None):
-    if not request:
-        return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
-    return my_response(result=True, alert=constant.UPDATE_ATTENDANCE_SUCCESSFUL)
+# def update_user_attendance(request=None):
+#     if not request:
+#         return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
+#     return my_response(result=True, alert=constant.UPDATE_ATTENDANCE_SUCCESSFUL)
 
 
-def delete_user_attendance(request=None):
+def delete_user_attendance(request=None, user_id=None):
     if not request:
         return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
 
     # if not user_id:
     #     return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
@@ -234,7 +234,7 @@ def delete_user_attendance(request=None):
 
     if constant.WORK_MODEL_FIELDS['attend_id'] not in get_json_data:
         alert = f"{constant.PAYLOAD_DATA_ERROR} {constant.WORK_MODEL_FIELDS['attend_id']}" + \
-            f" in {constant.PAYLOAD_DATA_FORMAT}"
+                f" in {constant.PAYLOAD_DATA_FORMAT}"
         return my_response(result=False, alert=alert)
     try:
         get_attend = AttendMaster.objects.get(**{
@@ -247,11 +247,11 @@ def delete_user_attendance(request=None):
     return my_response(result=True, alert=constant.DELETE_ATTENDANCE_SUCCESSFUL)
 
 
-def get_all_cat(request):
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
-    if not user_id:
-        user_id = loads(request.body)[constant.USER_MODEL_FIELDS['get_user_id']]
-        # return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
+def get_all_cat(request, user_id=None):
+    # user_id = my_session_get(request, constant.SESSION_USER_ID)
+    # if not user_id:
+    #     user_id = loads(request.body)[constant.USER_MODEL_FIELDS['get_user_id']]
+    #     return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     get_cats = CatMaster.objects.all()
     cat_list = []
     for cat in get_cats:
@@ -267,29 +267,46 @@ def get_all_cat(request):
     return my_response(result=True, alert=constant.DATA_FETCH_SUCCESSFUL, data=cat_list)
 
 
-def create_category(request):
+def create_category(request, user_id=None):
     if not request:
         return my_response(result=False, alert=constant.UNEXPECTED_ERROR)
-    user_id = my_session_get(request, constant.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response(result=False, alert=constant.USER_NOT_LOGGED_IN)
     try:
         get_json_response = loads(request.body)
-        get_cat_name = get_json_response[constant.WORK_MODEL_FIELDS['cat_name']]
-        user_id = get_json_response[constant.USER_MODEL_FIELDS['get_user_id']]
+        get_cat_name = get_json_response[constant.WORK_MODEL_FIELDS['cat_name']].capitalize()
+        cat_id = None
+        if constant.WORK_MODEL_FIELDS['get_cat_id'] in get_json_response:
+            cat_id = get_json_response['get_cat_id']
+
     except:
         alert = my_payload_error(
             constant.WORK_MODEL_FIELDS['cat_name'],
-            constant.USER_MODEL_FIELDS['get_user_id']
         )
         return my_response(result=False, alert=alert)
-
     get_user_master = AuthUser.objects.get(
         **{constant.USER_MODEL_FIELDS['id']: user_id}
     )
-    create_cat = CatMaster(**{
+    cat_params = {
         constant.WORK_MODEL_FIELDS['cat_name']: get_cat_name,
         constant.WORK_MODEL_FIELDS['created_by']: get_user_master
-    })
-    create_cat.save()
-    return my_response(result=True, alert=constant.CATEGORY_CREATE_SUCCESSFUL)
+    }
+    if cat_id:
+        get_cat = CatMaster.objects.filter(**{
+            constant.WORK_MODEL_FIELDS['cat_id']: cat_id
+        })
+        if not get_cat:
+            alert = constant.CAT_NOT_EXIST
+        else:
+            get_cat.update(**cat_params)
+            alert = constant.CAT_UPDATE_SUCCESSFUL
+    else:
+        try:
+            get_cat = CatMaster.objects.get(**{
+                constant.WORK_MODEL_FIELDS['cat_name']: get_cat_name
+            })
+            alert = constant.CAT_ALREADY_EXIST
+        except:
+            create_cat = CatMaster(**cat_params)
+            create_cat.save()
+            alert = constant.CATEGORY_CREATE_SUCCESSFUL
+    return my_response(result=True, alert=alert)
+
