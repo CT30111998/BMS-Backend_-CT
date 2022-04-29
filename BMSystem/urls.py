@@ -24,12 +24,12 @@ from django.conf.urls.static import static
 from User import views
 
 urlpatterns = [
-    path(constant.USER_URLS['admin'], admin.site.urls, name=constant.USER_VIEWS_NAME['admin']),
-    path(constant.DASHBOARD_URL, views.home_view, name=constant.DASHBOARD_VIEW),
+    path(constants.USER_URLS['admin'], admin.site.urls, name=constants.USER_VIEWS_NAME['admin']),
+    path(constants.DASHBOARD_URL, views.home_view, name=constants.DASHBOARD_VIEW),
 
-    path(constant.USER_URLS['user'], include('User.urls')),
-    path(constant.BLOG_URLS['blog'], include('Blog.urls')),
-    path(constant.EMPLOYEE_REPORT_URLS['me'], include('Work.urls')),
+    path(constants.USER_URLS['user'], include('User.urls')),
+    path(constants.BLOG_URLS['blog'], include('Blog.urls')),
+    path(constants.EMPLOYEE_REPORT_URLS['me'], include('Work.urls')),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')

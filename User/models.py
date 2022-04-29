@@ -100,7 +100,7 @@ class UserPosition(models.Model):
 
 class UserPermission(models.Model):
     user = models.ForeignKey(auth_model.User, models.CASCADE)
-    permission = models.IntegerField(default=constant.USER)
+    permission = models.IntegerField(default=constants.USER)
     createdAt = models.DateField(auto_now_add=True)
 
 

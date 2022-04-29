@@ -4,17 +4,17 @@ from . import views
 
 urlpatterns = [
     path(
-        constant.EMPLOYEE_REPORT_URLS['attend'],
+        constants.EMPLOYEE_REPORT_URLS['attend'],
         views.Attendance.as_view(),
-        name=constant.EMPLOYEE_REPORT_VIEWS_NAME['attend']),
+        name=constants.EMPLOYEE_REPORT_VIEWS_NAME['attend']),
     path(
-        constant.EMPLOYEE_REPORT_URLS['all_attend'],
+        constants.EMPLOYEE_REPORT_URLS['all_attend'],
         views.AllAttendance.as_view(),
-        name=constant.EMPLOYEE_REPORT_VIEWS_NAME['all_attend']),
+        name=constants.EMPLOYEE_REPORT_VIEWS_NAME['all_attend']),
 
     path(
-        constant.EMPLOYEE_REPORT_URLS['category'],
+        constants.EMPLOYEE_REPORT_URLS['category'],
         views.Category.as_view(),
-        name=constant.EMPLOYEE_REPORT_VIEWS_NAME['category'],
+        name=constants.EMPLOYEE_REPORT_VIEWS_NAME['category'],
     ),
 ]

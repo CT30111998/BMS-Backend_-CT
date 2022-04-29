@@ -17,25 +17,25 @@ def save_file_storage(request):
 
 
 def get_name_from_master_user(user_objects):
-    user_name = f"{getattr(user_objects, constant.USER_MODEL_FIELDS['first_name'])} " + \
-        f"{getattr(user_objects, constant.USER_MODEL_FIELDS['last_name'])}"
+    user_name = f"{getattr(user_objects, constants.USER_MODEL_FIELDS['first_name'])} " + \
+        f"{getattr(user_objects, constants.USER_MODEL_FIELDS['last_name'])}"
     return user_name
 
 
 def get_date_from_tabl_object(table_object):
-    date = f"{getattr(table_object, constant.WORK_MODEL_FIELDS['year'])}-" +\
-            f"{getattr(table_object, constant.WORK_MODEL_FIELDS['month'])}-" +\
-            f"{getattr(table_object, constant.WORK_MODEL_FIELDS['day'])}"
+    date = f"{getattr(table_object, constants.WORK_MODEL_FIELDS['year'])}-" +\
+            f"{getattr(table_object, constants.WORK_MODEL_FIELDS['month'])}-" +\
+            f"{getattr(table_object, constants.WORK_MODEL_FIELDS['day'])}"
     return date
 
 
 def check_user_loging(request):
-    user_id = get_session(request, constant.SESSION_USER_ID)
+    user_id = get_session(request, constants.SESSION_USER_ID)
     if not user_id:
         try:
-            user_id = loads(request.body)[constant.USER_MODEL_FIELDS['get_user_id']]
+            user_id = loads(request.body)[constants.USER_MODEL_FIELDS['get_user_id']]
         except:
-            return {"result": False, "alert": constant.USER_NOT_LOGGED_IN}
+            return {"result": False, "alert": constants.USER_NOT_LOGGED_IN}
     return {'result': True, 'data': user_id}
 
 
@@ -54,7 +54,7 @@ def get_payload_error_alert(*fields):
     field_name = []
     for field in fields:
         field_name.append(str(field))
-    alert = f"{constant.PAYLOAD_DATA_ERROR} {field_name} in {constant.PAYLOAD_DATA_FORMAT}"
+    alert = f"{constants.PAYLOAD_DATA_ERROR} {field_name} in {constants.PAYLOAD_DATA_FORMAT}"
     return alert
 
 
