@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from django.contrib.auth.models import User as AuthUser
 from User.models import UserMaster, UserPermission
-from BMSystem import constant
+from BMSystem import constants
 
 
 class AuthUserSerializer(serializers.ModelSerializer):

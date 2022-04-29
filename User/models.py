@@ -1,6 +1,6 @@
 import email
 from django.db import models
-from BMSystem import constant
+from BMSystem import constants
 from django.contrib.auth import models as auth_model
 import datetime
 import os

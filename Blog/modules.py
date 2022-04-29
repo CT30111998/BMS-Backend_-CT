@@ -4,7 +4,7 @@ from .models import Master as BlogMaster, Like as LikeMaster, Comment as Comment
 from math import ceil
 from django.contrib.auth.models import User as AuthUser
 from User.models import UserMaster as MasterUser
-from BMSystem import constant
+from BMSystem import constants
 from BMSystem.base_function import \
     create_response as my_response_create, \
     get_session as my_session_get, \

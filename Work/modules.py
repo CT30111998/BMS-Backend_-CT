@@ -4,7 +4,7 @@ from BMSystem.base_function import \
     get_name_from_master_user as my_name_create, \
     get_payload_error_alert as my_payload_error, \
     get_date_from_tabl_object as my_date_get_from_table
-from BMSystem import constant
+from BMSystem import constants
 from json import loads
 from django.contrib.auth.models import User as AuthUser
 from User.models import UserMaster as MasterUser

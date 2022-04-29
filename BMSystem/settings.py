@@ -16,7 +16,6 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = 'django-insecure-1+aq%ya_hc18tvm285vszv3az6r(h9_liljb0(^femdap!4kra
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.46', 'localhost']
-
 
 # Application definition
 
@@ -85,17 +83,17 @@ CORE_ORIGIN_WHITELIST = ''
 
 # alternate cors Header allow method access
 CORS_ALLOWED_ORIGINS = [
-        'http://localhost:4200',
-        'http://192.168.1.82:4200',
-        'http://localhost:4210',
-        'http://192.168.1.82:4210',
+    'http://localhost:4200',
+    'http://192.168.1.82:4200',
+    'http://localhost:4210',
+    'http://192.168.1.82:4210',
 ]
 CSRF_TRUSTED_ORIGINS = [
-        'http://localhost:4200',
-        'http://192.168.1.82:4200',
-        'http://localhost:4210',
-        'http://192.168.1.82:4210',
-    ]
+    'http://localhost:4200',
+    'http://192.168.1.82:4200',
+    'http://localhost:4210',
+    'http://192.168.1.82:4210',
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -110,10 +108,9 @@ DATABASES = {
         'PASSWORD': '',
     },
     'OPTIONS': {
-            'init_command': "SET sql_mode = 'STRICT_TRANS_TABLES",
-        }
+        'init_command': "SET sql_mode = 'STRICT_TRANS_TABLES",
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -132,7 +129,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 STATICFILES_DIRS = [
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -153,7 +149,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -162,7 +157,6 @@ BASE_URL = 'http://localhost/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = 'media/'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -173,16 +167,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication'
     ]
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=(60*24)),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=(60 * 24)),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
@@ -211,6 +207,12 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=3600),
 }
 REST_USE_JWT = True
 # End CSRF Token

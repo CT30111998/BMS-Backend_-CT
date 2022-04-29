@@ -1,6 +1,6 @@
 from . import views
 from django.urls import path
-from BMSystem import constant
+from BMSystem import constants
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [

@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from .moduals.authModels import *
-from BMSystem import constant
+from BMSystem import constants
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication

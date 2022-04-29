@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from django.http import JsonResponse
-from . import constant
+from . import constants
 import re
 from json import loads
 

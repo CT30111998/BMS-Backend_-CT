@@ -1,5 +1,5 @@
 from django.urls import path
-from BMSystem import constant
+from BMSystem import constants
 from . import views
 
 urlpatterns = [

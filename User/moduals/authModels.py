@@ -3,7 +3,7 @@ from django.contrib.auth.models import User as AuthUser
 from ..models import UserMaster as UserDetail, BmsSession as bmSession, UserPermission as userPermission
 from django.contrib.auth import login, authenticate
 from django.contrib import auth
-from BMSystem import constant
+from BMSystem import constants
 from User.serializers import UserSerializer as UserSer, UserPermissionSerializer as PermissionSer
 from json import loads
 from BMSystem.base_function import \
@@ -149,11 +149,11 @@ def user_login(request=None):
     if request.method == constant.POST:
         try:
             get_request_data = loads(request.body)
-            user_email = get_request_data[constant.USER_MODEL_FIELDS['email']]
+            user_email = get_request_data[constant.USER_MODEL_FIELDS['username']]
             password = get_request_data[constant.USER_MODEL_FIELDS['password']]
 
         except:
-            alert = my_payload_error(constant.USER_MODEL_FIELDS['email'], constant.USER_MODEL_FIELDS['password'])
+            alert = my_payload_error(constant.USER_MODEL_FIELDS['username'], constant.USER_MODEL_FIELDS['password'])
             return my_response_create(alert=alert, result=False)
         field = [user_email, password]
         fields_check = null_valid(field)
