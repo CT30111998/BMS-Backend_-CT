@@ -22,6 +22,9 @@ class Master(models.Model):
     def __str__(self):
         return self.postTitle
 
+    class Meta:
+        db_table = 'blog_master'
+
 
 class Like(models.Model):
     like_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
@@ -29,9 +32,15 @@ class Like(models.Model):
     like = models.IntegerField(default=0)
     liked_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        db_table = 'like_master'
+
 
 class Comment(models.Model):
     comment_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     blog = models.ForeignKey(Master, on_delete=models.CASCADE)
     comment = models.CharField(max_length=255)
     created_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'comment_master'
