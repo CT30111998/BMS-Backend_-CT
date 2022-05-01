@@ -26,17 +26,21 @@ def get_date_from_tabl_object(table_object):
     date = f"{getattr(table_object, constants.WORK_MODEL_FIELDS['year'])}-" +\
             f"{getattr(table_object, constants.WORK_MODEL_FIELDS['month'])}-" +\
             f"{getattr(table_object, constants.WORK_MODEL_FIELDS['day'])}"
+
     return date
 
 
-def check_user_loging(request):
+def check_user_loging(request, method=constants.GET):
     user_id = get_session(request, constants.SESSION_USER_ID)
     if not user_id:
         try:
-            user_id = loads(request.body)[constants.USER_MODEL_FIELDS['get_user_id']]
+            if 'user_id' in request.data:
+                user_id = request.data['user_id']
+            else:
+                user_id = request.GET['user_id']
         except:
-            return {"result": False, "alert": constants.USER_NOT_LOGGED_IN}
-    return {'result': True, 'data': user_id}
+            return None
+    return user_id
 
 
 def check_response_result(response=None):
