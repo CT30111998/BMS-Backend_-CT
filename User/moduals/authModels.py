@@ -148,7 +148,7 @@ def user_login(request=None):
     #     return my_response_create(result=False, alert=constants.USER_LOGGED_IN)
     if request.method == constants.POST:
         try:
-            get_request_data = loads(request.body)
+            get_request_data = request.data
             user_email = get_request_data[constants.USER_MODEL_FIELDS['username']]
             password = get_request_data[constants.USER_MODEL_FIELDS['password']]
 
