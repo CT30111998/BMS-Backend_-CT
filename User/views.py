@@ -15,15 +15,18 @@ def home_view(request):
 
 class User(APIView):
     def get(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = get_all_user_data(request)
         return get_response
 
     def delete(self, request):
-        get_response = delete_user(request)
+        user_id = check_user_loging(request)
+        if not user_id:
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
+        get_response = delete_user(request, get_user_id=user_id)
         return get_response
 
 
@@ -33,13 +36,13 @@ class SignupUser(APIView):
         response = check_user_loging(request)
         user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(**response)
         return render(request, constants.USER_TEMPLATE_DIR + constants.USER_TEMPLATES['register'])
 
     # @api_view([constants.POST])
     def post(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request, method=constants.POST)
+        # user_id = check_response_result(response)
         if user_id:
             return create_response(result=False, alert=constants.USER_LOGGED_IN)
         get_api_response = create_my_user(request)
@@ -54,8 +57,8 @@ class LoginUser(APIView):
     #     return render(request, constants.USER_TEMPLATE_DIR + constants.USER_TEMPLATES['login'])
 
     def post(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if user_id:
             return create_response(result=False, alert=constants.USER_LOGGED_IN)
         get_api_response = user_login(request)
@@ -64,10 +67,10 @@ class LoginUser(APIView):
 
 class ProfileUser(APIView):
     def get(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_api_response = user_profile(request, user_id)
         return get_api_response
 
@@ -75,7 +78,7 @@ class ProfileUser(APIView):
         response = check_user_loging(request)
         user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_api_response = update_profile(request, user_id)
         return get_api_response
 
@@ -86,10 +89,10 @@ class Logout(APIView):
     # permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_api_response = user_logout(request)
         return get_api_response
 
