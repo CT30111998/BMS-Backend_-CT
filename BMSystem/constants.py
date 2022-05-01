@@ -35,7 +35,7 @@ EMPLOYEE_REPORT_URLS = {
     'category': 'category/',
 }
 BLOG_URLS = {
-    'blog': 'blog/<int:user_id>',
+    'blog': 'blog/',
     'dashboard': '',
     'blog_update': 'delete/',
     'blog_like': 'like/',
