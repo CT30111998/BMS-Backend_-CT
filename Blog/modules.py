@@ -108,16 +108,14 @@ def get_all_blog(request=None, get_user_id=None):
 
 
 def create_blog(request=None, user_id=None):
+    print('USER ID: ', user_id)
     if not request:
         my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
-    if not request.body:
+    if not request.data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
-    get_json_data = loads(request.body)
+    get_json_data = request.data
     if not constants.BLOG_MODEL_FIELDS['blog_title'] in get_json_data and \
             not constants.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
         alert = f"{constants.ONE_FIELD_REQUIRED_FROM_FIELDS} {constants.BLOG_MODEL_FIELDS['blog_title']}" + \
@@ -151,14 +149,11 @@ def create_blog(request=None, user_id=None):
 def update_blog(request=None, user_id=None):
     if request is None:
         my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
-    if not request.body:
+    if not request.data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
-    get_json_data = loads(request.body)
+    get_json_data = request.data
 
     if not constants.BLOG_MODEL_FIELDS['get_blog_id'] in get_json_data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
@@ -191,13 +186,10 @@ def update_blog(request=None, user_id=None):
 
 
 def delete_blog(request, user_id=None):
-    if not request or not request.body:
-        my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
+    # if not request or not request.body:
+    #     my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
     try:
-        get_json_data = loads(request.body)
+        get_json_data = request.GET
     except:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
@@ -232,10 +224,10 @@ def like_blog(request=None, user_id=None):
     # if not user_id:
     #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
-    if not request.body:
+    if not request.data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
-    get_json_response = loads(request.body)
+    get_json_response = request.data
 
     if constants.BLOG_MODEL_FIELDS['get_blog_id'] and constants.BLOG_MODEL_FIELDS['like_status'] not in get_json_response:
         alert = my_payload_error(
@@ -281,10 +273,10 @@ def comment_blog(request=None, user_id=None):
     # if not user_id:
     #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
-    if not request.body:
+    if not request.data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
-    get_json_response = loads(request.body)
+    get_json_response = request.data
     if constants.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response \
             or constants.BLOG_MODEL_FIELDS['comment'] not in get_json_response:
         alert = my_payload_error(
@@ -330,11 +322,11 @@ def delete_comment_blog(request=None, user_id=None):
     # if not user_id:
     #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
-    if not request.body:
+    if not request.GET:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
 
-    get_json_response = loads(request.body)
+    get_json_response = request.GET
     if constants.BLOG_MODEL_FIELDS['get_blog_id'] not in get_json_response:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
