@@ -35,7 +35,7 @@ def create_my_user(request=None):
     #     return my_response_create(result=False, alert=constants.USER_LOGGED_IN)
     if request.method == constants.POST:
         try:
-            request_data = loads(request.body)
+            request_data = request.data
             first_name, last_name, user_email, mobile_no, password, confirm_password = \
                 request_data[constants.USER_MODEL_FIELDS['first_name']].capitalize(), \
                 request_data[constants.USER_MODEL_FIELDS['last_name']].capitalize(), \
