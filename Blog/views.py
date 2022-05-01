@@ -12,45 +12,47 @@ class BlogMaster(APIView):
     # permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id=None):
-        response = check_user_loging(request)
+        user_id = check_user_loging(request)
         # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.UNEXPECTED_ERROR)
+        # user_id = request.GET['user_id']
         get_response = get_all_blog(request, user_id)
         return get_response
 
     # @csrf_exempt
     def post(self, request, user_id=None):
-        response = check_user_loging(request)
+        user_id = check_user_loging(request)
         # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.UNEXPECTED_ERROR)
         get_response = create_blog(request, user_id)
         return get_response
 
     def put(self, request=None, user_id=None):
-        response = check_user_loging(request)
+        user_id = check_user_loging(request)
         # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.UNEXPECTED_ERROR)
         get_response = update_blog(request, user_id)
         return get_response
 
-    def delete(self, request, user_id=None):
-        response = check_user_loging(request)
+    def delete(self, request):
+        user_id = check_user_loging(request)
         # user_id = check_response_result(response)
+        # user_id = request.GET['user_id']
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = delete_blog(request=request, user_id=user_id)
         return get_response
 
 
 class UpdateBlog(APIView):
     def get(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = delete_blog(request=request, user_id=user_id)
         return get_response
 
@@ -58,18 +60,18 @@ class UpdateBlog(APIView):
 class LikBlog(APIView):
 
     def post(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = like_blog(request=request, user_id=user_id)
         return get_response
 
     def put(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = like_blog(request=request, user_id=user_id)
         return get_response
 
@@ -77,25 +79,25 @@ class LikBlog(APIView):
 class CommentBlog(APIView):
 
     def post(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = comment_blog(request, user_id)
         return get_response
 
     def put(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = comment_blog(request, user_id)
         return get_response
 
     def delete(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
+        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(response)
+            return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_response = delete_comment_blog(request, user_id)
         return get_response
