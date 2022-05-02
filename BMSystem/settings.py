@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1+aq%ya_hc18tvm285vszv3az6r(h9_liljb0(^femdap!4kra'
+SECRET_KEY = f'ck-cms-1+aq%ya_hc18tvm285vszv3az6r({datetime.now()}h9_liljb0(^femdap!4kra'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+CORS_ALLOW_HEADERS = ['*']
+ALLOWED_HOSTS = ('*',)
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -78,13 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'BMSystem.wsgi.application'
 
-CORE_ORIGIN_ALLOW_ALL = True
-CORE_ORIGIN_WHITELIST = ''
 
-# alternate cors Header allow method access
-# CORS_ALLOWED_ORIGINS = [
-#     '*'
-# ]
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
     'http://192.168.1.82:4200',
