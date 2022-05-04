@@ -1,0 +1,29 @@
+
+## BACKEND ##
+
+BACKEND IP = 127.0.0.1
+BACKEND PORT = 8000
+BACKEND_URL = http://127.0.0.1:8000/
+
+## USER API ##
+LOGIN = /user/login/		POST
+REGISTER = /user/signup/	POST
+LOGOUT = /user/logout/		GET
+PROFILE = /user/profile/(user_id)	GET-fatch data /POST- update profile image - NOT WORKING CURRNETLY
+
+## BLOG API ##
+
+Blog = /blog/	
+	POST - Create blog
+	PUT - Update blog
+	GET - get all blogs
+	DELETE - Delete blogs
+
+Like or Unlike blog = /blog/like/	- POST
+
+Blog comment = /blog/comment/
+	POST - Create comment
+	PUT - Update comment
+	DELETE - Delete comment
+
+	
