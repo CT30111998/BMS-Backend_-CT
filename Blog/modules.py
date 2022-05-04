@@ -1,4 +1,6 @@
 # Blog Modules
+import datetime
+
 from django.core.files.storage import FileSystemStorage
 from .models import Master as BlogMaster, Like as LikeMaster, Comment as CommentMaster
 from math import ceil
@@ -108,7 +110,6 @@ def get_all_blog(request=None, get_user_id=None):
 
 
 def create_blog(request=None, user_id=None):
-    print('USER ID: ', user_id)
     if not request:
         my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
 
@@ -133,11 +134,13 @@ def create_blog(request=None, user_id=None):
             get_json_data[constants.BLOG_MODEL_FIELDS['blog_desc']].capitalize()
 
     if constants.BLOG_MODEL_FIELDS['blog_image'] in get_json_data:
-        get_file = request.FILES()
+        get_file = request.FILES['postImage']
         fs = FileSystemStorage()
-        path = f"{constants.UPLOAD_PATH}{constants.BLOG_PATH}{get_file.name}"
+        time = str(datetime.datetime.now())
+        time_str = time.split('.')[0].replace(' ', '-').replace(':', '-')
+        path = f"{constants.UPLOAD_PATH}{constants.BLOG_PATH}{time_str}_{get_file.name}"
         fs.save(name=path, content=get_file)
-        blog_params[constants.BLOG_MODEL_FIELDS['blog_image']] = path
+        blog_params[constants.BLOG_MODEL_FIELDS['blog_image']] = constants.MEDIA_PATH+path
     try:
         create_new_blog = BlogMaster(**blog_params)
         create_new_blog.save()

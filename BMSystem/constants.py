@@ -12,6 +12,7 @@ JS_URL = "/media/js/"
 UPLOAD_PATH = 'Uploads/'
 PROFILE_PATH = 'Profiles/'
 BLOG_PATH = 'Blog/'
+MEDIA_PATH = 'media/'
 # End Uploads media path
 
 #   ** End PATH **
@@ -36,6 +37,7 @@ EMPLOYEE_REPORT_URLS = {
 }
 BLOG_URLS = {
     'blog': 'blog/',
+    'upload': 'upload/<int:blog_id>',
     'dashboard': '',
     'blog_update': 'delete/',
     'blog_like': 'like/',
@@ -320,4 +322,12 @@ CAT_UPDATE_SUCCESSFUL = "Category update successful!"
 CAT_NOT_EXIST = "Category not exist!"
 CAT_ALREADY_EXIST = "Category already exist! please create different category."
 # End Category work
+FILE_UPLOAD_FAILURE = "File upload failed!"
+INVALID_FILE_TYPE = "Invalid file type"
+MAX_FILE_SIZE_LIMIT_REACHED = "Max file size limit reached!"
+FILE_DELETION_FAILURE = "File deletion failure!"
+FILE_UPLOAD_SUCCESS = "File upload successful!"
 #   ** End alert massage **
+
+IMAGE_MIME_TYPES = ['image/jpeg', 'image/png']
+MAX_FILE_SIZE = 5000000  # 5 MB
