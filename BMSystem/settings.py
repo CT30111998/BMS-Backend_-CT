@@ -26,6 +26,7 @@ SECRET_KEY = f'ck-cms-1+aq%ya_hc18tvm285vszv3az6r({datetime.now()}h9_liljb0(^fem
 DEBUG = True
 CORS_ALLOW_HEADERS = ['*']
 ALLOWED_HOSTS = ('*',)
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition

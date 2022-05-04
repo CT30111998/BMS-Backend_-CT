@@ -19,6 +19,9 @@ class BlogMaster(APIView):
         get_response = get_all_blog(request, user_id)
         return get_response
 
+    def retrive(self):
+        pass
+
     # @csrf_exempt
     def post(self, request, user_id=None):
         user_id = check_user_loging(request)

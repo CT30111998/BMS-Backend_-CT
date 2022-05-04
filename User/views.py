@@ -5,12 +5,6 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from BMSystem.base_function import create_response, check_response_result, check_user_loging
-from rest_framework.permissions import IsAuthenticated
-import json
-
-
-def home_view(request):
-    return render(request, 'index.html')
 
 
 class User(APIView):
