@@ -4,6 +4,7 @@ from django.core.files.storage import FileSystemStorage
 from .models import Master as BlogMaster, Like as LikeMaster, Comment as CommentMaster
 from math import ceil
 from django.contrib.auth.models import User as AuthUser
+from base.query_modules import get_data
 from User.models import UserMaster as MasterUser
 from BMSystem import constants
 from BMSystem.base_function import \
@@ -15,13 +16,22 @@ from .blog_serializer import BlogMasterSerializer as BlogSerializer
 from json import loads
 
 
-def get_all_blog(request=None, get_user_id=None):
+def get_all_blog(request=None, get_user_id=None, blog_id=None):
     if not request:
         my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
+    request_data = request.GET
+    if 'blog_id' in request_data:
+        blog_id = request_data['blog_id']
 
-    get_blogs = BlogMaster.objects.filter(**{
-        constants.BLOG_MODEL_FIELDS['blog_delete']: constants.BLOG_NOT_DELETE_NUM
-    })
+    blog_filter = {
+        constants.BLOG_MODEL_FIELDS['blog_delete']: constants.BLOG_NOT_DELETE_NUM,
+    }
+    if blog_id:
+        blog_filter['id'] = blog_id
+
+    get_blogs = get_data(model=BlogMaster, filters=blog_filter)
+    if not get_blogs:
+        return my_response_create(alert=constants.BLOG_NOT_EXIST)
     total_blogs = len(get_blogs)
     total_blog_details = []
     for blog in get_blogs:
@@ -102,6 +112,8 @@ def get_all_blog(request=None, get_user_id=None):
     nSlid = n // 4 + ceil((n / 4) - (n // 4))
     alert = constants.GET_ALL_BLOG_DATA_SUCCESSFUL
     params = {'no_of_slides': nSlid, 'total blogs': total_blogs, 'blogs_detail': total_blog_details}
+    if total_blogs == 1:
+        params['blogs_detail'] = total_blog_details[0]
     return my_response_create(alert=alert, result=True, data=params)
 
 
