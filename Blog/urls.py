@@ -3,7 +3,8 @@ from BMSystem import constants
 from . import views
 
 urlpatterns = [
-    path(constants.BLOG_URLS['dashboard'], views.BlogMaster.as_view()),
+    path(constants.BLOG_URLS['dashboard'], views.BlogMaster.as_view({'get': 'list'})),
+    path(constants.BLOG_URLS['get_blog'], views.BlogMaster.as_view({'get': 'retrieve'})),
     # path(constant.BLOG_URLS['blog_update'], views.UpdateBlog.as_view()),
     path(constants.BLOG_URLS['blog_like'], views.LikBlog.as_view()),
     path(constants.BLOG_URLS['blog_comment'], views.CommentBlog.as_view(),
