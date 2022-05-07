@@ -1,16 +1,17 @@
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView, Response
+from rest_framework.viewsets import ViewSet
 from Blog.modules import *
 from os import SEEK_END
 from .models import Master
 from BMSystem.base_function import check_user_loging, check_response_result, create_response
 
 
-class BlogMaster(APIView):
+class BlogMaster(ViewSet):
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
 
-    def get(self, request, user_id=None):
+    def list(self, request, user_id=None):
         user_id = check_user_loging(request)
         # user_id = check_response_result(response)
         if not user_id:
@@ -19,8 +20,12 @@ class BlogMaster(APIView):
         get_response = get_all_blog(request, user_id)
         return get_response
 
-    def retrive(self):
-        pass
+    def retrieve(self, request, blog_id):
+        user_id = check_user_loging(request)
+        if not user_id:
+            return create_response(alert=constants.UNEXPECTED_ERROR)
+        get_response = get_all_blog(request, user_id)
+        return get_response
 
     # @csrf_exempt
     def post(self, request, user_id=None):
