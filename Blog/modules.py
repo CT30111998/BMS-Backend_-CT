@@ -1,6 +1,5 @@
 # Blog Modules
 import datetime
-
 from django.core.files.storage import FileSystemStorage
 from .models import Master as BlogMaster, Like as LikeMaster, Comment as CommentMaster
 from math import ceil
@@ -19,9 +18,6 @@ from json import loads
 def get_all_blog(request=None, get_user_id=None):
     if not request:
         my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(alert=constants.USER_NOT_LOGGED_IN, result=False)
 
     get_blogs = BlogMaster.objects.filter(**{
         constants.BLOG_MODEL_FIELDS['blog_delete']: constants.BLOG_NOT_DELETE_NUM
@@ -189,8 +185,6 @@ def update_blog(request=None, user_id=None):
 
 
 def delete_blog(request, user_id=None):
-    # if not request or not request.body:
-    #     my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
     try:
         get_json_data = request.GET
     except:
@@ -211,7 +205,6 @@ def delete_blog(request, user_id=None):
     if not get_blog:
         return my_response_create(result=False, alert=constants.BLOG_NOT_EXIST)
     try:
-        # get_blog.update(**{constants.BLOG_MODEL_FIELDS['blog_delete']: constants.BLOG_DELETE_NUM})
         get_blog.delete()
     except:
         return my_response_create(result=False, alert=constants.BLOG_NOT_DELETE)
@@ -222,10 +215,6 @@ def delete_blog(request, user_id=None):
 def like_blog(request=None, user_id=None):
     if not request:
         my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
     if not request.data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
@@ -272,10 +261,6 @@ def comment_blog(request=None, user_id=None):
     if not request:
         return my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
 
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
-
     if not request.data:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
         return my_response_create(result=False, alert=alert)
@@ -321,9 +306,6 @@ def comment_blog(request=None, user_id=None):
 def delete_comment_blog(request=None, user_id=None):
     if not request:
         return my_response_create(result=False, alert=constants.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
 
     if not request.GET:
         alert = my_payload_error(constants.BLOG_MODEL_FIELDS['get_blog_id'])
