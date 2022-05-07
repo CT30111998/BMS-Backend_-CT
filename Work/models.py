@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User as AuthUser
+from base.base_models import CreatedMixer
 # Create your models here.
 
 
@@ -100,3 +101,7 @@ class AttendanceMaster(models.Model):
 
     class Meta:
         db_table = 'attendance_master'
+
+
+class FeedbackMaster(CreatedMixer):
+    feedback = models.CharField(max_length=800)
