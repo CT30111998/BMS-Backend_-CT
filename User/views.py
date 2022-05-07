@@ -36,7 +36,6 @@ class SignupUser(APIView):
     # @api_view([constants.POST])
     def post(self, request):
         user_id = check_user_loging(request, method=constants.POST)
-        # user_id = check_response_result(response)
         if user_id:
             return create_response(result=False, alert=constants.USER_LOGGED_IN)
         get_api_response = create_my_user(request)
@@ -52,7 +51,6 @@ class LoginUser(APIView):
 
     def post(self, request):
         user_id = check_user_loging(request)
-        # user_id = check_response_result(response)
         if user_id:
             return create_response(result=False, alert=constants.USER_LOGGED_IN)
         get_api_response = user_login(request)
@@ -62,15 +60,13 @@ class LoginUser(APIView):
 class ProfileUser(APIView):
     def get(self, request):
         user_id = check_user_loging(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_api_response = user_profile(request, user_id)
         return get_api_response
 
     def put(self, request):
-        response = check_user_loging(request)
-        user_id = check_response_result(response)
+        user_id = check_user_loging(request)
         if not user_id:
             return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_api_response = update_profile(request, user_id)
@@ -84,7 +80,6 @@ class Logout(APIView):
 
     def get(self, request):
         user_id = check_user_loging(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=constants.USER_NOT_LOGGED_IN)
         get_api_response = user_logout(request)
