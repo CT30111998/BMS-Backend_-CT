@@ -17,4 +17,8 @@ urlpatterns = [
         views.Category.as_view(),
         name=constants.EMPLOYEE_REPORT_VIEWS_NAME['category'],
     ),
+    path(
+        constants.EMPLOYEE_REPORT_URLS['feedback'],
+        views.Feedback.as_view({'get': 'list'}),
+    ),
 ]
