@@ -34,10 +34,12 @@ EMPLOYEE_REPORT_URLS = {
     'attend': 'attendance/',
     'all_attend': 'all-attendance/',
     'category': 'category/',
+    'feedback': 'feedback/',
 }
 BLOG_URLS = {
     'blog': 'blog/',
     'upload': 'upload/<int:blog_id>',
+    'get_blog': '<int:blog_id>',
     'dashboard': '',
     'blog_update': 'delete/',
     'blog_like': 'like/',
@@ -322,6 +324,13 @@ CAT_UPDATE_SUCCESSFUL = "Category update successful!"
 CAT_NOT_EXIST = "Category not exist!"
 CAT_ALREADY_EXIST = "Category already exist! please create different category."
 # End Category work
+# Start Feedback
+FEEDBACK_CREATE_SUCCESS = 'Feedback create successful!'
+FEEDBACK_UPDATE_SUCCESS = 'Feedback update successful!'
+FEEDBACK_DELETE_SUCCESS = 'Feedback delete successful!'
+FEEDBACK_GET_SUCCESS = 'Feedback fetch successful!'
+FEEDBACK_NOT_EXIST = 'Feedback not exist!'
+# End Feedback
 FILE_UPLOAD_FAILURE = "File upload failed!"
 INVALID_FILE_TYPE = "Invalid file type"
 MAX_FILE_SIZE_LIMIT_REACHED = "Max file size limit reached!"
