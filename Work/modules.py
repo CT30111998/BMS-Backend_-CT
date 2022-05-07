@@ -8,8 +8,10 @@ from BMSystem import constants
 from json import loads
 from django.contrib.auth.models import User as AuthUser
 from User.models import UserMaster as MasterUser
-from .models import AttendanceMaster as AttendMaster, CategoryMaser as CatMaster
+from .models import AttendanceMaster as AttendMaster, CategoryMaser as CatMaster, FeedbackMaster
 import datetime
+from base.query_modules import save_data, get_data, update_data_by_fields, update_data_by_filters
+from datetime import datetime
 
 
 def get_all_user_attendance(request=None, user_id=None):
@@ -168,7 +170,7 @@ def create_user_attendance(request=None, user_id=None):
     if not request:
         return my_response(result=False, alert=constants.UNEXPECTED_ERROR)
 
-    get_json_data = loads(request.body)
+    get_json_data = request.data
     if constants.WORK_MODEL_FIELDS['punch_status'] not in get_json_data:
         alert = f"{constants.PAYLOAD_DATA_ERROR} {constants.WORK_MODEL_FIELDS['punch_status']}" + \
                 f" in {constants.PAYLOAD_DATA_FORMAT}"
@@ -190,7 +192,6 @@ def create_user_attendance(request=None, user_id=None):
         get_emp = get_current_user
 
     attend_params = {constants.USER_MODEL_FIELDS['user']: get_emp}
-
     if get_json_data[constants.WORK_MODEL_FIELDS['punch_status']] == constants.PUNCH_IN_STATUS:
         attend_params[constants.WORK_MODEL_FIELDS['punch_in']] = datetime.datetime.now().time()
     else:
@@ -310,3 +311,66 @@ def create_category(request, user_id=None):
             alert = constants.CATEGORY_CREATE_SUCCESSFUL
     return my_response(result=True, alert=alert)
 
+
+def get_feedback(request):
+    request_data = request.GET
+    feedback_object = get_data(
+        model=FeedbackMaster,
+        filters={'id': request_data['feedback_id']} if 'feedback_id' in request_data else None
+    )
+    if not feedback_object:
+        return my_response(alert=constants.FEEDBACK_NOT_EXIST)
+    data_list = list()
+    for feedback in feedback_object:
+        feedback_dict = {
+            'id': feedback.id,
+            'feedback': feedback.feedback,
+            'created_by': feedback.created_by.id,
+        }
+        data_list.append(feedback_dict)
+    return my_response(result=True, alert=constants.FEEDBACK_GET_SUCCESS, data=data_list)
+
+
+def create_feedback(request, user_id=None):
+    request_data = request.data
+    user_object = get_data(model=AuthUser, filters={'id': user_id})
+    if not user_object:
+        return my_response(alert=constants.USER_NOT_EXIST)
+
+    feedback_save = save_data(model=FeedbackMaster, fields={
+        constants.WORK_MODEL_FIELDS['created_by']: user_object.first(),
+        'feedback': request_data['feedback'].capitalize(),
+        'created_time': datetime.now()
+    })
+
+    if not feedback_save:
+        return my_response(alert=constants.UNEXPECTED_ERROR)
+
+    return my_response(result=True, alert=constants.FEEDBACK_CREATE_SUCCESS)
+
+
+def update_feedback(request):
+    request_data = request.data
+    feedback_id = request_data['feedback_id']
+    feedback = request_data['feedback'].capitalize()
+
+    feedback_object = update_data_by_filters(
+        model=FeedbackMaster,
+        filters={'id': feedback_id},
+        fields={'feedback': feedback}
+    )
+    if not feedback_object:
+        return my_response(alert=constants.UNEXPECTED_ERROR)
+
+    return my_response(result=True, alert=constants.FEEDBACK_UPDATE_SUCCESS)
+
+
+def delete_feedback(request, user_id=None):
+    request_data = request.GET
+    feedback_id = request_data['feedback_id']
+    feedback_object = get_data(model=FeedbackMaster, filters={'id': feedback_id})
+    if not feedback_object:
+        return my_response(alert=constants.FEEDBACK_NOT_EXIST)
+
+    feedback_object.delete()
+    return my_response(result=True, alert=constants.FEEDBACK_DELETE_SUCCESS)
