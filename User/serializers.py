@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers
 from django.contrib.auth.models import User as AuthUser
-from User.models import UserMaster, UserPermission
+from User.models import UserMaster
 from BMSystem import constants
 
 
@@ -17,10 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserPermissionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserPermission
-        fields = '__all__'
+# class UserPermissionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = UserPermission
+#         fields = '__all__'
 
     # def to_representation(self, instance):
     #     self.fields['user_id'] = AuthUserSerializer(read_only=True)

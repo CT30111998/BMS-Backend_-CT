@@ -5,11 +5,6 @@ import re
 from json import loads
 
 
-def create_response(result=False, alert=None, data=None):
-    get = {"result": result, 'alert': alert, 'data': data}
-    return JsonResponse(get)
-
-
 def save_file_storage(request):
     file = request.FILES['uploadedFile']
     # file_name = default_storage.save(file.name, file)

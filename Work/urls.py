@@ -4,21 +4,22 @@ from . import views
 
 urlpatterns = [
     path(
-        constants.EMPLOYEE_REPORT_URLS['attend'],
+        constants.EMPLOYEE_REPORT_URLS['ATTEND'],
         views.Attendance.as_view(),
-        name=constants.EMPLOYEE_REPORT_VIEWS_NAME['attend']),
-    path(
-        constants.EMPLOYEE_REPORT_URLS['all_attend'],
-        views.AllAttendance.as_view(),
-        name=constants.EMPLOYEE_REPORT_VIEWS_NAME['all_attend']),
+    ),
 
     path(
-        constants.EMPLOYEE_REPORT_URLS['category'],
-        views.Category.as_view(),
-        name=constants.EMPLOYEE_REPORT_VIEWS_NAME['category'],
+        constants.EMPLOYEE_REPORT_URLS['GET_ALL_ATTEND'],
+        views.AllAttendance.as_view(),
     ),
+
     path(
-        constants.EMPLOYEE_REPORT_URLS['feedback'],
+        constants.EMPLOYEE_REPORT_URLS['CATEGORY'],
+        views.Category.as_view(),
+    ),
+
+    path(
+        constants.EMPLOYEE_REPORT_URLS['FEEDBACK'],
         views.Feedback.as_view({'get': 'list'}),
     ),
 ]

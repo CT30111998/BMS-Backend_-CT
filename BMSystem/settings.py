@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "rest_framework_simplejwt",
     'corsheaders',
+    'Auth',
     'Blog',
     'User',
     'Work',
@@ -209,3 +210,6 @@ JWT_AUTH = {
 }
 REST_USE_JWT = True
 # End CSRF Token
+
+TOKEN_KEY_LENGTH = 20
+SESSION_LENGTH = 86400  # Session Length 1 Day = 86,400 seconds
