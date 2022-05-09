@@ -1,6 +1,5 @@
-import email
-from django.db import models
-from BMSystem import constants
+from django.db.models import CharField, IntegerField, EmailField, ForeignKey, DateTimeField, \
+    DateField, ImageField, CASCADE
 from Auth.models import GroupMaster
 from base.base_models import UserMixing, CreatedMixing, UpdatedMixing
 import datetime
@@ -12,22 +11,21 @@ def get_file_path(request, filename):
     return os.path.join('uploads/', filename)
 
 
-class UserMaster(UserMixing):
-    firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
-    mNo = models.IntegerField()
-    email = models.EmailField()
-    image = models.ImageField(upload_to=get_file_path, null=True)
-    address = models.CharField(max_length=250, null=True)
-    city = models.CharField(max_length=50, null=True)
-    state = models.CharField(max_length=50, null=True)
-    country = models.CharField(max_length=50, null=True)
-    about = models.CharField(max_length=255, null=True)
-    birthDate = models.DateField(null=True)
-    dateOfJoining = models.DateField(null=True)
-    jonTittle = models.CharField(max_length=50, null=True)
-    updatedAt = models.DateField(null=True)
-    createdAt = models.DateField()
+class UserMaster(UserMixing, UpdatedMixing):
+    firstName = CharField(max_length=100)
+    lastName = CharField(max_length=100)
+    mNo = IntegerField()
+    email = EmailField()
+    image = ImageField(upload_to=get_file_path, null=True)
+    address = CharField(max_length=250, null=True)
+    city = CharField(max_length=50, null=True)
+    state = CharField(max_length=50, null=True)
+    country = CharField(max_length=50, null=True)
+    about = CharField(max_length=255, null=True)
+    birthDate = DateField(null=True)
+    dateOfJoining = DateField(null=True)
+    jonTittle = CharField(max_length=50, null=True)
+    created_at = DateTimeField()
 
     def __str__(self):
         return self.firstName
@@ -37,7 +35,7 @@ class UserMaster(UserMixing):
 
 
 class DepartmentMaster(CreatedMixing, UpdatedMixing):
-    dept = models.CharField(max_length=30)
+    dept = CharField(max_length=30)
 
     def __str__(self):
         return self.dept
@@ -47,7 +45,7 @@ class DepartmentMaster(CreatedMixing, UpdatedMixing):
 
 
 class ShiftMaster(CreatedMixing, UpdatedMixing):
-    shift = models.CharField(max_length=50)
+    shift = CharField(max_length=50)
 
     def __str__(self):
         return self.shift
@@ -56,13 +54,14 @@ class ShiftMaster(CreatedMixing, UpdatedMixing):
         db_table = 'shift_master'
 
 
-class UserGroup(UserMixing, CreatedMixing, UpdatedMixing):
-    group = models.ForeignKey(
+class UserGroup(UserMixing, UpdatedMixing):
+    group = ForeignKey(
         GroupMaster,
-        on_delete=models.CASCADE,
+        on_delete=CASCADE,
         related_name="related_user_group_group_master",
         verbose_name="User add in user group"
     )
+    created_at = DateTimeField()
 
     class Meta:
         db_table = "user_group"
