@@ -1,6 +1,4 @@
-from abc import ABC
-
-from rest_framework.serializers import Serializer, CharField, EmailField, IntegerField, ValidationError
+from rest_framework.serializers import Serializer, CharField, EmailField, IntegerField, ValidationError, ModelSerializer
 from BMSystem import constants, decimal_constants, response_messages
 from base.common_helpers import check_email_format
 from base.query_modules import get_data
@@ -13,7 +11,7 @@ class CreateUserSerializer(Serializer):
     password = CharField(required=True)
     confirm_password = CharField(required=True)
     is_active = IntegerField(default=decimal_constants.NOT_ACTIVE)
-    id_deleted = IntegerField(default=decimal_constants.NOT_DELETED)
+    is_deleted = IntegerField(default=decimal_constants.NOT_DELETED)
 
     def validate(self, data):
         error_dict = dict()
@@ -22,9 +20,9 @@ class CreateUserSerializer(Serializer):
         if not check_email_valid:
             error_dict['email'] = response_messages.EMAIL_NOT_VALID
 
-        status = get_data(model=AuthMaster, filters={'email': data['email']})
-        if not status:
-            error_dict['other_errors'] = response_messages.UNEXPECTED_ERROR
+        user_object = get_data(model=AuthMaster, filters={'email': data['email']})
+        if user_object:
+            error_dict['user'] = response_messages.USER_EXIST
 
         if data['password'] != data['confirm_password']:
             error_dict['password'] = response_messages.PASSWORD_NOT_SAME
@@ -60,3 +58,9 @@ class LoginSerializer(Serializer):
         if error_dict:
             raise ValidationError(error_dict)
         return data
+
+
+class AuthUserSerializer(ModelSerializer):
+    class Meta:
+        model = AuthMaster
+        fields = ('id',)

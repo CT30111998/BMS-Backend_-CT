@@ -8,7 +8,7 @@ class AuthMaster(Model):
     password = CharField(max_length=800)
     is_active = IntegerField(default=decimal_constants.NOT_ACTIVE)
     last_login = DateTimeField(null=True)
-    id_deleted = IntegerField(default=decimal_constants.NOT_DELETED)
+    is_deleted = IntegerField(default=decimal_constants.NOT_DELETED)
 
     class Meta:
         db_table = "auth_master"
@@ -40,7 +40,7 @@ class AuthToken(Model):
     user_master = ForeignKey(
         AuthMaster, related_name='auth_token_user', on_delete=CASCADE
     )
-    created_time = IntegerField(null=True, blank=True)
+    created_at = DateTimeField()
 
     class Meta:
         db_table = 'bms_auth_session'
