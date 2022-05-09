@@ -3,8 +3,8 @@ import datetime
 from django.core.files.storage import FileSystemStorage
 from .models import BlogMaster as BlogMaster, Like as LikeMaster, Comment as CommentMaster
 from math import ceil
-from django.contrib.auth.models import User as AuthUser
-from base.query_modules import get_data
+from Auth.models import AuthMaster as AuthUser
+from base.query_modules import get_data, save_data, update_data_by_fields
 from User.models import UserMaster as MasterUser
 from BMSystem import constants, response_messages, model_fields, decimal_constants
 from BMSystem.base_function import \
@@ -13,6 +13,7 @@ from BMSystem.base_function import \
     get_payload_error_alert as my_payload_error
 from base.common_helpers import create_response as my_response_create
 from .blog_serializer import BlogMasterSerializer as BlogSerializer
+from django.utils import timezone
 from json import loads
 
 
@@ -44,7 +45,7 @@ def get_all_blog(request=None, get_user_id=None, blog_id=None):
         get_user_id = getattr(get_user, model_fields.ID)
         user_name = my_name_create(get_user)
 
-        blog_details['blog_id'] = getattr(blog, model_fields.BLOG_ID)
+        blog_details['blog_id'] = getattr(blog, model_fields.ID)
         blog_details['blog_image'] = str(getattr(blog, model_fields.BLOG_IMAGE))
         blog_details['blog_title'] = getattr(blog, model_fields.BLOG_TITLE)
         blog_details['blog_desc'] = getattr(blog, model_fields.BLOG_TITLE)
@@ -131,15 +132,15 @@ def create_blog(request=None, user_id=None):
                 f" and {model_fields.BLOG_IMAGE}!"
         return my_response_create(result=False, alert=alert)
 
-    get_user_details = AuthUser.objects.get(id=user_id)
-    blog_params = {model_fields.CREATED_BY: get_user_details}
+    user_object = get_data(model=AuthUser, filters={model_fields.ID: user_id}).first()
+    blog_create_params = {model_fields.CREATED_BY: user_object}
 
     if model_fields.BLOG_TITLE in get_json_data:
-        blog_params[model_fields.BLOG_TITLE] = \
+        blog_create_params[model_fields.BLOG_TITLE] = \
             get_json_data[model_fields.BLOG_TITLE].title()
 
     if model_fields.BLOG_DESC in get_json_data:
-        blog_params[model_fields.BLOG_DESC] = \
+        blog_create_params[model_fields.BLOG_DESC] = \
             get_json_data[model_fields.BLOG_DESC].capitalize()
 
     if model_fields.BLOG_IMAGE in get_json_data:
@@ -149,13 +150,14 @@ def create_blog(request=None, user_id=None):
         time_str = time.split('.')[0].replace(' ', '-').replace(':', '-')
         path = f"{constants.UPLOAD_PATH}{constants.BLOG_PATH}{time_str}_{get_file.name}"
         fs.save(name=path, content=get_file)
-        blog_params[model_fields.BLOG_IMAGE] = constants.MEDIA_PATH + path
-    try:
-        create_new_blog = BlogMaster(**blog_params)
-        create_new_blog.save()
-        return my_response_create(result=True, alert=response_messages.CREATE_BLOG_SUCCESSFUL)
-    except:
-        return my_response_create(result=False, alert=response_messages.DATABASE_SERVER_ERROR)
+        blog_create_params[model_fields.BLOG_IMAGE] = constants.MEDIA_PATH + path
+
+    blog_create_params[model_fields.CREATED_AT] = timezone.now()
+
+    create_new_blog = save_data(model=BlogMaster, fields=blog_create_params)
+    if not create_new_blog:
+        return my_response_create(result=False, alert=response_messages.UNEXPECTED_ERROR)
+    return my_response_create(result=True, alert=response_messages.CREATE_BLOG_SUCCESSFUL)
 
 
 def update_blog(request=None, user_id=None):

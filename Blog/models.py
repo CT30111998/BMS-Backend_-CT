@@ -1,7 +1,7 @@
 from django.db.models import CharField, ImageField, IntegerField, ForeignKey, CASCADE
 import datetime
 import os
-from base.base_models import CreatedMixing, UpdatedMixing
+from base.base_models import CreatedMixing, UpdatedMixing, DeletedMixing
 
 
 def get_file_path(request, filename):
@@ -9,11 +9,10 @@ def get_file_path(request, filename):
     return os.path.join('uploads/', filename)
 
 
-class BlogMaster(CreatedMixing, UpdatedMixing):
+class BlogMaster(CreatedMixing, UpdatedMixing, DeletedMixing):
     postTitle = CharField(max_length=50, null=True)
     postImage = ImageField(upload_to=get_file_path, null=True)
     postDescription = CharField(max_length=255, null=True)
-    deleted = IntegerField(default=0)
 
     def __str__(self):
         return self.postTitle

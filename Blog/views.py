@@ -6,15 +6,20 @@ from os import SEEK_END
 from .models import BlogMaster as Master
 from BMSystem import response_messages, model_fields
 from base.common_helpers import create_response
-from BMSystem.base_function import check_user_loging, check_response_result
+from BMSystem.base_function import get_user_id_from_request, check_response_result
+from Auth.jwt_module import JWTAuthentication
+# from .serializer import BlogSerializer
 
 
 class BlogMaster(ViewSet):
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = [IsAuthenticated]
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # self.serializer_class = BlogSerializer
+        self.authentication_classes = [JWTAuthentication]
+        self.token = self.authentication_classes
 
     def list(self, request, user_id=None):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
@@ -23,23 +28,21 @@ class BlogMaster(ViewSet):
         return get_response
 
     def retrieve(self, request, blog_id):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
         get_response = get_all_blog(request, user_id)
         return get_response
 
-    # @csrf_exempt
     def post(self, request, user_id=None):
-        user_id = check_user_loging(request)
-        # user_id = check_response_result(response)
+        user_id = get_user_id_from_request(request)
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
         get_response = create_blog(request, user_id)
         return get_response
 
     def put(self, request=None, user_id=None):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
@@ -47,7 +50,7 @@ class BlogMaster(ViewSet):
         return get_response
 
     def delete(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         # user_id = request.GET['user_id']
         if not user_id:
@@ -58,7 +61,7 @@ class BlogMaster(ViewSet):
 
 class UpdateBlog(APIView):
     def get(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
@@ -69,7 +72,7 @@ class UpdateBlog(APIView):
 class LikBlog(APIView):
 
     def post(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
@@ -77,7 +80,7 @@ class LikBlog(APIView):
         return get_response
 
     def put(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
@@ -88,7 +91,7 @@ class LikBlog(APIView):
 class CommentBlog(APIView):
 
     def post(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
@@ -96,7 +99,7 @@ class CommentBlog(APIView):
         return get_response
 
     def put(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
@@ -104,7 +107,7 @@ class CommentBlog(APIView):
         return get_response
 
     def delete(self, request):
-        user_id = check_user_loging(request)
+        user_id = get_user_id_from_request(request)
         # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
