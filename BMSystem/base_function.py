@@ -1,8 +1,8 @@
-from rest_framework.response import Response
-from django.http import JsonResponse
-from . import constants
+from BMSystem import model_fields, constants
+from base.query_modules import get_data
+from Auth.models import AuthToken
 import re
-from json import loads
+from Auth.jwt_module import get_token_from_request
 
 
 def save_file_storage(request):
@@ -12,21 +12,23 @@ def save_file_storage(request):
 
 
 def get_name_from_master_user(user_objects):
-    user_name = f"{getattr(user_objects, constants.USER_MODEL_FIELDS['first_name'])} " + \
-        f"{getattr(user_objects, constants.USER_MODEL_FIELDS['last_name'])}"
+    user_name = f"{getattr(user_objects, model_fields.FIRST_NAME)} " + \
+        f"{getattr(user_objects, model_fields.LAST_NAME)}"
     return user_name
 
 
 def get_date_from_tabl_object(table_object):
-    date = f"{getattr(table_object, constants.WORK_MODEL_FIELDS['year'])}-" +\
-            f"{getattr(table_object, constants.WORK_MODEL_FIELDS['month'])}-" +\
-            f"{getattr(table_object, constants.WORK_MODEL_FIELDS['day'])}"
+    date = f"{getattr(table_object, model_fields.YEAR)}-" +\
+            f"{getattr(table_object, model_fields.MONTH)}-" +\
+            f"{getattr(table_object, model_fields.DAY)}"
 
     return date
 
 
-def check_user_loging(request, method=constants.GET):
-    user_id = get_session(request, constants.SESSION_USER_ID)
+def get_user_id_from_request(request, method=constants.GET):
+    token = get_token_from_request(request)
+    user_object = get_data(model=AuthToken, filters={'token': token}).first().user_master
+    user_id = user_object.id
     if not user_id:
         try:
             if 'user_id' in request.data:
