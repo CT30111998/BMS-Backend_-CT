@@ -6,6 +6,8 @@ from base.query_modules import save_data
 class AuthMaster(Model):
     email = EmailField(max_length=255)
     password = CharField(max_length=800)
+    firstName = CharField(max_length=100)
+    lastName = CharField(max_length=100)
     is_active = IntegerField(default=decimal_constants.NOT_ACTIVE)
     last_login = DateTimeField(null=True)
     is_deleted = IntegerField(default=decimal_constants.NOT_DELETED)

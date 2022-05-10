@@ -1,40 +1,42 @@
 from django.core.files.storage import FileSystemStorage
 from Auth.models import AuthMaster as AuthUser
-from ..models import UserMaster as UserDetail
-from BMSystem import constants, response_messages, model_fields
+from ..models import UserMaster
+from base.query_modules import get_data
+from BMSystem import constants, response_messages, model_fields, decimal_constants
 from User.serializers import UserSerializer as UserSer
 from base.common_helpers import create_response as my_response_create
 
 
-def get_all_user_data(request):
-    if not request:
-        return my_response_create(result=False, alert=response_messages.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request, constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
-    get_users = UserDetail.objects.all()
-    serialize = UserSer(get_users, many=True)
-    data = serialize.data
-    return my_response_create(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=data)
+def get_all_user_data(request_data=None):
+    user_id = request_data.get('user_id', None)
+    user_filter = {
+        model_fields.IS_DELETED: decimal_constants.NOT_DELETED,
+    }
+    if user_id:
+        user_filter[model_fields.USER] = user_id
+    user_object = get_data(model=UserMaster, filters=user_filter)
+
+    if not user_object:
+        return my_response_create(alert=response_messages.USER_NOT_EXIST)
+    if len(user_object) == 1:
+        serialize = UserSer(user_object[0], many=False)
+    else:
+        serialize = UserSer(user_object, many=True)
+    return my_response_create(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=serialize.data)
 
 
-def delete_user(request, get_user_id=None):
-    if not request:
-        return my_response_create(result=False, alert=response_messages.UNEXPECTED_ERROR)
-    # if not request.body:
-    #     alert = my_payload_error(constants.USER_MODEL_FIELDS['get_user_id'])
-    #     return my_response_create(result=False, alert=alert)
-    #
-    # get_json_data = loads(request.body)
-    #
-    # if constants.USER_MODEL_FIELDS['get_user_id'] not in get_json_data:
-    #     alert = my_payload_error(constants.USER_MODEL_FIELDS['get_user_id'])
-    #     return my_response_create(result=False, alert=alert)
-    # get_user_id = get_json_data[constants.USER_MODEL_FIELDS['get_user_id']]
-    get_user = AuthUser.objects.filter(**{model_fields.ID: get_user_id})
-    if not get_user:
+def delete_user(user_id=None):
+
+    user_object = get_data(model=UserMaster, filters={model_fields.USER: user_id})
+    if not user_object:
+        return my_response_create(alert=response_messages.USER_NOT_EXIST)
+    user_object.update({model_fields.IS_DELETED: decimal_constants.DELETED})
+
+    auth_user_object = get_data(model=AuthUser, filters={model_fields.ID: user_id})
+    if not auth_user_object:
         return my_response_create(result=False, alert=response_messages.USER_NOT_EXIST)
-    get_user.delete()
+    auth_user_object.update({model_fields.IS_DELETED: decimal_constants.DELETED})
+
     return my_response_create(result=True, alert=response_messages.DELETE_USER_SUCCESSFUL)
 
 
@@ -49,7 +51,7 @@ def user_profile(request=None, user_id=None):
     # if not user_id:
     #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
     try:
-        details = UserDetail.objects.get(user=user_id)
+        details = UserMaster.objects.get(user=user_id)
     except Exception:
         return my_response_create(alert=response_messages.DATA_NOT_FOUND, result=False)
         # if request.method == constants.GET:
@@ -66,7 +68,7 @@ def update_profile(request, user_id=None):
 
     file = request.FILES[model_fields.IMAGE]
     try:
-        details = UserDetail.objects.get(user=user_id)
+        user = UserMaster.objects.get(user=user_id)
     except:
         return my_response_create(result=False, alert=response_messages.DATA_NOT_FOUND)
     if not file:

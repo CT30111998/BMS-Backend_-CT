@@ -1,7 +1,7 @@
 from django.db.models import CharField, IntegerField, EmailField, ForeignKey, DateTimeField, \
     DateField, ImageField, CASCADE
 from Auth.models import GroupMaster
-from base.base_models import UserMixing, CreatedMixing, UpdatedMixing
+from base.base_models import UserMixing, CreatedMixing, UpdatedMixing, DeletedMixing
 import datetime
 import os
 
@@ -11,7 +11,7 @@ def get_file_path(request, filename):
     return os.path.join('uploads/', filename)
 
 
-class UserMaster(UserMixing, UpdatedMixing):
+class UserMaster(UserMixing, UpdatedMixing, DeletedMixing):
     firstName = CharField(max_length=100)
     lastName = CharField(max_length=100)
     mNo = IntegerField()

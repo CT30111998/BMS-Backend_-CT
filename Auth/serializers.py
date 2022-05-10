@@ -9,6 +9,8 @@ from Auth.models import AuthMaster
 class CreateUserSerializer(Serializer):
     email = EmailField(required=True)
     password = CharField(required=True)
+    firstName = CharField(required=True)
+    lastName = CharField(required=True)
     confirm_password = CharField(required=True)
     is_active = IntegerField(default=decimal_constants.NOT_ACTIVE)
     is_deleted = IntegerField(default=decimal_constants.NOT_DELETED)
@@ -63,4 +65,4 @@ class LoginSerializer(Serializer):
 class AuthUserSerializer(ModelSerializer):
     class Meta:
         model = AuthMaster
-        fields = ('id',)
+        fields = ('id', 'firstName', 'lastName')

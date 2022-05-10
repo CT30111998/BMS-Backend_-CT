@@ -6,22 +6,26 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from BMSystem.base_function import check_response_result, get_user_id_from_request
 from base.common_helpers import create_response
+from Auth.jwt_module import JWTAuthentication
 
 
 class User(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.authentication_classes = [JWTAuthentication]
+
     def get(self, request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = get_all_user_data(request)
+        get_response = get_all_user_data(request.GET)
         return get_response
 
     def delete(self, request):
         user_id = get_user_id_from_request(request)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = delete_user(request, get_user_id=user_id)
+        get_response = delete_user(user_id=user_id)
         return get_response
 
 

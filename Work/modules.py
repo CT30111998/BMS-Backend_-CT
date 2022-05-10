@@ -1,13 +1,10 @@
 from BMSystem.base_function import \
-    get_session as my_session_get, \
     get_name_from_master_user as my_name_create, \
     get_payload_error_alert as my_payload_error, \
     get_date_from_tabl_object as my_date_get_from_table
-from BMSystem import constants, response_messages, model_fields, decimal_constants
+from BMSystem import response_messages, model_fields, decimal_constants
 from base.common_helpers import create_response as my_response
-from json import loads
 from Auth.models import AuthMaster as AuthUser
-from User.models import UserMaster as MasterUser
 from .models import AttendanceMaster as AttendMaster, FeedbackMaster
 from .serializers import AttendanceSerializer
 from django.utils import timezone
@@ -57,51 +54,51 @@ def get_all_user_attendance(request_data=None):
     return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=serializer_object.data)
 
 
-def get_user_attendance(attend_id=None, user_id=None):
-
-    get_attends = AttendMaster.objects.filter(**{
-        model_fields.USER: user_id,
-        model_fields.MONTH: datetime.datetime.now().date().month,
-        model_fields.YEAR: datetime.datetime.now().date().year,
-    })
-    if not get_attends:
-        return my_response(result=False, alert=response_messages.ATTEND_NOT_FOUND)
-
-    attends_data_list = []
-    for attend in get_attends:
-        attend_params = {
-            "attend_id": getattr(attend, model_fields.ID),
-            "date": my_date_get_from_table(attend),
-            "punch_in": getattr(attend, model_fields.PUNCH_IN),
-            "punch_out": getattr(attend, model_fields.PUNCH_OUT),
-        }
-        get_created_user = MasterUser.objects.get(**{
-            model_fields.USER: getattr(attend, model_fields.CREATED_BY)
-        })
-        created_user_name = my_name_create(get_created_user)
-        created_user_id = getattr(get_created_user, model_fields.ID)
-        attend_params['created_by'] = {
-            'user_id': created_user_id,
-            'user_name': created_user_name
-        }
-        if getattr(attend, model_fields.UPDATED_BY):
-            if getattr(attend, model_fields.CREATED_BY) == \
-                    getattr(attend, model_fields.UPDATED_BY):
-                attend_params['updated_by'] = {
-                    'user_id': created_user_id,
-                    'user_name': created_user_name
-                }
-            else:
-                get_updated_user = MasterUser.objects.get(**{
-                    model_fields.USER: getattr(attend, model_fields.UPDATED_BY)
-                })
-                update_user_name = my_name_create(get_updated_user)
-                attend_params['updated_by'] = {
-                    'user_id': getattr(get_updated_user, model_fields.ID),
-                    'user_name': update_user_name
-                }
-        attends_data_list.append(attend_params)
-    return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
+# def get_user_attendance(attend_id=None, user_id=None):
+#
+#     get_attends = AttendMaster.objects.filter(**{
+#         model_fields.USER: user_id,
+#         model_fields.MONTH: datetime.datetime.now().date().month,
+#         model_fields.YEAR: datetime.datetime.now().date().year,
+#     })
+#     if not get_attends:
+#         return my_response(result=False, alert=response_messages.ATTEND_NOT_FOUND)
+#
+#     attends_data_list = []
+#     for attend in get_attends:
+#         attend_params = {
+#             "attend_id": getattr(attend, model_fields.ID),
+#             "date": my_date_get_from_table(attend),
+#             "punch_in": getattr(attend, model_fields.PUNCH_IN),
+#             "punch_out": getattr(attend, model_fields.PUNCH_OUT),
+#         }
+#         get_created_user = MasterUser.objects.get(**{
+#             model_fields.USER: getattr(attend, model_fields.CREATED_BY)
+#         })
+#         created_user_name = my_name_create(get_created_user)
+#         created_user_id = getattr(get_created_user, model_fields.ID)
+#         attend_params['created_by'] = {
+#             'user_id': created_user_id,
+#             'user_name': created_user_name
+#         }
+#         if getattr(attend, model_fields.UPDATED_BY):
+#             if getattr(attend, model_fields.CREATED_BY) == \
+#                     getattr(attend, model_fields.UPDATED_BY):
+#                 attend_params['updated_by'] = {
+#                     'user_id': created_user_id,
+#                     'user_name': created_user_name
+#                 }
+#             else:
+#                 get_updated_user = MasterUser.objects.get(**{
+#                     model_fields.USER: getattr(attend, model_fields.UPDATED_BY)
+#                 })
+#                 update_user_name = my_name_create(get_updated_user)
+#                 attend_params['updated_by'] = {
+#                     'user_id': getattr(get_updated_user, model_fields.ID),
+#                     'user_name': update_user_name
+#                 }
+#         attends_data_list.append(attend_params)
+#     return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
 
 
 def create_user_attendance(request_data=None, user_id=None):

@@ -43,6 +43,7 @@ EMPLOYEE_REPORT_URLS = {
     'GET_ALL_ATTEND': 'all-attendance/',
     'CATEGORY': 'category/',
     'FEEDBACK': 'feedback/',
+    'DEPARTMENT': 'department/',
 }
 
 BLOG_URLS = {
