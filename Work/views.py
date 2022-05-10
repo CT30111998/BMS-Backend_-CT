@@ -96,24 +96,6 @@ class Category(APIView):
         return get_response
 
 
-class Department(APIView):
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            self.authentication_classes = [JWTAuthentication]
-
-        def get(self):
-            return create_response(result=True)
-
-        def post(self):
-            return create_response(result=True)
-
-        def put(self):
-            return create_response(result=True)
-
-        def delete(self):
-            return create_response(result=True)
-
-
 class Feedback(ViewSet):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
