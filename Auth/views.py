@@ -7,8 +7,6 @@ from django.utils import timezone
 from base.query_modules import save_data, get_data, update_data_by_fields
 from .models import AuthMaster, AuthToken, GroupMaster
 from User.models import UserMaster, UserGroup
-from datetime import datetime
-from base.common_helpers import convert_time_to_timestamp
 
 
 class SignUp(APIView):
@@ -21,6 +19,7 @@ class SignUp(APIView):
     def post(self, request):
         data = request.data
         serializer = self.serializer_class(data=data)
+
         if serializer.is_valid():
             fields = serializer.data
             del fields['confirm_password']
@@ -61,7 +60,7 @@ class SignUp(APIView):
                 user_data_object.delete()
                 return create_response(alert=response_messages.UNEXPECTED_ERROR)
 
-            return create_response(alert=response_messages.REGISTER_SUCCESSFUL)
+            return create_response(result=True, alert=response_messages.REGISTER_SUCCESSFUL)
         else:
             return create_response(alert=serializer.errors)
 
@@ -90,7 +89,7 @@ class Login(APIView):
 
             # Update user to Active
             update_data_by_fields(model_object=user_object, fields={'is_active': decimal_constants.ACTIVE})
-            return create_response(alert=response_messages.LOGIN_SUCCESSFUL, data={'access': encode_key})
+            return create_response(result=True, alert=response_messages.LOGIN_SUCCESSFUL, data={'access': encode_key})
         else:
             return create_response(alert=serializer.errors)
 
@@ -111,4 +110,4 @@ class Logout(APIView):
         if not status:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
 
-        return create_response(alert=response_messages.LOGOUT_SUCCESSFUL)
+        return create_response(result=True, alert=response_messages.LOGOUT_SUCCESSFUL)

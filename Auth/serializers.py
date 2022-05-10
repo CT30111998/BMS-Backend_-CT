@@ -44,7 +44,7 @@ class LoginSerializer(Serializer):
 
         user_object = get_data(model=AuthMaster, filters={'email': data['email']})
         if not user_object:
-            error_dict['other_errors'] = response_messages.UNEXPECTED_ERROR
+            error_dict['other_errors'] = response_messages.USER_NOT_EXIST
         else:
             # Check user active status
             user = user_object.first()

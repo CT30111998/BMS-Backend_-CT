@@ -31,7 +31,10 @@ class JWTAuthentication(TokenAuthentication):
     def authenticate(self, request):
 
         if 'email' in request.data:
-            user_object = get_data(model=AuthMaster, filters={model_fields.IS_ACTIVE: decimal_constants.ACTIVE})
+            user_object = get_data(model=AuthMaster, filters={
+                model_fields.IS_ACTIVE: decimal_constants.ACTIVE,
+                model_fields.EMAIL: request.data['email']
+            })
             if user_object:
                 raise AuthenticationFailed(response_messages.USER_LOGGED_IN)
             return True, None
