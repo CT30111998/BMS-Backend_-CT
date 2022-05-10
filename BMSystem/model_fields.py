@@ -57,10 +57,10 @@ SHIFT = 'shift'
 """
 
 BLOG = 'blog'
-BLOG_ID = 'blog_id'
+BLOG_ID: str = 'blog_id'
 BLOG_TITLE = 'postTitle'
 BLOG_IMAGE = 'postImage'
-BLOG_DESC = 'postDescription'
+BLOG_DESC: str = 'postDescription'
 LIKE_BY = 'like_by'
 LIKE_STATUS = 'like_status'
 LIKE = 'like'

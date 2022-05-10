@@ -14,104 +14,117 @@ from Auth.jwt_module import JWTAuthentication
 class BlogMaster(ViewSet):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # self.serializer_class = BlogSerializer
+        self.serializer_class = BlogSerializer
         self.authentication_classes = [JWTAuthentication]
-        self.token = self.authentication_classes
 
-    def list(self, request, user_id=None):
+    def list(self, request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
+
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
-        # user_id = request.GET['user_id']
-        get_response = get_all_blog(request, user_id)
+
+        blog_id = request.GET.get('blog_id', None)
+        get_response = get_all_blog(blog_id=blog_id, serializer_class=self.serializer_class)
         return get_response
 
     def retrieve(self, request, blog_id):
         user_id = get_user_id_from_request(request)
+
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
-        get_response = get_all_blog(request, user_id)
+
+        get_response = get_all_blog(blog_id=blog_id, serializer_class=self.serializer_class)
         return get_response
 
-    def post(self, request, user_id=None):
+    @staticmethod
+    def post(request):
         user_id = get_user_id_from_request(request)
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
-        get_response = create_blog(request, user_id)
+
+        if not request.data:
+            alert = my_payload_error(model_fields.BLOG_ID)
+            return create_response(alert=alert)
+
+        get_response = create_blog(request_date=request.data, user_id=user_id)
         return get_response
 
-    def put(self, request=None, user_id=None):
+    @staticmethod
+    def put(request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
+
         if not user_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
-        get_response = update_blog(request, user_id)
+
+        if not request.data:
+            alert = my_payload_error(model_fields.BLOG_ID)
+            return my_response_create(result=False, alert=alert)
+
+        get_response = update_blog(request.data)
         return get_response
 
-    def delete(self, request):
+    @staticmethod
+    def delete(request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
-        # user_id = request.GET['user_id']
-        if not user_id:
-            return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = delete_blog(request=request, user_id=user_id)
-        return get_response
 
-
-class UpdateBlog(APIView):
-    def get(self, request):
-        user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
-            return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = delete_blog(request=request, user_id=user_id)
+            return create_response(alert=response_messages.UNEXPECTED_ERROR)
+
+        blog_id = request.GET.get('blog_id', None)
+        get_response = delete_blog(blog_id=blog_id, user_id=user_id)
         return get_response
 
 
 class LikBlog(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # self.serializer_class = BlogSerializer
+        self.authentication_classes = [JWTAuthentication]
 
-    def post(self, request):
+    @staticmethod
+    def post(request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = like_blog(request=request, user_id=user_id)
+
+        get_response = like_blog(request_data=request.data, user_id=user_id)
         return get_response
 
+    @staticmethod
     def put(self, request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = like_blog(request=request, user_id=user_id)
+
+        get_response = like_blog(request_data=request.data, user_id=user_id)
         return get_response
 
 
 class CommentBlog(APIView):
-
-    def post(self, request):
+    @staticmethod
+    def post(request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = comment_blog(request, user_id)
+        get_response = comment_blog(request_data=request.data, user_id=user_id)
         return get_response
 
-    def put(self, request):
+    @staticmethod
+    def put(request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = comment_blog(request, user_id)
+        get_response = comment_blog(request_data=request.data, user_id=user_id)
         return get_response
 
-    def delete(self, request):
+    @staticmethod
+    def delete(request):
         user_id = get_user_id_from_request(request)
-        # user_id = check_response_result(response)
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
-        get_response = delete_comment_blog(request, user_id)
+
+        blog_id = request.GET.get('blog_id', None)
+        get_response = delete_comment_blog(blog_id=blog_id, user_id=user_id)
         return get_response
 
 

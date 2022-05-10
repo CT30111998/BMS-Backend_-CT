@@ -9,7 +9,7 @@ def get_file_path(request, filename):
     return os.path.join('uploads/', filename)
 
 
-class BlogMaster(CreatedMixing, UpdatedMixing, DeletedMixing):
+class BlogMaster(CreatedMixing, DeletedMixing):
     postTitle = CharField(max_length=50, null=True)
     postImage = ImageField(upload_to=get_file_path, null=True)
     postDescription = CharField(max_length=255, null=True)
@@ -21,17 +21,17 @@ class BlogMaster(CreatedMixing, UpdatedMixing, DeletedMixing):
         db_table = 'blog_master'
 
 
-class Like(CreatedMixing):
-    blog = ForeignKey(BlogMaster, on_delete=CASCADE, related_name="like_related_blog")
+class BlogLike(CreatedMixing):
+    blog = ForeignKey(BlogMaster, on_delete=CASCADE, related_name="blog_like")
     like = IntegerField(default=0)
 
     class Meta:
-        db_table = 'like_master'
+        db_table = 'blog_like'
 
 
-class Comment(CreatedMixing):
-    blog = ForeignKey(BlogMaster, on_delete=CASCADE, related_name="comment_related_blog")
+class BlogComment(CreatedMixing):
+    blog = ForeignKey(BlogMaster, on_delete=CASCADE, related_name="blog_comment")
     comment = CharField(max_length=255)
 
     class Meta:
-        db_table = 'comment_master'
+        db_table = 'blog_comment'

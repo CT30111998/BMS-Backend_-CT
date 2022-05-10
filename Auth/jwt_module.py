@@ -75,4 +75,4 @@ def get_token_from_request(request):
         token = request.data['key']
     elif 'key' in request.GET:
         token = request.GET['key']
-    return token
+    return token if token else None

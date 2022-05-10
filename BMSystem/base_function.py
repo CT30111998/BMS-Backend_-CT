@@ -27,6 +27,8 @@ def get_date_from_tabl_object(table_object):
 
 def get_user_id_from_request(request, method=constants.GET):
     token = get_token_from_request(request)
+    if not token:
+        return None
     user_object = get_data(model=AuthToken, filters={'token': token}).first().user_master
     user_id = user_object.id
     if not user_id:
