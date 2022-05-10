@@ -6,120 +6,58 @@ from BMSystem.base_function import \
 from BMSystem import constants, response_messages, model_fields, decimal_constants
 from base.common_helpers import create_response as my_response
 from json import loads
-from django.contrib.auth.models import User as AuthUser
+from Auth.models import AuthMaster as AuthUser
 from User.models import UserMaster as MasterUser
 from .models import AttendanceMaster as AttendMaster, FeedbackMaster
-import datetime
+from .serializers import AttendanceSerializer
+from django.utils import timezone
 from base.query_modules import save_data, get_data, update_data_by_fields, update_data_by_filters
 from datetime import datetime
 
 
-def get_all_user_attendance(request=None, user_id=None):
-    if not request:
-        return my_response(result=False, alert=response_messages.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request, constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response(result=False, alert=constants.USER_NOT_LOGGED_IN)
+def get_all_user_attendance(request_data=None):
     attend_filter = {}
     order_by = f"-{model_fields.DATE}"
-    if request.body:
-        get_json_response = loads(request.body)
-        if model_fields.USER_ID in get_json_response:
-            attend_filter[model_fields.USER] = \
-                get_json_response[model_fields.USER_ID]
 
-        if model_fields.YEAR in get_json_response:
-            attend_filter[model_fields.YEAR] = get_json_response[
-                model_fields.YEAR
+    if model_fields.YEAR in request_data:
+        attend_filter[model_fields.YEAR] = request_data[
+            model_fields.YEAR
+        ]
+        if model_fields.MONTH in request_data:
+            attend_filter[model_fields.MONTH] = request_data[
+                model_fields.MONTH
             ]
-            if model_fields.MONTH in get_json_response:
-                attend_filter[model_fields.MONTH] = get_json_response[
-                    model_fields.MONTH
+            if model_fields.DAY in request_data:
+                attend_filter[model_fields.DAY] = request_data[
+                    model_fields.DAY
                 ]
-                if model_fields.DAY in get_json_response:
-                    attend_filter[model_fields.DAY] = get_json_response[
-                        model_fields.DAY
-                    ]
 
-        if (model_fields.MONTH in get_json_response and
-            model_fields.YEAR not in get_json_response) \
-                or (model_fields.DAY in get_json_response and
-                    model_fields.MONTH not in get_json_response):
-            alert = my_payload_error(model_fields.YEAR, model_fields.MONTH)
-            return my_response(result=False, alert=alert)
+    if (model_fields.MONTH in request_data and
+        model_fields.YEAR not in request_data) \
+            or (model_fields.DAY in request_data and
+                model_fields.MONTH not in request_data):
+        alert = my_payload_error(model_fields.YEAR, model_fields.MONTH)
+        return my_response(result=False, alert=alert)
 
-        if model_fields.DATE in get_json_response:
-            attend_filter[model_fields.DATE] = get_json_response[
-                model_fields.DATE
-            ]
+    if model_fields.DATE in request_data:
+        attend_filter[model_fields.DATE] = request_data[
+            model_fields.DATE
+        ]
 
-        if model_fields.ORDER_BY in get_json_response:
-            if get_json_response[model_fields.ORDER_BY] == decimal_constants.ORDER_BY_DATE_ASCENDING:
-                order_by = model_fields.DATE
+    if model_fields.ORDER_BY in request_data:
+        if request_data[model_fields.ORDER_BY] == decimal_constants.ORDER_BY_DATE_ASCENDING:
+            order_by = model_fields.DATE
 
-    get_all_attendance = AttendMaster.objects.all().filter(**attend_filter).order_by(order_by)
-    attends_data_list = []
-    for attend in get_all_attendance:
-        attend_params = {
-            "attend_id": getattr(attend, model_fields.ID),
-            "attend_of_user": {},
-            "punch_in": getattr(attend, model_fields.PUNCH_IN),
-            "punch_out": getattr(attend, model_fields.PUNCH_OUT),
-            "date": my_date_get_from_table(attend),
-        }
+    attendance_object = get_data(model=AttendMaster, filters=attend_filter, order_by=order_by)
+    serializer_object = AttendanceSerializer(attendance_object, many=True)
 
-        get_attend_user = MasterUser.objects.get(**{
-            model_fields.USER: getattr(attend, model_fields.USER)
-        })
-        attend_user_name = my_name_create(get_attend_user)
-        attend_user_id = getattr(get_attend_user, model_fields.ID)
+    if not attendance_object:
+        return my_response(alert=response_messages.ATTEND_NOT_FOUND)
 
-        attend_params['attend_of_user'].update({
-            "name": attend_user_name,
-            "id": attend_user_id
-        })
-
-        get_created_user = MasterUser.objects.get(**{
-            model_fields.USER: getattr(attend, model_fields.CREATED_BY)
-        })
-        created_user_name = my_name_create(get_created_user)
-        created_user_id = getattr(get_created_user, model_fields.ID)
-        attend_params['created_by'] = {
-            'user_id': created_user_id,
-            'user_name': created_user_name
-        }
-        if getattr(attend, model_fields.UPDATED_BY):
-            if getattr(attend, model_fields.CREATED_BY) == \
-                    getattr(attend, model_fields.UPDATED_BY):
-                attend_params['updated_by'] = {
-                    'user_id': created_user_id,
-                    'user_name': created_user_name
-                }
-            else:
-                get_updated_user = MasterUser.objects.get(**{
-                    model_fields.USER: getattr(attend, model_fields.UPDATED_BY)
-                })
-                update_user_name = my_name_create(get_updated_user)
-                attend_params['updated_by'] = {
-                    'user_id': getattr(get_updated_user, model_fields.ID),
-                    'user_name': update_user_name
-                }
-        attends_data_list.append(attend_params)
-
-    if not get_all_attendance:
-        return my_response(result=False, alert=response_messages.ATTEND_NOT_FOUND)
-
-    return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
+    return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=serializer_object.data)
 
 
-def get_user_attendance(request=None, user_id=None):
-    if not request:
-        return my_response(result=False, alert=response_messages.UNEXPECTED_ERROR)
-
-    # user_id = my_session_get(request, constants.SESSION_USER_ID)
-
-    # if not user_id:
-    #     return my_response(result=False, alert=constants.USER_NOT_LOGGED_IN)
+def get_user_attendance(attend_id=None, user_id=None):
 
     get_attends = AttendMaster.objects.filter(**{
         model_fields.USER: user_id,
@@ -166,53 +104,47 @@ def get_user_attendance(request=None, user_id=None):
     return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
 
 
-def create_user_attendance(request=None, user_id=None):
-    if not request:
-        return my_response(result=False, alert=response_messages.UNEXPECTED_ERROR)
+def create_user_attendance(request_data=None, user_id=None):
 
-    get_json_data = request.data
-    if model_fields.PUNCH_IN not in get_json_data:
-        alert = f"{response_messages.PAYLOAD_DATA_ERROR} {model_fields.PUNCH_IN}" + \
+    if model_fields.PUNCH_STATUS not in request_data:
+        alert = f"{response_messages.PAYLOAD_DATA_ERROR} {model_fields.PUNCH_STATUS}" + \
                 f" in {response_messages.PAYLOAD_DATA_FORMAT}"
         return my_response(result=False, alert=alert)
 
-    # user_id = my_session_get(request, constants.SESSION_USER_ID)
-    # if not user_id:
-    #     return my_response(result=False, alert=constants.USER_NOT_LOGGED_IN)
+    emp_id = request_data.get('emp_id', None)
+    user_object = get_data(model=AuthUser, filters={model_fields.ID: emp_id if emp_id else user_id})
+    if not user_object:
+        return my_response(alert=response_messages.USER_NOT_EXIST)
 
-    get_current_user = AuthUser.objects.get(**{model_fields.ID: user_id})
+    attend_params = {model_fields.USER: user_object.first()}
 
-    if "emp_id" in get_json_data:
-        emp_id = get_json_data["emp_id"]
-        try:
-            get_emp = AuthUser.objects.get(**{model_fields.ID: emp_id})
-        except:
-            return my_response(result=False, alert=response_messages.EMP_NOT_EXIST)
+    if int(request_data[model_fields.PUNCH_STATUS]) == decimal_constants.PUNCH_IN_STATUS:
+        attend_params[model_fields.PUNCH_IN] = datetime.now().time()
     else:
-        get_emp = get_current_user
+        attend_params[model_fields.PUNCH_OUT] = datetime.now().time()
 
-    attend_params = {model_fields.USER: get_emp}
-    if get_json_data[model_fields.PUNCH_IN] == decimal_constants.PUNCH_IN_STATUS:
-        attend_params[model_fields.PUNCH_IN] = datetime.datetime.now().time()
-    else:
-        attend_params[model_fields.PUNCH_OUT] = datetime.datetime.now().time()
+    if model_fields.ATTEND_ID not in request_data:
+        attend_params.update({
+            model_fields.DAY: datetime.now().date().day,
+            model_fields.MONTH: datetime.now().date().month,
+            model_fields.YEAR: datetime.now().date().year,
+            model_fields.CREATED_BY: user_object.first(),
+            model_fields.CREATED_AT: timezone.now()
+        })
 
-    if model_fields.ATTEND_ID not in get_json_data:
-        attend_params[model_fields.DAY] = datetime.datetime.now().date().day
-        attend_params[model_fields.MONTH] = datetime.datetime.now().date().month
-        attend_params[model_fields.YEAR] = datetime.datetime.now().date().year
-        attend_params[model_fields.CREATED_BY] = get_current_user
-        create_attend = AttendMaster(**attend_params)
-        create_attend.save()
+        save_data(model=AttendMaster, fields=attend_params)
         alert = response_messages.CREATE_ATTENDANCE_SUCCESSFUL
     else:
-        get_attend = AttendMaster.objects.filter(**{
-            model_fields.ID: get_json_data[model_fields.ATTEND_ID]
-        })
-        if not get_attend:
+        attend_object = get_data(model=AttendMaster, filters={model_fields.ID: request_data[model_fields.ATTEND_ID]})
+        if not attend_object:
             return my_response(result=False, alert=response_messages.ATTEND_NOT_FOUND)
-        attend_params[model_fields.UPDATED_BY] = get_current_user
-        get_attend.update(**attend_params)
+
+        attend_params.update({
+            model_fields.UPDATED_BY: user_object.first(),
+            model_fields.UPDATED_AT: timezone.now()
+        })
+
+        update_data_by_fields(model_object=attend_object, fields=attend_params)
         alert = response_messages.UPDATE_ATTENDANCE_SUCCESSFUL
 
     return my_response(result=True, alert=alert)
@@ -224,27 +156,17 @@ def create_user_attendance(request=None, user_id=None):
 #     return my_response(result=True, alert=constants.UPDATE_ATTENDANCE_SUCCESSFUL)
 
 
-def delete_user_attendance(request=None, user_id=None):
-    if not request:
-        return my_response(result=False, alert=response_messages.UNEXPECTED_ERROR)
-    # user_id = my_session_get(request, constants.SESSION_USER_ID)
-
-    # if not user_id:
-    #     return my_response(result=False, alert=constants.USER_NOT_LOGGED_IN)
-    get_json_data = loads(request.body)
-
-    if model_fields.ATTEND_ID not in get_json_data:
+def delete_user_attendance(request_data=None):
+    if model_fields.ATTEND_ID not in request_data:
         alert = f"{response_messages.PAYLOAD_DATA_ERROR} {model_fields.ATTEND_ID}" + \
                 f" in {response_messages.PAYLOAD_DATA_FORMAT}"
         return my_response(result=False, alert=alert)
-    try:
-        get_attend = AttendMaster.objects.get(**{
-            model_fields.ID: get_json_data[model_fields.ATTEND_ID]
-        })
-    except:
+
+    attend_object = get_data(model=AttendMaster, filters={model_fields.ID: request_data[model_fields.ATTEND_ID]})
+    if not attend_object:
         return my_response(result=False, alert=response_messages.ATTEND_NOT_FOUND)
 
-    get_attend.delete()
+    attend_object.delete()
     return my_response(result=True, alert=response_messages.DELETE_ATTENDANCE_SUCCESSFUL)
 
 
@@ -312,8 +234,7 @@ def create_category(request, user_id=None):
     return my_response(result=True)
 
 
-def get_feedback(request):
-    request_data = request.GET
+def get_feedback(request_data):
     feedback_object = get_data(
         model=FeedbackMaster,
         filters={'id': request_data['feedback_id']} if 'feedback_id' in request_data else None
@@ -331,8 +252,7 @@ def get_feedback(request):
     return my_response(result=True, alert=response_messages.FEEDBACK_GET_SUCCESS, data=data_list)
 
 
-def create_feedback(request, user_id=None):
-    request_data = request.data
+def create_feedback(request_data, user_id=None):
     user_object = get_data(model=AuthUser, filters={'id': user_id})
     if not user_object:
         return my_response(alert=response_messages.USER_NOT_EXIST)
@@ -349,8 +269,7 @@ def create_feedback(request, user_id=None):
     return my_response(result=True, alert=response_messages.FEEDBACK_CREATE_SUCCESS)
 
 
-def update_feedback(request):
-    request_data = request.data
+def update_feedback(request_data):
     feedback_id = request_data['feedback_id']
     feedback = request_data['feedback'].capitalize()
 
@@ -365,8 +284,8 @@ def update_feedback(request):
     return my_response(result=True, alert=response_messages.FEEDBACK_UPDATE_SUCCESS)
 
 
-def delete_feedback(request, user_id=None):
-    request_data = request.GET
+def delete_feedback(request_data):
+    request_data = request_data.GET
     feedback_id = request_data['feedback_id']
     feedback_object = get_data(model=FeedbackMaster, filters={'id': feedback_id})
     if not feedback_object:

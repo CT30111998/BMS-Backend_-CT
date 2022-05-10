@@ -8,7 +8,6 @@ class AttendanceMaster(CreatedMixing, UserMixing, UpdatedMixing):
     day = models.IntegerField()
     month = models.IntegerField()
     year = models.IntegerField()
-    date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'attendance_master'

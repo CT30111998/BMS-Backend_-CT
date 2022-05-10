@@ -7,5 +7,5 @@ urlpatterns = [
     path(constants.BLOG_URLS['GET_BLOG'], views.BlogMaster.as_view({'get': 'retrieve'})),
     path(constants.BLOG_URLS['LIKE'], views.LikBlog.as_view()),
     path(constants.BLOG_URLS['COMMENT'], views.CommentBlog.as_view()),
-    path(constants.BLOG_URLS['UPLOAD'], views.upload_file),
+    # path(constants.BLOG_URLS['UPLOAD'], views.upload_file),
 ]

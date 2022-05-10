@@ -5,12 +5,12 @@ from . import views
 urlpatterns = [
     path(
         constants.EMPLOYEE_REPORT_URLS['ATTEND'],
-        views.Attendance.as_view(),
+        views.Attendance.as_view({'get': 'retrieve'}),
     ),
 
     path(
         constants.EMPLOYEE_REPORT_URLS['GET_ALL_ATTEND'],
-        views.AllAttendance.as_view(),
+        views.Attendance.as_view({'get': 'list'}),
     ),
 
     path(
