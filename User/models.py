@@ -1,5 +1,5 @@
 from django.db.models import CharField, IntegerField, EmailField, ForeignKey, DateTimeField, \
-    DateField, ImageField, CASCADE
+    DateField, ImageField, CASCADE, BigIntegerField
 from Auth.models import GroupMaster
 from base.base_models import UserMixing, CreatedMixing, UpdatedMixing, DeletedMixing
 import datetime
@@ -14,7 +14,7 @@ def get_file_path(request, filename):
 class UserMaster(UserMixing, UpdatedMixing, DeletedMixing):
     firstName = CharField(max_length=100)
     lastName = CharField(max_length=100)
-    mNo = IntegerField()
+    mNo = BigIntegerField()
     email = EmailField()
     image = ImageField(upload_to=get_file_path, null=True)
     address = CharField(max_length=250, null=True)
