@@ -35,7 +35,8 @@ AUTH_URLS = {
 
 USER_URLS = {
     'GET_ALL': '',
-    'PROFILE': 'profile/'
+    'PROFILE': 'profile/',
+    'DEPARTMENT': 'department/'
 }
 
 EMPLOYEE_REPORT_URLS = {

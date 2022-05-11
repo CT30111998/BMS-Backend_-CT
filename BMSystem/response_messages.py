@@ -135,6 +135,24 @@ FEEDBACK_NOT_EXIST = 'Feedback not exist!'
     END FEEDBACK MESSAGES
 """
 
+
+"""
+    START DEPARTMENT MESSAGES
+"""
+
+DEPARTMENT_CREATE_SUCCESS = 'Department create successful!'
+DEPARTMENT_UPDATE_SUCCESS = 'Department update successful!'
+DEPARTMENT_DELETE_SUCCESS = 'Department delete successful!'
+DEPARTMENT_GET_SUCCESS = 'Department fetch successful!'
+
+DEPARTMENT_NOT_EXIST = 'Department not exist!'
+DEPARTMENT_EXIST = 'Department exist!'
+
+"""
+    END DEPARTMENT MESSAGES
+"""
+
+
 """
     START FILE UPLOAD MESSAGES
 """

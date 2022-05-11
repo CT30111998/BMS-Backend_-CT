@@ -35,10 +35,10 @@ class UserMaster(UserMixing, UpdatedMixing, DeletedMixing):
 
 
 class DepartmentMaster(CreatedMixing, UpdatedMixing):
-    dept = CharField(max_length=30)
+    department = CharField(max_length=30)
 
     def __str__(self):
-        return self.dept
+        return self.department
 
     class Meta:
         db_table = 'department_master'

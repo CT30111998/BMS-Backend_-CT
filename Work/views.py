@@ -23,7 +23,7 @@ class Attendance(ViewSet):
         if not user_id:
             return create_response(alert=response_messages.USER_NOT_LOGGED_IN)
 
-        get_response = get_all_user_attendance(request_data=request.data)
+        get_response = get_all_user_attendance(request_data=request.GET, user_id=user_id)
         return get_response
 
     @staticmethod

@@ -87,3 +87,13 @@ ATTEND_ID = 'attend_id'
 """
     END ATTENDANCE
 """
+
+
+"""
+    START DEPARTMENT
+"""
+DEPARTMENT_ID = 'department_id'
+
+"""
+    END DEPARTMENT
+"""

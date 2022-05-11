@@ -12,9 +12,11 @@ from base.query_modules import save_data, get_data, update_data_by_fields, updat
 from datetime import datetime
 
 
-def get_all_user_attendance(request_data=None):
-    attend_filter = {}
-    order_by = f"-{model_fields.DATE}"
+def get_all_user_attendance(request_data=None, user_id=None):
+    attend_filter = {
+        model_fields.USER: user_id if 'user_id' not in request_data else request_data['user_id']
+    }
+    order_by = f"-{model_fields.CREATED_AT}"
 
     if model_fields.YEAR in request_data:
         attend_filter[model_fields.YEAR] = request_data[
@@ -231,7 +233,7 @@ def create_category(request, user_id=None):
     return my_response(result=True)
 
 
-def get_feedback(request_data):
+def get_feedback(request_data, user_id=None):
     feedback_object = get_data(
         model=FeedbackMaster,
         filters={'id': request_data['feedback_id']} if 'feedback_id' in request_data else None

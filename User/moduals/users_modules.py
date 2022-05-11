@@ -1,7 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from Auth.models import AuthMaster as AuthUser
 from ..models import UserMaster
-from base.query_modules import get_data
+from base.query_modules import get_data, save_data, update_data_by_fields
 from BMSystem import constants, response_messages, model_fields, decimal_constants
 from User.serializers import UserSerializer as UserSer
 from base.common_helpers import create_response as my_response_create
@@ -76,7 +76,8 @@ def update_profile(request, user_id=None):
     fs = FileSystemStorage()
     path = f"{constants.UPLOAD_PATH}{constants.PROFILE_PATH}{file.name}"
     fs.save(name=path, content=file)
-    details.update(**{model_fields.IMAGE: path})
-    details.save()
-    serialize = UserSer(details, many=False)
+    # update_data_by_fields(model_object=)
+    # details.update(**{model_fields.IMAGE: path})
+    # details.save()
+    # serialize = UserSer(details, many=False)
     return my_response_create(result=True, alert=response_messages.UPDATE_SUCCESSFUL, data=serialize.data)
