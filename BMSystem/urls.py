@@ -16,8 +16,11 @@ urlpatterns = [
 
     path(constants.URLS_PATH['AUTH'], include('Auth.urls')),
     path(constants.URLS_PATH['USERS'], include('User.urls')),
+    path(constants.URLS_PATH['DEPARTMENT'], include('Department.urls')),
     path(constants.URLS_PATH['BLOG'], include('Blog.urls')),
-    path(constants.URLS_PATH['WORK'], include('Work.urls')),
+    path(constants.URLS_PATH['ATTENDANCE'], include('Attendance.urls')),
+    path(constants.URLS_PATH['FEEDBACK'], include('Feedback.urls')),
+    path(constants.URLS_PATH['CATEGORY'], include('Category.urls')),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
