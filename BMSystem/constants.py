@@ -22,6 +22,10 @@ MEDIA_PATH = 'media/'
 URLS_PATH = {
     'USERS': 'users/',
     'AUTH': 'auth/',
+    'DEPARTMENT': 'department/',
+    'ATTENDANCE': 'attendance/',
+    'FEEDBACK': 'feedback/',
+    'CATEGORY': 'category/',
     'BLOG': 'blog/',
     'WORK': 'me/'
 }
@@ -36,15 +40,14 @@ AUTH_URLS = {
 USER_URLS = {
     'GET_ALL': '',
     'PROFILE': 'profile/',
-    'DEPARTMENT': 'department/'
+    'DEPARTMENT': ''
 }
 
 EMPLOYEE_REPORT_URLS = {
-    'ATTEND': 'attendance/',
+    'ATTEND': '',
     'GET_ALL_ATTEND': 'all-attendance/',
-    'CATEGORY': 'category/',
-    'FEEDBACK': 'feedback/',
-    'DEPARTMENT': 'department/',
+    'CATEGORY': '',
+    'FEEDBACK': '',
 }
 
 BLOG_URLS = {
