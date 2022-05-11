@@ -1,5 +1,4 @@
 
-
 def get_data(model=None, filters=None, order_by='id'):
     if filters:
         get_object = model.objects.filter(**filters).order_by(order_by)
@@ -40,3 +39,11 @@ def update_data_by_filters(model=None, filters=None, fields=None):
         return True
     except:
         return False
+
+
+def delete_data_by_filters(model=None, filters=None):
+    query_object = get_data(model=model, filters=filters)
+    if not query_object:
+        return False
+    query_object.delete()
+    return True

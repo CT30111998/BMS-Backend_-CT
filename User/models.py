@@ -34,16 +34,6 @@ class UserMaster(UserMixing, UpdatedMixing, DeletedMixing):
         db_table = 'user_master'
 
 
-class DepartmentMaster(CreatedMixing, UpdatedMixing):
-    department = CharField(max_length=30)
-
-    def __str__(self):
-        return self.department
-
-    class Meta:
-        db_table = 'department_master'
-
-
 class ShiftMaster(CreatedMixing, UpdatedMixing):
     shift = CharField(max_length=50)
 

@@ -1,60 +1,83 @@
-from BMSystem import model_fields, decimal_constants, response_messages
-from base.query_modules import save_data, get_data, update_data_by_fields
-from base.common_helpers import create_response
-from Auth.models import AuthMaster
-from .models import DepartmentMaster
-from .serializers import DepartmentSerializer
-from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
+from Auth.models import AuthMaster as AuthUser
+from .models import UserMaster
+from base.query_modules import get_data, save_data, update_data_by_fields
+from BMSystem import constants, response_messages, model_fields, decimal_constants
+from User.serializers import UserSerializer as UserSer
+from base.common_helpers import create_response as my_response_create
 
 
-def api_get_department():
-    department_object = get_data(DepartmentMaster, )
-    pass
-
-
-def api_create_depart(request_data, user_id):
-    department = request_data.get(model_fields.DEPARTMENT)
-    department = department.title() if not department.isupper() or not len(department) < 4 else department
-    department_id = request_data.get(model_fields.DEPARTMENT_ID, None)
-
-    department_params = {
-        model_fields.DEPARTMENT: department,
+def get_all_user_data(request_data=None):
+    user_id = request_data.get('user_id', None)
+    user_filter = {
+        model_fields.IS_DELETED: decimal_constants.NOT_DELETED,
     }
-
-    user_object = get_data(model=AuthMaster, filters={
-        model_fields.ID: user_id,
-        model_fields.IS_DELETED: decimal_constants.NOT_DELETED
-    })
+    if user_id:
+        user_filter[model_fields.USER] = user_id
+    user_object = get_data(model=UserMaster, filters=user_filter)
 
     if not user_object:
-        return create_response(alert=response_messages.USER_NOT_EXIST)
-
-    same_department_object = get_data(model=DepartmentMaster, filters={model_fields.DEPARTMENT: department})
-    if same_department_object:
-        return create_response(alert=response_messages.DEPARTMENT_EXIST)
-
-    department_object = get_data(
-        model=DepartmentMaster, filters={
-            model_fields.ID: department_id
-        }
-    )
-
-    if not department_object:
-        department_params.update({
-            model_fields.CREATED_AT: timezone.now(),
-            model_fields.CREATED_BY: user_object.first()
-        })
-
-        save_data(model=DepartmentMaster, fields=department_params)
-        alert = response_messages.DEPARTMENT_CREATE_SUCCESS
-
+        return my_response_create(alert=response_messages.USER_NOT_EXIST)
+    if len(user_object) == 1:
+        serialize = UserSer(user_object[0], many=False)
     else:
-        print("DEPARTMENT NAME: ", department_object.first().department)
-        department_params.update({
-            model_fields.UPDATED_AT: timezone.now(),
-            model_fields.UPDATED_BY: user_object.first()
-        })
-        update_data_by_fields(model_object=department_object, fields=department_params)
-        alert = response_messages.DEPARTMENT_UPDATE_SUCCESS
+        serialize = UserSer(user_object, many=True)
+    return my_response_create(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=serialize.data)
 
-    return create_response(result=True, alert=alert)
+
+def delete_user(user_id=None):
+
+    user_object = get_data(model=UserMaster, filters={model_fields.USER: user_id})
+    if not user_object:
+        return my_response_create(alert=response_messages.USER_NOT_EXIST)
+    user_object.update({model_fields.IS_DELETED: decimal_constants.DELETED})
+
+    auth_user_object = get_data(model=AuthUser, filters={model_fields.ID: user_id})
+    if not auth_user_object:
+        return my_response_create(result=False, alert=response_messages.USER_NOT_EXIST)
+    auth_user_object.update({model_fields.IS_DELETED: decimal_constants.DELETED})
+
+    return my_response_create(result=True, alert=response_messages.DELETE_USER_SUCCESSFUL)
+
+
+def user_profile(request=None, user_id=None):
+    if not request:
+        return my_response_create(result=False, alert=response_messages.UNEXPECTED_ERROR)
+    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
+    # try:
+    #     # user_id = loads(request.body)['user_id']
+    # except:
+    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
+    # if not user_id:
+    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
+    try:
+        details = UserMaster.objects.get(user=user_id)
+    except Exception:
+        return my_response_create(alert=response_messages.DATA_NOT_FOUND, result=False)
+        # if request.method == constants.GET:
+    serialize = UserSer(details, many=False)
+    return my_response_create(alert=response_messages.DATA_FETCH_SUCCESSFUL, result=True, data=serialize.data)
+
+
+def update_profile(request, user_id=None):
+    if not request:
+        return my_response_create(result=False, alert=response_messages.UNEXPECTED_ERROR)
+    # user_id = my_session_get(request=request, key=constants.SESSION_USER_ID)
+    # if not user_id:
+    #     return my_response_create(result=False, alert=constants.USER_NOT_LOGGED_IN)
+
+    file = request.FILES[model_fields.IMAGE]
+    try:
+        user = UserMaster.objects.get(user=user_id)
+    except:
+        return my_response_create(result=False, alert=response_messages.DATA_NOT_FOUND)
+    if not file:
+        return my_response_create(result=False, alert=response_messages.UPLOAD_FAIL)
+    fs = FileSystemStorage()
+    path = f"{constants.UPLOAD_PATH}{constants.PROFILE_PATH}{file.name}"
+    fs.save(name=path, content=file)
+    # update_data_by_fields(model_object=)
+    # details.update(**{model_fields.IMAGE: path})
+    # details.save()
+    # serialize = UserSer(details, many=False)
+    return my_response_create(result=True, alert=response_messages.UPDATE_SUCCESSFUL)
