@@ -37,3 +37,25 @@ class Department(APIView):
         if not department_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
         return api_delete_department(department_id=department_id)
+
+
+class UserDepartment(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.authentication_classes = [JWTAuthentication]
+
+    @staticmethod
+    def get(request):
+        pass
+
+    @staticmethod
+    def post(request):
+        pass
+
+    @staticmethod
+    def put(request):
+        pass
+
+    @staticmethod
+    def delete(request):
+        pass

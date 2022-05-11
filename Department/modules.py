@@ -2,7 +2,7 @@ from BMSystem import model_fields, decimal_constants, response_messages
 from base.query_modules import save_data, get_data, update_data_by_fields, delete_data_by_filters
 from base.common_helpers import create_response
 from Auth.models import AuthMaster
-from .models import DepartmentMaster
+from .models import DepartmentMaster, UserDepartment
 from .serializers import DepartmentSerializer
 from django.utils import timezone
 
@@ -76,3 +76,16 @@ def api_delete_department(department_id=None):
         return create_response(alert=response_messages.DEPARTMENT_NOT_EXIST)
 
     return create_response(result=True, alert=response_messages.DEPARTMENT_DELETE_SUCCESS)
+
+
+def api_get_user_department():
+    pass
+
+
+def api_create_update_user_department(request_data):
+    user_id = request_data.get(model_fields.USER_ID)
+    department_id = request_data.get(model_fields.DEPARTMENT_ID)
+
+    user_department_object = get_data(model=UserDepartment, filters={model_fields.USER: user_id})
+    if user_department_object:
+        return create_response(alert=response_messages.USER_DEPARTMENT_EXIST)
