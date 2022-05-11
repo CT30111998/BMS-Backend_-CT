@@ -147,6 +147,7 @@ DEPARTMENT_GET_SUCCESS = 'Department fetch successful!'
 
 DEPARTMENT_NOT_EXIST = 'Department not exist!'
 DEPARTMENT_EXIST = 'Department exist!'
+USER_DEPARTMENT_EXIST = 'User already added in department exist!'
 
 """
     END DEPARTMENT MESSAGES
