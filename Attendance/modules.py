@@ -1,14 +1,11 @@
-from BMSystem.base_function import \
-    get_name_from_master_user as my_name_create, \
-    get_payload_error_alert as my_payload_error, \
-    get_date_from_tabl_object as my_date_get_from_table
+from BMSystem.base_function import get_payload_error_alert as my_payload_error
 from BMSystem import response_messages, model_fields, decimal_constants
 from base.common_helpers import create_response as my_response
 from Auth.models import AuthMaster as AuthUser
-from .models import AttendanceMaster as AttendMaster, FeedbackMaster
+from .models import AttendanceMaster as AttendMaster
 from .serializers import AttendanceSerializer
 from django.utils import timezone
-from base.query_modules import save_data, get_data, update_data_by_fields, update_data_by_filters
+from base.query_modules import save_data, get_data, update_data_by_fields
 from datetime import datetime
 
 
@@ -103,7 +100,7 @@ def get_all_user_attendance(request_data=None, user_id=None):
 #     return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=attends_data_list)
 
 
-def create_user_attendance(request_data=None, user_id=None):
+def create_update_attendance(request_data=None, user_id=None):
 
     if model_fields.PUNCH_STATUS not in request_data:
         alert = f"{response_messages.PAYLOAD_DATA_ERROR} {model_fields.PUNCH_STATUS}" + \
@@ -149,12 +146,6 @@ def create_user_attendance(request_data=None, user_id=None):
     return my_response(result=True, alert=alert)
 
 
-# def update_user_attendance(request=None):
-#     if not request:
-#         return my_response(result=False, alert=constants.UNEXPECTED_ERROR)
-#     return my_response(result=True, alert=constants.UPDATE_ATTENDANCE_SUCCESSFUL)
-
-
 def delete_user_attendance(request_data=None):
     if model_fields.ATTEND_ID not in request_data:
         alert = f"{response_messages.PAYLOAD_DATA_ERROR} {model_fields.ATTEND_ID}" + \
@@ -167,128 +158,3 @@ def delete_user_attendance(request_data=None):
 
     attend_object.delete()
     return my_response(result=True, alert=response_messages.DELETE_ATTENDANCE_SUCCESSFUL)
-
-
-def get_all_cat(request, user_id=None):
-    # user_id = my_session_get(request, constants.SESSION_USER_ID)
-    # if not user_id:
-    #     user_id = loads(request.body)[model_fields.USER_ID]
-    #     return my_response(result=False, alert=constants.USER_NOT_LOGGED_IN)
-    # get_cats = CatMaster.objects.all()
-    cat_list = []
-    # for cat in get_cats:
-    #     get_user = MasterUser.objects.get(**{model_fields.USER: user_id})
-    #     user_name = my_name_create(get_user)
-    #     cat_dict = {
-    #         constants.WORK_MODEL_FIELDS["cat_name"]: getattr(cat, constants.WORK_MODEL_FIELDS['cat_name']),
-    #         constants.WORK_MODEL_FIELDS["created_by"]: {
-    #             "id": user_id, "name": user_name
-    #         }
-    #     }
-    #     cat_list.append(cat_dict)
-    return my_response(result=True, alert=response_messages.DATA_FETCH_SUCCESSFUL, data=cat_list)
-
-
-def create_category(request, user_id=None):
-    if not request:
-        return my_response(result=False, alert=response_messages.UNEXPECTED_ERROR)
-    # try:
-    #     get_json_response = loads(request.body)
-    #     get_cat_name = get_json_response[constants.WORK_MODEL_FIELDS['cat_name']].capitalize()
-    #     cat_id = None
-    #     if constants.WORK_MODEL_FIELDS['get_cat_id'] in get_json_response:
-    #         cat_id = get_json_response['get_cat_id']
-    #
-    # except:
-    #     alert = my_payload_error(
-    #         constants.WORK_MODEL_FIELDS['cat_name'],
-    #     )
-    #     return my_response(result=False, alert=alert)
-    # get_user_master = AuthUser.objects.get(
-    #     **{model_fields.ID: user_id}
-    # )
-    # cat_params = {
-    #     constants.WORK_MODEL_FIELDS['cat_name']: get_cat_name,
-    #     model_fields.CREATED_BY: get_user_master
-    # }
-    # if cat_id:
-    #     get_cat = CatMaster.objects.filter(**{
-    #         constants.WORK_MODEL_FIELDS['cat_id']: cat_id
-    #     })
-    #     if not get_cat:
-    #         alert = constants.CAT_NOT_EXIST
-    #     else:
-    #         get_cat.update(**cat_params)
-    #         alert = constants.CAT_UPDATE_SUCCESSFUL
-    # else:
-    #     try:
-    #         get_cat = CatMaster.objects.get(**{
-    #             constants.WORK_MODEL_FIELDS['cat_name']: get_cat_name
-    #         })
-    #         alert = constants.CAT_ALREADY_EXIST
-    #     except:
-    #         create_cat = CatMaster(**cat_params)
-    #         create_cat.save()
-    #         alert = constants.CATEGORY_CREATE_SUCCESSFUL
-    return my_response(result=True)
-
-
-def get_feedback(request_data, user_id=None):
-    feedback_object = get_data(
-        model=FeedbackMaster,
-        filters={'id': request_data['feedback_id']} if 'feedback_id' in request_data else None
-    )
-    if not feedback_object:
-        return my_response(alert=response_messages.FEEDBACK_NOT_EXIST)
-    data_list = list()
-    for feedback in feedback_object:
-        feedback_dict = {
-            'id': feedback.id,
-            'feedback': feedback.feedback,
-            'created_by': feedback.created_by.id,
-        }
-        data_list.append(feedback_dict)
-    return my_response(result=True, alert=response_messages.FEEDBACK_GET_SUCCESS, data=data_list)
-
-
-def create_feedback(request_data, user_id=None):
-    user_object = get_data(model=AuthUser, filters={'id': user_id})
-    if not user_object:
-        return my_response(alert=response_messages.USER_NOT_EXIST)
-
-    feedback_save = save_data(model=FeedbackMaster, fields={
-        model_fields.CREATED_BY: user_object.first(),
-        'feedback': request_data['feedback'].capitalize(),
-        'created_time': datetime.now()
-    })
-
-    if not feedback_save:
-        return my_response(alert=response_messages.UNEXPECTED_ERROR)
-
-    return my_response(result=True, alert=response_messages.FEEDBACK_CREATE_SUCCESS)
-
-
-def update_feedback(request_data):
-    feedback_id = request_data['feedback_id']
-    feedback = request_data['feedback'].capitalize()
-
-    feedback_object = update_data_by_filters(
-        model=FeedbackMaster,
-        filters={'id': feedback_id},
-        fields={'feedback': feedback}
-    )
-    if not feedback_object:
-        return my_response(alert=response_messages.UNEXPECTED_ERROR)
-
-    return my_response(result=True, alert=response_messages.FEEDBACK_UPDATE_SUCCESS)
-
-
-def delete_feedback(request_data):
-    request_data = request_data.GET
-    feedback_id = request_data['feedback_id']
-    feedback_object = get_data(model=FeedbackMaster, filters={'id': feedback_id})
-    if not feedback_object:
-        return my_response(alert=response_messages.FEEDBACK_NOT_EXIST)
-
-    feedback_object.delete()
-    return my_response(result=True, alert=response_messages.FEEDBACK_DELETE_SUCCESS)

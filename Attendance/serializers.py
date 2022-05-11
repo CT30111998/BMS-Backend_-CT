@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import AttendanceMaster, FeedbackMaster
+from .models import AttendanceMaster
 from Auth.serializers import AuthUserSerializer
 
 
@@ -10,11 +10,4 @@ class AttendanceSerializer(ModelSerializer):
 
     class Meta:
         model = AttendanceMaster
-        fields = '__all__'
-
-
-class FeedbackSerializer(ModelSerializer):
-
-    class Meta:
-        model = FeedbackMaster
         fields = '__all__'
