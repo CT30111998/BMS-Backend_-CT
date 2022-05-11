@@ -1,5 +1,5 @@
-from django.db.models import CharField, CASCADE
-from base.base_models import CreatedMixing, UpdatedMixing, DeletedMixing
+from django.db.models import CharField, CASCADE, ForeignKey
+from base.base_models import CreatedMixing, UpdatedMixing, DeletedMixing, UserMixing
 
 
 class DepartmentMaster(CreatedMixing, UpdatedMixing):
@@ -10,3 +10,7 @@ class DepartmentMaster(CreatedMixing, UpdatedMixing):
 
     class Meta:
         db_table = 'department_master'
+
+
+class UserDepartment(CreatedMixing, UpdatedMixing, UserMixing):
+    department = ForeignKey(DepartmentMaster, on_delete=CASCADE, related_name='user_department')
