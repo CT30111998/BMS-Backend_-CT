@@ -12,5 +12,8 @@ class DepartmentMaster(CreatedMixing, UpdatedMixing):
         db_table = 'department_master'
 
 
-class UserDepartment(CreatedMixing, UpdatedMixing, UserMixing):
-    department = ForeignKey(DepartmentMaster, on_delete=CASCADE, related_name='user_department')
+# class UserDepartment(CreatedMixing, UpdatedMixing, UserMixing):
+#     department = ForeignKey(DepartmentMaster, on_delete=CASCADE, related_name='user_department')
+#
+#     class Meta:
+#         db_table = 'user_department'

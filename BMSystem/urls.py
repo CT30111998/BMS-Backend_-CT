@@ -17,6 +17,7 @@ urlpatterns = [
     path(constants.URLS_PATH['AUTH'], include('Auth.urls')),
     path(constants.URLS_PATH['USERS'], include('User.urls')),
     path(constants.URLS_PATH['DEPARTMENT'], include('Department.urls')),
+    path(constants.URLS_PATH['SHIFT'], include('Shift.urls')),
     path(constants.URLS_PATH['BLOG'], include('Blog.urls')),
     path(constants.URLS_PATH['ATTENDANCE'], include('Attendance.urls')),
     path(constants.URLS_PATH['FEEDBACK'], include('Feedback.urls')),

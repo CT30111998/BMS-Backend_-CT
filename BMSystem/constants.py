@@ -23,6 +23,7 @@ URLS_PATH = {
     'USERS': 'users/',
     'AUTH': 'auth/',
     'DEPARTMENT': 'department/',
+    'SHIFT': 'department/',
     'ATTENDANCE': 'attendance/',
     'FEEDBACK': 'feedback/',
     'CATEGORY': 'category/',
@@ -40,7 +41,9 @@ AUTH_URLS = {
 USER_URLS = {
     'GET_ALL': '',
     'PROFILE': 'profile/',
-    'DEPARTMENT': ''
+    'DEPARTMENT': '',
+    'USER_DEPARTMENT': 'user-department/',
+    'SHIFT': '',
 }
 
 EMPLOYEE_REPORT_URLS = {

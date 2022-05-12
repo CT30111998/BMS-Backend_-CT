@@ -5,17 +5,11 @@ from .models import BlogMaster as BlogMaster, BlogLike as LikeMaster, BlogCommen
 from math import ceil
 from Auth.models import AuthMaster as AuthUser
 from base.query_modules import get_data, save_data, update_data_by_fields
-from User.models import UserMaster as MasterUser
 from BMSystem import constants, response_messages, model_fields, decimal_constants
-from BMSystem.base_function import \
-    get_session as my_session_get, \
-    get_name_from_master_user as my_name_create, \
+from base.common_helpers import create_response as my_response_create,\
     get_payload_error_alert as my_payload_error
-from base.common_helpers import create_response as my_response_create
-from .blog_serializer import BlogMasterSerializer as BlogSerializer
 from django.utils import timezone
 from .serializers import BlogSerializer
-from json import loads
 
 
 def get_all_blog(serializer_class=None, blog_id=None):

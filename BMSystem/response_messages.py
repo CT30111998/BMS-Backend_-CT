@@ -41,6 +41,7 @@ PASSWORD_NOT_SAME = "Password and Confirm password not match!"
 REGISTER_FAIL = "Account create fail!"
 USER_EXIST = "Already exist account with this email!"
 USER_NOT_EXIST = 'User not exits!'
+EMP_NOT_EXIST = 'Employee not exits!'
 PASSWORD_LENGTH_ALERT = 'Password should have min 8 characters!'
 INCORRECT_PASSWORD = 'Incorrect password!'
 USER_AND_PASSWORD_NOT_MATCH = "Email and password could not match!"
@@ -107,7 +108,6 @@ UPDATE_ATTENDANCE_FAIL = "Attendance update Fail!"
 CREATE_ATTENDANCE_FAIL = "Attendance create Fail!"
 DELETE_ATTENDANCE_FAIL = "Attendance delete Fail!"
 ATTEND_NOT_FOUND = "Attendance not exist!"
-EMP_NOT_EXIST = "Employee not exist!"
 
 """
     END ATTENDANCE WORK MESSAGES
@@ -147,10 +147,26 @@ DEPARTMENT_GET_SUCCESS = 'Department fetch successful!'
 
 DEPARTMENT_NOT_EXIST = 'Department not exist!'
 DEPARTMENT_EXIST = 'Department exist!'
-USER_DEPARTMENT_EXIST = 'User already added in department exist!'
 
 """
     END DEPARTMENT MESSAGES
+"""
+
+
+"""
+    START SHIFT MESSAGES
+"""
+
+SHIFT_CREATE_SUCCESS = 'Department create successful!'
+SHIFT_UPDATE_SUCCESS = 'Department update successful!'
+SHIFT_DELETE_SUCCESS = 'Department delete successful!'
+SHIFT_GET_SUCCESS = 'Department fetch successful!'
+
+SHIFT_NOT_EXIST = 'Department not exist!'
+SHIFT_EXIST = 'User already added in department.!'
+
+"""
+    END SHIFT MESSAGES
 """
 
 

@@ -1,14 +1,9 @@
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView, Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from Blog.modules import *
-from os import SEEK_END
-from .models import BlogMaster as Master
 from BMSystem import response_messages, model_fields
-from base.common_helpers import create_response
-from BMSystem.base_function import get_user_id_from_request, check_response_result
+from base.common_helpers import create_response, get_user_id_from_request
 from Auth.jwt_module import JWTAuthentication
-# from .serializer import BlogSerializer
 
 
 class BlogMaster(ViewSet):

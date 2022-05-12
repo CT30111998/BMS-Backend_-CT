@@ -1,6 +1,5 @@
-from BMSystem.base_function import get_payload_error_alert as my_payload_error
 from BMSystem import response_messages, model_fields, decimal_constants
-from base.common_helpers import create_response as my_response
+from base.common_helpers import create_response as my_response, get_payload_error_alert as my_payload_error
 from Auth.models import AuthMaster as AuthUser
 from .models import AttendanceMaster as AttendMaster
 from .serializers import AttendanceSerializer

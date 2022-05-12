@@ -1,6 +1,7 @@
 from django.db.models import CharField, IntegerField, EmailField, ForeignKey, DateTimeField, \
     DateField, ImageField, CASCADE, BigIntegerField
 from Auth.models import GroupMaster
+from Department.models import DepartmentMaster
 from base.base_models import UserMixing, CreatedMixing, UpdatedMixing, DeletedMixing
 import datetime
 import os
@@ -26,22 +27,13 @@ class UserMaster(UserMixing, UpdatedMixing, DeletedMixing):
     dateOfJoining = DateField(null=True)
     jonTittle = CharField(max_length=50, null=True)
     created_at = DateTimeField()
+    department = ForeignKey(DepartmentMaster, related_name="user_departments", on_delete=CASCADE, null=True)
 
     def __str__(self):
         return self.firstName
 
     class Meta:
         db_table = 'user_master'
-
-
-class ShiftMaster(CreatedMixing, UpdatedMixing):
-    shift = CharField(max_length=50)
-
-    def __str__(self):
-        return self.shift
-
-    class Meta:
-        db_table = 'shift_master'
 
 
 class UserGroup(UserMixing, UpdatedMixing):

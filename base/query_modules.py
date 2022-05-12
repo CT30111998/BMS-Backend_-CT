@@ -10,12 +10,12 @@ def get_data(model=None, filters=None, order_by='id'):
 
 
 def save_data(model=None, fields=None):
-    try:
-        create_data = model(**fields)
-        create_data.save()
-        return create_data
-    except:
-        return False
+    # try:
+    create_data = model(**fields)
+    create_data.save()
+    return create_data
+    # except:
+    #     return False
 
 
 def update_data_by_fields(model_object=None, fields=None):

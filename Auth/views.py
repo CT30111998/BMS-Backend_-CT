@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from base.common_helpers import create_response
 from .serializers import CreateUserSerializer, LoginSerializer
-from BMSystem import constants, response_messages, decimal_constants, model_fields
+from BMSystem import response_messages, decimal_constants, model_fields
 from .jwt_module import jwt_encode, generate_key, logout as session_logout, JWTAuthentication, get_token_from_request
 from django.utils import timezone
 from base.query_modules import save_data, get_data, update_data_by_fields

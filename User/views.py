@@ -1,8 +1,7 @@
 from .modules import get_all_user_data, delete_user, update_profile, user_profile
 from BMSystem import response_messages
 from rest_framework.views import APIView
-from BMSystem.base_function import check_response_result, get_user_id_from_request
-from base.common_helpers import create_response
+from base.common_helpers import create_response, get_user_id_from_request
 from Auth.jwt_module import JWTAuthentication
 
 

@@ -216,4 +216,11 @@ REST_USE_JWT = True
 # End CSRF Token
 
 TOKEN_KEY_LENGTH = 20
-SESSION_LENGTH = 86400  # Session Length 1 Day = 86,400 seconds
+
+
+def session_expire_time(hours=0, minutes=0, seconds=0):
+    return ((hours * 60) * 60) + (minutes * 60) + seconds
+
+
+# Total expire second
+SESSION_LENGTH = session_expire_time(hours=24)

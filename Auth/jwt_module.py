@@ -4,7 +4,6 @@ from BMSystem.settings import SECRET_KEY
 import os
 from Auth.models import AuthToken, AuthMaster
 from base.query_modules import get_data, save_data, update_data_by_fields
-from base.common_helpers import convert_time_to_timestamp
 from binascii import hexlify
 from BMSystem.settings import TOKEN_KEY_LENGTH
 from rest_framework.authentication import TokenAuthentication
@@ -22,7 +21,7 @@ def jwt_decode(encode_data):
 
 
 def generate_key():
-    return hexlify(os.urandom(20)).decode()
+    return hexlify(os.urandom(TOKEN_KEY_LENGTH)).decode()
 
 
 class JWTAuthentication(TokenAuthentication):

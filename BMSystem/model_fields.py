@@ -14,7 +14,7 @@ UPDATED_AT = 'updated_at'
 UPDATED_BY = 'updated_by'
 IS_DELETED = "is_deleted"
 IS_ACTIVE = "is_active"
-
+EMP_ID = 'emp_id'
 """
     END COMMON
 """
@@ -25,7 +25,6 @@ IS_ACTIVE = "is_active"
 """
 
 USER = 'user'
-USER_ID = 'user_id'
 FIRST_NAME = 'firstName'
 LAST_NAME = 'lastName'
 MOBILE_NUMBER = 'mNo'
@@ -57,7 +56,6 @@ SHIFT = 'shift'
 """
 
 BLOG = 'blog'
-BLOG_ID: str = 'blog_id'
 BLOG_TITLE = 'postTitle'
 BLOG_IMAGE = 'postImage'
 BLOG_DESC: str = 'postDescription'
@@ -82,7 +80,6 @@ MONTH = 'month'
 YEAR = 'year'
 DATE = 'date'
 PUNCH_STATUS = 'punch_status'
-ATTEND_ID = 'attend_id'
 
 """
     END ATTENDANCE
@@ -90,10 +87,16 @@ ATTEND_ID = 'attend_id'
 
 
 """
-    START DEPARTMENT
+    START PAYLOAD IDS
 """
 DEPARTMENT_ID = 'department_id'
+USER_DEPARTMENT_ID = 'user_department_id'
+ATTEND_ID = 'attend_id'
+BLOG_ID: str = 'blog_id'
+USER_ID = 'user_id'
+FEEDBACK_ID = 'feedback_id'
+SHIFT_ID = 'shift_id'
 
 """
-    END DEPARTMENT
+    END PAYLOAD IDS
 """

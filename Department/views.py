@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
 from Auth.jwt_module import JWTAuthentication
-from .modules import api_create_update_depart, api_get_department, api_delete_department
-from BMSystem.base_function import get_user_id_from_request
-from base.common_helpers import create_response
+from .modules import (
+    api_create_update_depart, api_get_department, api_delete_department
+)
+from base.common_helpers import create_response, get_user_id_from_request
 from BMSystem import response_messages
 
 
@@ -39,23 +40,30 @@ class Department(APIView):
         return api_delete_department(department_id=department_id)
 
 
-class UserDepartment(APIView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.authentication_classes = [JWTAuthentication]
-
-    @staticmethod
-    def get(request):
-        pass
-
-    @staticmethod
-    def post(request):
-        pass
-
-    @staticmethod
-    def put(request):
-        pass
-
-    @staticmethod
-    def delete(request):
-        pass
+# class UserDepartment(APIView):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+#         self.authentication_classes = [JWTAuthentication]
+#
+#     @staticmethod
+#     def get(request):
+#         return api_get_user_department()
+#
+#     @staticmethod
+#     def post(request):
+#         user_id = get_user_id_from_request(request)
+#         if not user_id:
+#             return create_response(alert=response_messages.UNEXPECTED_ERROR)
+#
+#         return api_create_user_department(request_data=request.data, user_id=user_id)
+#
+#     @staticmethod
+#     def put(request):
+#         user_id = get_user_id_from_request(request)
+#         if not user_id:
+#             return create_response(alert=response_messages.UNEXPECTED_ERROR)
+#         return api_update_user_department(request_data=request.data, user_id=user_id)
+#
+#     @staticmethod
+#     def delete(request):
+#         return api_delete_user_department(request_data=request.GET)

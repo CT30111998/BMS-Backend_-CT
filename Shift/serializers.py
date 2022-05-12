@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from Auth.serializers import AuthUserSerializer
-from .models import DepartmentMaster
+from .models import ShiftMaster
 
 
 # class UserDepartmentSerializer(ModelSerializer):
@@ -14,10 +14,10 @@ from .models import DepartmentMaster
 #         fields = ('user',)
 
 
-class DepartmentSerializer(ModelSerializer):
+class ShiftSerializer(ModelSerializer):
     created_by = AuthUserSerializer(many=False)
     updated_by = AuthUserSerializer(many=False)
 
     class Meta:
-        model = DepartmentMaster
+        model = ShiftMaster
         fields = '__all__'
