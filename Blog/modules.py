@@ -108,7 +108,7 @@ def get_all_blog(serializer_class=None, blog_id=None):
     return my_response_create(alert=alert, result=True, data=params)
 
 
-def create_blog(request_date=None, user_id=None):
+def create_blog(request_date=None, user_id=None, request_file=None):
     if not model_fields.BLOG_TITLE and model_fields.BLOG_IMAGE in request_date:
         alert = f"{response_messages.ONE_FIELD_REQUIRED_FROM_FIELDS} {model_fields.BLOG_TITLE}" + \
                 f" and {model_fields.BLOG_IMAGE}!"
@@ -126,7 +126,7 @@ def create_blog(request_date=None, user_id=None):
             request_date[model_fields.BLOG_DESC].capitalize()
 
     if model_fields.BLOG_IMAGE in request_date:
-        get_file = request_date.FILES['postImage']
+        get_file = request_file.get('postImage', None)
         fs = FileSystemStorage()
         time = str(datetime.datetime.now())
         time_str = time.split('.')[0].replace(' ', '-').replace(':', '-')

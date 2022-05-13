@@ -41,7 +41,7 @@ class BlogMaster(ViewSet):
             alert = my_payload_error(model_fields.BLOG_ID)
             return create_response(alert=alert)
 
-        get_response = create_blog(request_date=request.data, user_id=user_id)
+        get_response = create_blog(request_date=request.data, user_id=user_id, request_file=request.FILES)
         return get_response
 
     @staticmethod
