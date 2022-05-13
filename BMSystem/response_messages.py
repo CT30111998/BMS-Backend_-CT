@@ -157,13 +157,13 @@ DEPARTMENT_EXIST = 'Department exist!'
     START SHIFT MESSAGES
 """
 
-SHIFT_CREATE_SUCCESS = 'Department create successful!'
-SHIFT_UPDATE_SUCCESS = 'Department update successful!'
-SHIFT_DELETE_SUCCESS = 'Department delete successful!'
-SHIFT_GET_SUCCESS = 'Department fetch successful!'
+SHIFT_CREATE_SUCCESS = 'Shift create successful!'
+SHIFT_UPDATE_SUCCESS = 'Shift update successful!'
+SHIFT_DELETE_SUCCESS = 'Shift delete successful!'
+SHIFT_GET_SUCCESS = 'Shift fetch successful!'
 
-SHIFT_NOT_EXIST = 'Department not exist!'
-SHIFT_EXIST = 'User already added in department.!'
+SHIFT_NOT_EXIST = 'Shift not exist!'
+SHIFT_EXIST = 'User already added in Shift.!'
 
 """
     END SHIFT MESSAGES

@@ -21,8 +21,9 @@ def api_get_shift(request_data):
 
 
 def api_create_update_shift(request_data, user_id):
-    shift = request_data.get(model_fields.DEPARTMENT)
-    shift = shift.title() if not shift.isupper() or not len(shift) < 3 else shift
+    shift = request_data.get(model_fields.SHIFT, None)
+    if shift:
+        shift = shift.title() if not shift.isupper() or not len(shift) < 3 else shift
     shift_id = request_data.get(model_fields.SHIFT_ID, None)
 
     shift_params = {
@@ -54,7 +55,7 @@ def api_create_update_shift(request_data, user_id):
         })
 
         save_data(model=ShiftMaster, fields=shift_params)
-        alert = response_messages.DEPARTMENT_CREATE_SUCCESS
+        alert = response_messages.SHIFT_CREATE_SUCCESS
 
     else:
         shift_params.update({

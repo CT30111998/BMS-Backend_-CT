@@ -23,7 +23,7 @@ URLS_PATH = {
     'USERS': 'users/',
     'AUTH': 'auth/',
     'DEPARTMENT': 'department/',
-    'SHIFT': 'department/',
+    'SHIFT': 'shift/',
     'ATTENDANCE': 'attendance/',
     'FEEDBACK': 'feedback/',
     'CATEGORY': 'category/',

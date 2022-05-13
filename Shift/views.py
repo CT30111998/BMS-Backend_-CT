@@ -7,7 +7,7 @@ from base.common_helpers import create_response, get_user_id_from_request
 from BMSystem import response_messages
 
 
-class Department(APIView):
+class Shift(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.authentication_classes = [JWTAuthentication]
@@ -34,10 +34,10 @@ class Department(APIView):
 
     @staticmethod
     def delete(request):
-        department_id = request.GET.get('department_id', None)
-        if not department_id:
+        shift_id = request.GET.get('shift_id', None)
+        if not shift_id:
             return create_response(alert=response_messages.UNEXPECTED_ERROR)
-        return api_delete_shift(shift_id=department_id)
+        return api_delete_shift(shift_id=shift_id)
 
 
 # class UserDepartment(APIView):
